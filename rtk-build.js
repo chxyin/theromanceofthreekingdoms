@@ -307,8 +307,12 @@ ${JS}
 `;
 
 fs.writeFileSync(OUT, html, 'utf8');
+/* GitHub Pages 的入口：同一份内容，另存为 index.html，
+   这样 https://<user>.github.io/theromanceofthreekingdoms/ 直接就是这本书 */
+fs.writeFileSync(path.join(OUTDIR, 'index.html'), html, 'utf8');
 
 console.log('written:', OUT);
+console.log('written:', path.join(OUTDIR, 'index.html'));
 console.log('size:', (Buffer.byteLength(html, 'utf8') / 1024).toFixed(1) + ' KB');
 console.log('chapters:', chapters.length, '(' + chapters.map(c => c.num).join(',') + ')');
 console.log('paras:', nParas, 'sentences:', nSent, 'words:', nWords);
