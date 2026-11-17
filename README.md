@@ -2,6 +2,8 @@
 
 逐字拼音 + 英译的《三国演义》电子书。单文件、离线可读，一个 HTML 就是整本书。
 
+**在线阅读 → https://chxyin.github.io/theromanceofthreekingdoms/**
+
 ![预览](预览.png)
 
 ## 打开
@@ -27,6 +29,7 @@
 
 | 文件 | 说明 |
 | --- | --- |
+| `index.html` | GitHub Pages 入口，内容与 `三国演义.html` 完全相同 |
 | `三国演义.html` | 成品，自包含（样式、脚本、数据全部内联） |
 | `ch*.html` | 各回源文件，拼音数据就在这里 |
 | `rtk-build.js` | 把 `ch*.html` 合成成品 |
