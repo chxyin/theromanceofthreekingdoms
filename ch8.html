@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>三国演义 · 第八回 · 点击显示拼音 + 英译</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: #f8f5f0;
+            font-family: 'Segoe UI', 'Noto Serif SC', 'KaiTi', '楷体', 'Songti SC', serif;
+            padding: 2rem 1rem;
+            display: flex;
+            justify-content: center;
+            line-height: 2.2;
+        }
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background: #fffcf8;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border-radius: 24px;
+            padding: 3rem 2.5rem;
+            border: 1px solid #e6d9cc;
+        }
+        h1 {
+            font-size: 2.2rem;
+            text-align: center;
+            color: #5e3e2b;
+            letter-spacing: 4px;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            border-bottom: 2px solid #d9c6b0;
+            padding-bottom: 1.2rem;
+        }
+        .subhead {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #8b6f55;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+            font-style: italic;
+        }
+        .jumpbar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.6rem;
+            margin: 1.2rem 0 2.5rem 0;
+            padding: 0.9rem;
+            background: #f4ebe2;
+            border-radius: 14px;
+            border: 1px solid #e6d9cc;
+        }
+        .jumpbar a {
+            text-decoration: none;
+            font-size: 0.92rem;
+            color: #5e3e2b;
+            background: #fffcf8;
+            border: 1px solid #d9c6b0;
+            border-radius: 10px;
+            padding: 0.35rem 0.8rem;
+            transition: background 0.2s, color 0.2s;
+        }
+        .jumpbar a:hover { background: #5e3e2b; color: #fff8f0; }
+        .chapter-title {
+            font-size: 1.6rem;
+            text-align: center;
+            color: #4a3322;
+            margin: 2rem 0 2.5rem 0;
+            font-weight: 600;
+            letter-spacing: 3px;
+            background: linear-gradient(to right, transparent, #efe3d8, transparent);
+            padding: 0.8rem 0;
+            scroll-margin-top: 1.5rem;
+        }
+        .chapter-title .eng-title {
+            display: block;
+            font-size: 1rem;
+            font-weight: 400;
+            color: #8b6f55;
+            letter-spacing: 1px;
+            margin-top: 0.4rem;
+            font-style: italic;
+        }
+        .paragraph { margin-bottom: 2.2rem; text-align: justify; }
+        .sentence { display: block; margin-bottom: 1.5rem; }
+        .zh-line { display: block; margin-bottom: 0.3rem; }
+        .word {
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+            font-size: 1.25rem;
+            font-family: 'Noto Serif SC', 'KaiTi', serif;
+            color: #1f1a15;
+            margin: 0 0.05em;
+            padding: 0.05em 0.1em;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+            vertical-align: middle;
+        }
+        .word:hover { background-color: #f0e4d8; }
+        .word.revealed {
+            background-color: #f4e8dc;
+            box-shadow: 0 0 0 1px #d9c6b0;
+        }
+        .punct {
+            font-family: 'Noto Serif SC', 'KaiTi', serif;
+            font-size: 1.25rem;
+            color: #1f1a15;
+            vertical-align: middle;
+        }
+        .pinyin {
+            display: none;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 100%;
+            margin-bottom: 2px;
+            background-color: #5e3e2b;
+            color: #fff8f0;
+            font-size: 0.7rem;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            letter-spacing: 0.5px;
+            padding: 0.15em 0.5em;
+            border-radius: 12px;
+            white-space: nowrap;
+            z-index: 10;
+            line-height: 1.4;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            pointer-events: none;
+        }
+        .word.revealed .pinyin { display: block; }
+        .eng-line {
+            display: block;
+            font-size: 0.95rem;
+            color: #7a6554;
+            font-family: 'Segoe UI', 'Georgia', serif;
+            line-height: 1.6;
+            padding-left: 0.5rem;
+            border-left: 2px solid #d9c6b0;
+            margin-top: 0.2rem;
+            margin-bottom: 0.4rem;
+            font-style: italic;
+        }
+        .note {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px dashed #cdb9a8;
+            font-size: 0.9rem;
+            color: #7a5e4b;
+            text-align: center;
+            font-style: italic;
+        }
+        .hint {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #a0785a;
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+        @media (max-width: 600px) {
+            .container { padding: 1.8rem 1.2rem; }
+            h1 { font-size: 1.6rem; letter-spacing: 2px; }
+            .word, .punct { font-size: 1.1rem; }
+            .chapter-title { font-size: 1.2rem; }
+            .eng-line { font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>三国演义</h1>
+    <div class="subhead">第八回 · 点击汉字显示拼音 + 英译</div>
+    <div class="hint">👆 点击任意汉字即可显示/隐藏其拼音</div>
+
+    <nav class="jumpbar">
+        <a href="#s1">连环</a>
+        <a href="#s2">凤仪</a>
+        <a href="#s3">离间</a>
+    </nav>
+
+    <div id="story"></div>
+
+    <div class="note">
+        —— 第八回 · 点击汉字显示拼音 + 英译 ——
+    </div>
+</div>
+
+<script>
+const SENTENCES = [
+    {
+        type: "title",
+        zh: "王|wáng 司|sī 徒|tú 巧|qiǎo 使|shǐ 连|lián 环|huán 计|jì · 董|dǒng 太|tài 师|shī 大|dà 闹|nào 凤|fèng 仪|yí 亭|tíng",
+        en: "Wang the Minister Cleverly Devises the Chain Link Strategy; Grand Preceptor Dong Causes an Uproar at the Fengyi Pavilion"
+    },
+    {
+        type: "para", id: "s1",
+        sentences: [
+            {
+                zh: "董|dǒng 卓|zhuó 专|zhuān 权|quán 跋|bá 扈|hù ，朝|cháo 野|yě 怨|yuàn 声|shēng 载|zài 道|dào 。司|sī 徒|tú 王|wáng 允|yǔn 忧|yōu 国|guó 忧|yōu 民|mín ，夜|yè 不|bù 能|néng 寐|mèi 。他|tā 府|fǔ 中|zhōng 有|yǒu 歌|gē 妓|jì 貂|diāo 蝉|chán ，色|sè 艺|yì 双|shuāng 绝|jué ，王|wáng 允|yǔn 遂|suì 收|shōu 为|wéi 义|yì 女|nǚ ，暗|àn 定|dìng 连|lián 环|huán 之|zhī 计|jì 。",
+                en: "Dong Zhuo wielded power tyrannically, and resentment filled the court and countryside. Wang Yun, the Minister of Works, grieved for the country and could not sleep at night. In his household was the singing girl Diao Chan, unmatched in beauty and talent; Wang Yun took her as his adopted daughter and secretly devised the Chain Link Strategy."
+            }
+        ]
+    },
+    {
+        type: "para", id: "s2",
+        sentences: [
+            {
+                zh: "王|wáng 允|yǔn 先|xiān 将|jiāng 貂|diāo 蝉|chán 许|xǔ 配|pèi 吕|lǚ 布|bù ，后|hòu 又|yòu 献|xiàn 于|yú 董|dǒng 卓|zhuó 。吕|lǚ 布|bù 与|yǔ 貂|diāo 蝉|chán 情|qíng 深|shēn ，见|jiàn 董|dǒng 卓|zhuó 夺|duó 爱|ài ，心|xīn 中|zhōng 大|dà 恨|hèn 。",
+                en: "Wang Yun first promised Diao Chan in marriage to Lü Bu, then presented her to Dong Zhuo. Lü Bu and Diao Chan were deeply attached, and when Lü Bu saw Dong Zhuo take her for himself, he was filled with resentment."
+            },
+            {
+                zh: "一|yī 日|rì ，吕|lǚ 布|bù 在|zài 凤|fèng 仪|yí 亭|tíng 与|yǔ 貂|diāo 蝉|chán 相|xiāng 会|huì ，被|bèi 董|dǒng 卓|zhuó 撞|zhuàng 见|jiàn 。董|dǒng 卓|zhuó 大|dà 怒|nù ，夺|duó 吕|lǚ 布|bù 方|fāng 天|tiān 戟|jǐ 追|zhuī 刺|cì 吕|lǚ 布|bù ，二|èr 人|rén 由|yóu 此|cǐ 反|fǎn 目|mù 。",
+                en: "One day, Lü Bu met Diao Chan at the Fengyi Pavilion and was caught by Dong Zhuo. Dong Zhuo flew into a rage, seized Lü Bu's halberd, and chased him to stab him; from then on the two turned against each other."
+            }
+        ]
+    },
+    {
+        type: "para", id: "s3",
+        sentences: [
+            {
+                zh: "王|wáng 允|yǔn 见|jiàn 时|shí 机|jī 已|yǐ 到|dào ，便|biàn 劝|quàn 吕|lǚ 布|bù 除|chú 掉|diào 董|dǒng 卓|zhuó 。吕|lǚ 布|bù 犹|yóu 豫|yù 不|bù 决|jué ，王|wáng 允|yǔn 以|yǐ 大|dà 义|yì 相|xiāng 激|jī ，吕|lǚ 布|bù 终|zhōng 于|yú 答|dá 应|yìng 同|tóng 谋|móu 诛|zhū 杀|shā 董|dǒng 卓|zhuó 。",
+                en: "Seeing that the moment had come, Wang Yun urged Lü Bu to remove Dong Zhuo. Lü Bu hesitated, but Wang Yun stirred him with appeals to righteousness, and Lü Bu finally agreed to join the plot to kill Dong Zhuo."
+            }
+        ]
+    }
+];
+
+function tokenToHtml(tok) {
+    if (tok.startsWith("RAW")) return tok.slice(3);
+    if (tok.includes("|")) {
+        const [ch, py] = tok.split("|");
+        return `<span class="word" data-pinyin="${py}">${ch}</span>`;
+    }
+    return `<span class="punct">${tok}</span>`;
+}
+
+function renderZh(zh) {
+    return zh.split(/\s+/).filter(Boolean).map(tokenToHtml).join("");
+}
+
+function renderSentence(s) {
+    return `<div class="sentence">
+        <span class="zh-line">${renderZh(s.zh)}</span>
+        <span class="eng-line">${s.en}</span>
+    </div>`;
+}
+
+function render() {
+    const root = document.getElementById("story");
+    let html = "";
+    for (const block of SENTENCES) {
+        if (block.type === "title") {
+            html += `<div class="chapter-title">${renderZh(block.zh)}<span class="eng-title">${block.en}</span></div>`;
+        } else if (block.type === "para") {
+            html += `<div class="paragraph"${block.id ? ` id="${block.id}"` : ""}>${block.sentences.map(renderSentence).join("")}</div>`;
+        }
+    }
+    root.innerHTML = html;
+    bindWords();
+}
+
+function bindWords() {
+    document.querySelectorAll(".word").forEach(function (word) {
+        var pinyinText = word.getAttribute("data-pinyin");
+        if (pinyinText) {
+            var pinyinSpan = document.createElement("span");
+            pinyinSpan.className = "pinyin";
+            pinyinSpan.textContent = pinyinText;
+            word.appendChild(pinyinSpan);
+        }
+        word.addEventListener("click", function (e) {
+            e.stopPropagation();
+            this.classList.toggle("revealed");
+        });
+    });
+}
+
+document.addEventListener("click", function () {
+    document.querySelectorAll(".word.revealed").forEach(function (w) {
+        w.classList.remove("revealed");
+    });
+});
+
+render();
+</script>
+</body>
+</html>

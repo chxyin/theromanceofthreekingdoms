@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>三国演义 · 第十四回 · 点击显示拼音 + 英译</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: #f8f5f0;
+            font-family: 'Segoe UI', 'Noto Serif SC', 'KaiTi', '楷体', 'Songti SC', serif;
+            padding: 2rem 1rem;
+            display: flex;
+            justify-content: center;
+            line-height: 2.2;
+        }
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background: #fffcf8;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border-radius: 24px;
+            padding: 3rem 2.5rem;
+            border: 1px solid #e6d9cc;
+        }
+        h1 {
+            font-size: 2.2rem;
+            text-align: center;
+            color: #5e3e2b;
+            letter-spacing: 4px;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            border-bottom: 2px solid #d9c6b0;
+            padding-bottom: 1.2rem;
+        }
+        .subhead {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #8b6f55;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+            font-style: italic;
+        }
+        .jumpbar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.6rem;
+            margin: 1.2rem 0 2.5rem 0;
+            padding: 0.9rem;
+            background: #f4ebe2;
+            border-radius: 14px;
+            border: 1px solid #e6d9cc;
+        }
+        .jumpbar a {
+            text-decoration: none;
+            font-size: 0.92rem;
+            color: #5e3e2b;
+            background: #fffcf8;
+            border: 1px solid #d9c6b0;
+            border-radius: 10px;
+            padding: 0.35rem 0.8rem;
+            transition: background 0.2s, color 0.2s;
+        }
+        .jumpbar a:hover { background: #5e3e2b; color: #fff8f0; }
+        .chapter-title {
+            font-size: 1.6rem;
+            text-align: center;
+            color: #4a3322;
+            margin: 2rem 0 2.5rem 0;
+            font-weight: 600;
+            letter-spacing: 3px;
+            background: linear-gradient(to right, transparent, #efe3d8, transparent);
+            padding: 0.8rem 0;
+            scroll-margin-top: 1.5rem;
+        }
+        .chapter-title .eng-title {
+            display: block;
+            font-size: 1rem;
+            font-weight: 400;
+            color: #8b6f55;
+            letter-spacing: 1px;
+            margin-top: 0.4rem;
+            font-style: italic;
+        }
+        .paragraph { margin-bottom: 2.2rem; text-align: justify; }
+        .sentence { display: block; margin-bottom: 1.5rem; }
+        .zh-line { display: block; margin-bottom: 0.3rem; }
+        .word {
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+            font-size: 1.25rem;
+            font-family: 'Noto Serif SC', 'KaiTi', serif;
+            color: #1f1a15;
+            margin: 0 0.05em;
+            padding: 0.05em 0.1em;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+            vertical-align: middle;
+        }
+        .word:hover { background-color: #f0e4d8; }
+        .word.revealed {
+            background-color: #f4e8dc;
+            box-shadow: 0 0 0 1px #d9c6b0;
+        }
+        .punct {
+            font-family: 'Noto Serif SC', 'KaiTi', serif;
+            font-size: 1.25rem;
+            color: #1f1a15;
+            vertical-align: middle;
+        }
+        .pinyin {
+            display: none;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 100%;
+            margin-bottom: 2px;
+            background-color: #5e3e2b;
+            color: #fff8f0;
+            font-size: 0.7rem;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            letter-spacing: 0.5px;
+            padding: 0.15em 0.5em;
+            border-radius: 12px;
+            white-space: nowrap;
+            z-index: 10;
+            line-height: 1.4;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            pointer-events: none;
+        }
+        .word.revealed .pinyin { display: block; }
+        .eng-line {
+            display: block;
+            font-size: 0.95rem;
+            color: #7a6554;
+            font-family: 'Segoe UI', 'Georgia', serif;
+            line-height: 1.6;
+            padding-left: 0.5rem;
+            border-left: 2px solid #d9c6b0;
+            margin-top: 0.2rem;
+            margin-bottom: 0.4rem;
+            font-style: italic;
+        }
+        .note {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px dashed #cdb9a8;
+            font-size: 0.9rem;
+            color: #7a5e4b;
+            text-align: center;
+            font-style: italic;
+        }
+        .hint {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #a0785a;
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+        @media (max-width: 600px) {
+            .container { padding: 1.8rem 1.2rem; }
+            h1 { font-size: 1.6rem; letter-spacing: 2px; }
+            .word, .punct { font-size: 1.1rem; }
+            .chapter-title { font-size: 1.2rem; }
+            .eng-line { font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>三国演义</h1>
+    <div class="subhead">第十四回 · 点击汉字显示拼音 + 英译</div>
+    <div class="hint">👆 点击任意汉字即可显示/隐藏其拼音</div>
+
+    <nav class="jumpbar">
+        <a href="#s1">曹操迁都</a>
+        <a href="#s2">刘备失徐州</a>
+        <a href="#s3">吕布夺权</a>
+        <a href="#s4">曹操图吕布</a>
+    </nav>
+
+    <div id="story"></div>
+
+    <div class="note">
+        —— 第十四回 · 点击汉字显示拼音 + 英译 ——
+    </div>
+</div>
+
+<script>
+const SENTENCES = [
+    {
+        type: "title",
+        zh: "曹|cáo 孟|mèng 德|dé 移|yí 驾|jià 许|jú 都|dū · 吕|lǚ 奉|fèng 先|xiān 夜|yè 袭|xí 徐|xú 州|zhōu",
+        en: "Cao Mengde Moves the Imperial Court to Xudu; Lü Fengxian Makes a Night Raid on Xuzhou"
+    },
+    {
+        type: "para", id: "s1",
+        sentences: [
+            {
+                zh: "曹|cáo 操|cāo 迎|yíng 献|xiàn 帝|dì 入|rù 许|jú 都|dū 后|hòu ，自|zì 任|rèn 大|dà 将|jiàng 军|jūn ，总|zǒng 揽|lǎn 朝|cháo 政|zhèng 。他|tā 广|guǎng 纳|nà 贤|xián 才|cái ，屯|tún 田|tián 积|jī 粮|liáng ，势|shì 力|lì 日|rì 益|yì 强|qiáng 大|dà 。",
+                en: "After welcoming Emperor Xian into Xudu, Cao Cao appointed himself General-in-Chief and took full control of the court. He widely recruited talented men, established military farms to store grain, and his power grew stronger by the day."
+            },
+            {
+                zh: "刘|liú 备|bèi 领|lǐng 徐|xú 州|zhōu 之|zhī 事|shì 后|hòu ，吕|lǚ 布|bù 被|bèi 曹|cáo 操|cāo 击|jī 败|bài ，前|qián 来|lái 投|tóu 奔|bēn 。刘|liú 备|bèi 仁|rén 厚|hòu ，让|ràng 吕|lǚ 布|bù 屯|tún 兵|bīng 小|xiǎo 沛|pèi ，以|yǐ 为|wéi 犄|jī 角|jiǎo 之|zhī 势|shì 。",
+                en: "After Liu Bei took charge of Xuzhou, Lü Bu, having been defeated by Cao Cao, came seeking refuge. The kind-hearted Liu Bei let Lü Bu station his troops at Xiaopei, forming a mutual support arrangement."
+            }
+        ]
+    },
+    {
+        type: "para", id: "s2",
+        sentences: [
+            {
+                zh: "刘|liú 备|bèi 奉|fèng 命|mìng 前|qián 往|wǎng 征|zhēng 讨|tǎo 袁|yuán 术|shù ，留|liú 张|zhāng 飞|fēi 守|shǒu 徐|xú 州|zhōu 。张|zhāng 飞|fēi 性|xìng 如|rú 烈|liè 火|huǒ ，酒|jiǔ 后|hòu 鞭|biān 打|dǎ 部|bù 下|xià ，部|bù 将|jiàng 曹|cáo 豹|bào 心|xīn 怀|huái 不|bù 满|mǎn 。",
+                en: "Liu Bei was ordered to go campaign against Yuan Shu, leaving Zhang Fei to guard Xuzhou. Zhang Fei had a fiery temper and, after drinking, whipped his subordinates; his officer Cao Bao grew resentful."
+            },
+            {
+                zh: "曹|cáo 豹|bào 勾|gōu 结|jié 吕|lǚ 布|bù ，夜|yè 间|jiān 偷|tōu 开|kāi 城|chéng 门|mén 。吕|lǚ 布|bù 率|shuài 军|jūn 袭|xí 取|qǔ 徐|xú 州|zhōu ，张|zhāng 飞|fēi 仓|cāng 促|cù 应|yìng 战|zhàn ，兵|bīng 败|bài 而|ér 走|zǒu 。",
+                en: "Cao Bao colluded with Lü Bu and secretly opened the city gate at night. Lü Bu led his troops in and seized Xuzhou; Zhang Fei fought hastily but was defeated and fled."
+            }
+        ]
+    },
+    {
+        type: "para", id: "s3",
+        sentences: [
+            {
+                zh: "刘|liú 备|bèi 闻|wén 徐|xú 州|zhōu 失|shī 守|shǒu ，急|jí 忙|máng 回|huí 师|shī ，却|què 被|bèi 吕|lǚ 布|bù 与|yǔ 袁|yuán 术|shù 夹|jiā 击|jī ，进|jìn 退|tuì 两|liǎng 难|nán 。刘|liú 备|bèi 只|zhǐ 得|de 暂|zàn 驻|zhù 小|xiǎo 沛|pèi ，与|yǔ 吕|lǚ 布|bù 暂|zàn 时|shí 讲|jiǎng 和|hé 。",
+                en: "When Liu Bei learned that Xuzhou had fallen, he hurriedly turned his army back, but was caught between Lü Bu and Yuan Shu, unable to advance or retreat. Liu Bei had no choice but to station temporarily at Xiaopei and make a temporary peace with Lü Bu."
+            }
+        ]
+    },
+    {
+        type: "para", id: "s4",
+        sentences: [
+            {
+                zh: "曹|cáo 操|cāo 见|jiàn 刘|liú 备|bèi 与|yǔ 吕|lǚ 布|bù 相|xiāng 争|zhēng ，欲|yù 坐|zuò 收|shōu 渔|yú 利|lì ，便|biàn 表|biǎo 奏|zòu 刘|liú 备|bèi 为|wéi 豫|yù 州|zhōu 牧|mù ，令|lìng 其|qí 与|yǔ 吕|lǚ 布|bù 相|xiāng 抗|kàng ，自|zì 己|jǐ 则|zé 整|zhěng 军|jūn 备|bèi 战|zhàn ，图|tú 谋|móu 徐|xú 州|zhōu 。",
+                en: "Seeing Liu Bei and Lü Bu locked in conflict, Cao Cao wanted to profit from their struggle. He memorialized the throne to appoint Liu Bei as Governor of Yuzhou, setting him against Lü Bu, while Cao Cao himself prepared his army for war, scheming to take Xuzhou."
+            }
+        ]
+    }
+];
+
+function tokenToHtml(tok) {
+    if (tok.startsWith("RAW")) return tok.slice(3);
+    if (tok.includes("|")) {
+        const [ch, py] = tok.split("|");
+        return `<span class="word" data-pinyin="${py}">${ch}</span>`;
+    }
+    return `<span class="punct">${tok}</span>`;
+}
+
+function renderZh(zh) {
+    return zh.split(/\s+/).filter(Boolean).map(tokenToHtml).join("");
+}
+
+function renderSentence(s) {
+    return `<div class="sentence">
+        <span class="zh-line">${renderZh(s.zh)}</span>
+        <span class="eng-line">${s.en}</span>
+    </div>`;
+}
+
+function render() {
+    const root = document.getElementById("story");
+    let html = "";
+    for (const block of SENTENCES) {
+        if (block.type === "title") {
+            html += `<div class="chapter-title">${renderZh(block.zh)}<span class="eng-title">${block.en}</span></div>`;
+        } else if (block.type === "para") {
+            html += `<div class="paragraph"${block.id ? ` id="${block.id}"` : ""}>${block.sentences.map(renderSentence).join("")}</div>`;
+        }
+    }
+    root.innerHTML = html;
+    bindWords();
+}
+
+function bindWords() {
+    document.querySelectorAll(".word").forEach(function (word) {
+        var pinyinText = word.getAttribute("data-pinyin");
+        if (pinyinText) {
+            var pinyinSpan = document.createElement("span");
+            pinyinSpan.className = "pinyin";
+            pinyinSpan.textContent = pinyinText;
+            word.appendChild(pinyinSpan);
+        }
+        word.addEventListener("click", function (e) {
+            e.stopPropagation();
+            this.classList.toggle("revealed");
+        });
+    });
+}
+
+document.addEventListener("click", function () {
+    document.querySelectorAll(".word.revealed").forEach(function (w) {
+        w.classList.remove("revealed");
+    });
+});
+
+render();
+</script>
+</body>
+</html>
