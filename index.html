@@ -246,6 +246,52 @@ body.no-en .eng-line{display:none}
   .eng-line{font-size:.85rem}
 }
 
+/* ============================================================
+   移动端防横向溢出（兜底）
+   部分手机浏览器会把版面算得比屏幕宽 —— 字体自动放大、视口换算差异、
+   或把一串 inline-block 当成不可断的整体 —— 于是正文一路向右延伸，
+   必须左右拖动才能读。下面几条只做约束，不改变正常排版：
+   ============================================================ */
+html{
+  -webkit-text-size-adjust:100%;
+  -moz-text-size-adjust:100%;
+  text-size-adjust:100%;   /* 关掉手机浏览器的“字体自动放大” */
+  width:100%;
+  max-width:100%;
+}
+body{width:100%;max-width:100%}
+
+/* 容器一律不超过视口；min-width:0 让 flex 子项能被压缩 */
+.main,.chapter,.paragraph,.sentence,.chips,.cover,.gap-note,.book-end,.zh-line,.eng-line{
+  max-width:100%;
+  min-width:0;
+}
+/* 这两处原本有版面宽度，用 min() 保留原宽度、窄屏才收缩 */
+.book{max-width:min(790px,100%);min-width:0}
+.howto{max-width:min(600px,100%)}
+
+/* 超长英文单词 / 数字串 / 网址也要折断，不许把行顶破 */
+.zh-line,.eng-line,.chapter-title,.eng-title,.cover-sub,.cover-en,.howto,.gap-note,.toc-t{
+  overflow-wrap:break-word;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
+
+/* 顶栏与按钮在窄屏可收缩、可换行，不再硬撑 */
+.topbar{flex-wrap:wrap;row-gap:2px}
+.tools{flex-wrap:wrap;min-width:0}
+.tbtn{flex:0 1 auto;min-width:0}
+
+/* 拼音气泡贴到行尾时，别靠它把页面撑宽 */
+.pinyin{max-width:80vw}
+
+/* 最后兜底：即使仍有元素超宽，也不产生横向滚动。
+   只加在 html 上（overflow 会传递到视口），body 不动，吸顶栏不受影响。 */
+html{overflow-x:hidden}
+@supports (overflow-x:clip){
+  html{overflow-x:clip}   /* clip 不建立滚动容器，sticky 绝对安全 */
+}
+
 @media print{
   .side,.topbar,.scrim,.chips,.to-top{display:none!important}
   .main{margin:0}
