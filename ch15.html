@@ -1,294 +1,80 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>三国演义 · 第十五回 · 点击显示拼音 + 英译</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background-color: #f8f5f0;
-            font-family: 'Segoe UI', 'Noto Serif SC', 'KaiTi', '楷体', 'Songti SC', serif;
-            padding: 2rem 1rem;
-            display: flex;
-            justify-content: center;
-            line-height: 2.2;
-        }
-        .container {
-            max-width: 1000px;
-            width: 100%;
-            background: #fffcf8;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            border-radius: 24px;
-            padding: 3rem 2.5rem;
-            border: 1px solid #e6d9cc;
-        }
-        h1 {
-            font-size: 2.2rem;
-            text-align: center;
-            color: #5e3e2b;
-            letter-spacing: 4px;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-            border-bottom: 2px solid #d9c6b0;
-            padding-bottom: 1.2rem;
-        }
-        .subhead {
-            text-align: center;
-            font-size: 1.1rem;
-            color: #8b6f55;
-            margin-bottom: 1rem;
-            letter-spacing: 2px;
-            font-style: italic;
-        }
-        .jumpbar {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.6rem;
-            margin: 1.2rem 0 2.5rem 0;
-            padding: 0.9rem;
-            background: #f4ebe2;
-            border-radius: 14px;
-            border: 1px solid #e6d9cc;
-        }
-        .jumpbar a {
-            text-decoration: none;
-            font-size: 0.92rem;
-            color: #5e3e2b;
-            background: #fffcf8;
-            border: 1px solid #d9c6b0;
-            border-radius: 10px;
-            padding: 0.35rem 0.8rem;
-            transition: background 0.2s, color 0.2s;
-        }
-        .jumpbar a:hover { background: #5e3e2b; color: #fff8f0; }
-        .chapter-title {
-            font-size: 1.6rem;
-            text-align: center;
-            color: #4a3322;
-            margin: 2rem 0 2.5rem 0;
-            font-weight: 600;
-            letter-spacing: 3px;
-            background: linear-gradient(to right, transparent, #efe3d8, transparent);
-            padding: 0.8rem 0;
-            scroll-margin-top: 1.5rem;
-        }
-        .chapter-title .eng-title {
-            display: block;
-            font-size: 1rem;
-            font-weight: 400;
-            color: #8b6f55;
-            letter-spacing: 1px;
-            margin-top: 0.4rem;
-            font-style: italic;
-        }
-        .paragraph { margin-bottom: 2.2rem; text-align: justify; }
-        .sentence { display: block; margin-bottom: 1.5rem; }
-        .zh-line { display: block; margin-bottom: 0.3rem; }
-        .word {
-            display: inline-block;
-            position: relative;
-            cursor: pointer;
-            font-size: 1.25rem;
-            font-family: 'Noto Serif SC', 'KaiTi', serif;
-            color: #1f1a15;
-            margin: 0 0.05em;
-            padding: 0.05em 0.1em;
-            border-radius: 4px;
-            transition: background-color 0.2s;
-            vertical-align: middle;
-        }
-        .word:hover { background-color: #f0e4d8; }
-        .word.revealed {
-            background-color: #f4e8dc;
-            box-shadow: 0 0 0 1px #d9c6b0;
-        }
-        .punct {
-            font-family: 'Noto Serif SC', 'KaiTi', serif;
-            font-size: 1.25rem;
-            color: #1f1a15;
-            vertical-align: middle;
-        }
-        .pinyin {
-            display: none;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: 100%;
-            margin-bottom: 2px;
-            background-color: #5e3e2b;
-            color: #fff8f0;
-            font-size: 0.7rem;
-            font-family: 'Segoe UI', 'Arial', sans-serif;
-            letter-spacing: 0.5px;
-            padding: 0.15em 0.5em;
-            border-radius: 12px;
-            white-space: nowrap;
-            z-index: 10;
-            line-height: 1.4;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-            pointer-events: none;
-        }
-        .word.revealed .pinyin { display: block; }
-        .eng-line {
-            display: block;
-            font-size: 0.95rem;
-            color: #7a6554;
-            font-family: 'Segoe UI', 'Georgia', serif;
-            line-height: 1.6;
-            padding-left: 0.5rem;
-            border-left: 2px solid #d9c6b0;
-            margin-top: 0.2rem;
-            margin-bottom: 0.4rem;
-            font-style: italic;
-        }
-        .note {
-            margin-top: 3rem;
-            padding-top: 1.5rem;
-            border-top: 1px dashed #cdb9a8;
-            font-size: 0.9rem;
-            color: #7a5e4b;
-            text-align: center;
-            font-style: italic;
-        }
-        .hint {
-            text-align: center;
-            font-size: 0.85rem;
-            color: #a0785a;
-            margin-bottom: 1rem;
-            font-style: italic;
-        }
-        @media (max-width: 600px) {
-            .container { padding: 1.8rem 1.2rem; }
-            h1 { font-size: 1.6rem; letter-spacing: 2px; }
-            .word, .punct { font-size: 1.1rem; }
-            .chapter-title { font-size: 1.2rem; }
-            .eng-line { font-size: 0.85rem; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三国演义 · 第十五回 · 点击显示拼音 + 英译</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f8f5f0;font-family:'Segoe UI','Noto Serif SC','KaiTi','楷体','Songti SC',serif;padding:2rem 1rem;display:flex;justify-content:center;line-height:2.2}
+.container{max-width:1000px;width:100%;background:#fffcf8;box-shadow:0 10px 30px rgba(0,0,0,.08);border-radius:24px;padding:3rem 2.5rem;border:1px solid #e6d9cc}
+h1{font-size:2.2rem;text-align:center;color:#5e3e2b;letter-spacing:4px;font-weight:500;margin-bottom:.5rem;border-bottom:2px solid #d9c6b0;padding-bottom:1.2rem}
+.subhead{text-align:center;font-size:1.1rem;color:#8b6f55;margin-bottom:1rem;letter-spacing:2px;font-style:italic}
+.jumpbar{display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem;margin:1.2rem 0 2.5rem;padding:.9rem;background:#f4ebe2;border-radius:14px;border:1px solid #e6d9cc}
+.jumpbar a{text-decoration:none;font-size:.92rem;color:#5e3e2b;background:#fffcf8;border:1px solid #d9c6b0;border-radius:10px;padding:.35rem .8rem;transition:background .2s,color .2s}
+.jumpbar a:hover{background:#5e3e2b;color:#fff8f0}
+.chapter-title{font-size:1.6rem;text-align:center;color:#4a3322;margin:2rem 0 2.5rem;font-weight:600;letter-spacing:3px;background:linear-gradient(to right,transparent,#efe3d8,transparent);padding:.8rem 0;scroll-margin-top:1.5rem}
+.chapter-title .eng-title{display:block;font-size:1rem;font-weight:400;color:#8b6f55;letter-spacing:1px;margin-top:.4rem;font-style:italic}
+.paragraph{margin-bottom:2.2rem;text-align:justify}
+.sentence{display:block;margin-bottom:1.5rem}
+.zh-line{display:block;margin-bottom:.3rem}
+.word{display:inline-block;position:relative;cursor:pointer;font-size:1.25rem;font-family:'Noto Serif SC','KaiTi',serif;color:#1f1a15;margin:0 .05em;padding:.05em .1em;border-radius:4px;transition:background-color .2s;vertical-align:middle}
+.word:hover{background:#f0e4d8}
+.word.revealed{background:#f4e8dc;box-shadow:0 0 0 1px #d9c6b0}
+.punct{font-family:'Noto Serif SC','KaiTi',serif;font-size:1.25rem;color:#1f1a15;vertical-align:middle}
+.pinyin{display:none;position:absolute;left:50%;transform:translateX(-50%);bottom:100%;margin-bottom:2px;background:#5e3e2b;color:#fff8f0;font-size:.7rem;font-family:'Segoe UI','Arial',sans-serif;letter-spacing:.5px;padding:.15em .5em;border-radius:12px;white-space:nowrap;z-index:10;line-height:1.4;box-shadow:0 2px 6px rgba(0,0,0,.15);pointer-events:none}
+.word.revealed .pinyin{display:block}
+.eng-line{display:block;font-size:.95rem;color:#7a6554;font-family:'Segoe UI','Georgia',serif;line-height:1.6;padding-left:.5rem;border-left:2px solid #d9c6b0;margin-top:.2rem;margin-bottom:.4rem;font-style:italic}
+.note{margin-top:3rem;padding-top:1.5rem;border-top:1px dashed #cdb9a8;font-size:.9rem;color:#7a5e4b;text-align:center;font-style:italic}
+.hint{text-align:center;font-size:.85rem;color:#a0785a;margin-bottom:1rem;font-style:italic}
+@media(max-width:600px){.container{padding:1.8rem 1.2rem}h1{font-size:1.6rem;letter-spacing:2px}.word,.punct{font-size:1.1rem}.chapter-title{font-size:1.2rem}.eng-line{font-size:.85rem}}
+</style>
 </head>
 <body>
 <div class="container">
-    <h1>三国演义</h1>
-    <div class="subhead">第十五回 · 点击汉字显示拼音 + 英译</div>
-    <div class="hint">👆 点击任意汉字即可显示/隐藏其拼音</div>
-
-    <nav class="jumpbar">
-        <a href="#s1">太史慈</a>
-        <a href="#s2">孙策起兵</a>
-        <a href="#s3">神亭之战</a>
-        <a href="#s4">收服太史慈</a>
-    </nav>
-
-    <div id="story"></div>
-
-    <div class="note">
-        —— 第十五回 · 点击汉字显示拼音 + 英译 ——
-    </div>
+<h1>三国演义</h1>
+<div class="subhead">第十五回 · 点击汉字显示拼音 + 英译</div>
+<div class="hint">👆 点击任意汉字即可显示/隐藏其拼音</div>
+<nav class="jumpbar">
+<a href="#s1">孙策借兵</a>
+<a href="#s2">渡江起兵</a>
+<a href="#s3">神亭之战</a>
+<a href="#s4">收服太史慈</a>
+</nav>
+<div id="story"></div>
+<div class="note">—— 第十五回 · 点击汉字显示拼音 + 英译 ——</div>
 </div>
-
 <script>
-const SENTENCES = [
-    {
-        type: "title",
-        zh: "太|tài 史|shǐ 慈|cí 酣|hān 战|zhàn 小|xiǎo 霸|bà 王|wáng · 孙|sūn 伯|bó 符|fú 大|dà 战|zhàn 严|yán 白|bái 虎|hǔ",
-        en: "Taishi Ci Fights a Rousing Battle with the Little Tyrant; Sun Bofu Fights a Great Battle with White Tiger Yan"
-    },
-    {
-        type: "para", id: "s1",
-        sentences: [
-            {
-                zh: "孙|sūn 坚|jiān 死|sǐ 后|hòu ，其|qí 子|zǐ 孙|sūn 策|cè 投|tóu 奔|bēn 袁|yuán 术|shù ，屡|lǚ 立|lì 战|zhàn 功|gōng ，却|què 不|bù 得|dé 重|zhòng 用|yòng 。孙|sūn 策|cè 以|yǐ 玉|yù 玺|xǐ 为|wéi 质|zhì ，向|xiàng 袁|yuán 术|shù 借|jiè 兵|bīng ，准|zhǔn 备|bèi 回|huí 江|jiāng 东|dōng 开|kāi 创|chuàng 基|jī 业|yè 。",
-                en: "After Sun Jian's death, his son Sun Ce sought service under Yuan Shu and repeatedly earned merit, yet was never given important command. Sun Ce used the Imperial Seal as collateral to borrow troops from Yuan Shu, preparing to return to Jiangdong and build his own foundation."
-            }
-        ]
-    },
-    {
-        type: "para", id: "s2",
-        sentences: [
-            {
-                zh: "孙|sūn 策|cè 率|shuài 领|lǐng 旧|jiù 部|bù 渡|dù 江|jiāng ，一|yī 路|lù 招|zhāo 兵|bīng 买|mǎi 马|mǎ ，声|shēng 势|shì 渐|jiàn 大|dà 。他|tā 先|xiān 攻|gōng 刘|liú 繇|yáo ，再|zài 取|qǔ 严|yán 白|bái 虎|hǔ ，江|jiāng 东|dōng 豪|háo 杰|jié 纷|fēn 纷|fēn 来|lái 投|tóu 。",
-                en: "Sun Ce led his old followers across the river, recruiting soldiers and buying horses along the way, and his forces grew steadily. He first attacked Liu Yao, then dealt with White Tiger Yan, and heroes of Jiangdong came flocking to join him."
-            }
-        ]
-    },
-    {
-        type: "para", id: "s3",
-        sentences: [
-            {
-                zh: "孙|sūn 策|cè 与|yǔ 太|tài 史|shǐ 慈|cí 在|zài 神|shén 亭|tíng 相|xiāng 遇|yù ，两|liǎng 人|rén 大|dà 战|zhàn 数|shù 十|shí 合|hé ，不|bù 分|fēn 胜|shèng 负|fù 。孙|sūn 策|cè 夺|duó 得|de 太|tài 史|shǐ 慈|cí 短|duǎn 戟|jǐ ，太|tài 史|shǐ 慈|cí 抢|qiǎng 得|de 孙|sūn 策|cè 头|tóu 盔|kuī ，彼|bǐ 此|cǐ 佩|pèi 服|fú 。",
-                en: "Sun Ce and Taishi Ci met at Shenting and fought dozens of bouts without deciding victory. Sun Ce seized Taishi Ci's short halberd, and Taishi Ci snatched Sun Ce's helmet; each came to admire the other."
-            }
-        ]
-    },
-    {
-        type: "para", id: "s4",
-        sentences: [
-            {
-                zh: "后|hòu 来|lái 太|tài 史|shǐ 慈|cí 兵|bīng 败|bài 被|bèi 擒|qín ，孙|sūn 策|cè 亲|qīn 解|jiě 其|qí 缚|fù ，以|yǐ 礼|lǐ 相|xiāng 待|dài 。太|tài 史|shǐ 慈|cí 感|gǎn 其|qí 恩|ēn 义|yì ，遂|suì 归|guī 顺|shùn 孙|sūn 策|cè ，成|chéng 为|wéi 江|jiāng 东|dōng 名|míng 将|jiàng 。",
-                en: "Later Taishi Ci was defeated and captured. Sun Ce personally untied him and treated him with courtesy. Moved by Sun Ce's kindness, Taishi Ci submitted to him and became a famous general of Jiangdong."
-            }
-        ]
-    }
+const SENTENCES=[
+{type:"title",zh:"太|tài 史|shǐ 慈|cí 酣|hān 战|zhàn 小|xiǎo 霸|bà 王|wáng · 孙|sūn 伯|bó 符|fú 大|dà 战|zhàn 严|yán 白|bái 虎|hǔ",en:"Taishi Ci Fights a Rousing Battle with the Little Tyrant; Sun Bofu Fights a Great Battle with White Tiger Yan"},
+{type:"para",id:"s1",sentences:[
+{zh:"孙|sūn 坚|jiān 死|sǐ 后|hòu ，他|tā 的|de 大|dà 儿|ér 子|zi 孙|sūn 策|cè 带|dài 着|zhe 家|jiā 眷|juàn 投|tóu 奔|bēn 了|le 袁|yuán 术|shù 。孙|sūn 策|cè 年|nián 轻|qīng 有|yǒu 为|wéi ，打|dǎ 仗|zhàng 勇|yǒng 猛|měng ，袁|yuán 术|shù 手|shǒu 下|xià 的|de 人|rén 都|dōu 很|hěn 佩|pèi 服|fú 他|tā ，可|kě 袁|yuán 术|shù 本|běn 人|rén 却|què 始|shǐ 终|zhōng 不|bù 肯|kěn 重|zhòng 用|yòng 。",en:"After Sun Jian's death, his eldest son Sun Ce took the family and sought refuge with Yuan Shu. Sun Ce was young but capable and fierce in battle; Yuan Shu's men all admired him, yet Yuan Shu himself never gave him important command."},
+{zh:"孙|sūn 策|cè 心|xīn 里|lǐ 憋|biē 着|zhe 一|yī 股|gǔ 气|qì ，想|xiǎng 起|qǐ 父|fù 亲|qīn 留|liú 下|xià 的|de 江|jiāng 东|dōng 基|jī 业|yè 还|hái 没|méi 有|yǒu 夺|duó 回|huí ，就|jiù 拿|ná 出|chū 传|chuán 国|guó 玉|yù 玺|xǐ 做|zuò 抵|dǐ 押|yā ，向|xiàng 袁|yuán 术|shù 借|jiè 了|le 几|jǐ 千|qiān 兵|bīng 马|mǎ ，准|zhǔn 备|bèi 回|huí 江|jiāng 东|dōng 闯|chuǎng 天|tiān 下|xià 。",en:"Sun Ce burned with frustration. Remembering that his father's Jiangdong legacy had yet to be reclaimed, he used the Imperial Seal as collateral to borrow a few thousand troops from Yuan Shu, preparing to return to Jiangdong and make his own way in the world."},
+{zh:"袁|yuán 术|shù 本|běn 来|lái 就|jiù 眼|yǎn 馋|chán 那|nà 块|kuài 玉|yù 玺|xǐ ，见|jiàn 孙|sūn 策|cè 拿|ná 它|tā 来|lái 押|yā ，心|xīn 里|lǐ 乐|lè 开|kāi 了|le 花|huā ，当|dāng 场|chǎng 答|dá 应|yìng 借|jiè 兵|bīng 。他|tā 心|xīn 想|xiǎng ：“孙|sūn 策|cè 这|zhè 小|xiǎo 子|zi 年|nián 纪|jì 轻|qīng ，能|néng 成|chéng 什|shén 么|me 气|qì 候|hòu ！”",en:"Yuan Shu had long coveted the Imperial Seal. Seeing Sun Ce offer it as security, he was delighted and agreed on the spot to lend the troops. He thought to himself: \"That young whelp Sun Ce can't amount to much!\""}
+]},
+{type:"para",id:"s2",sentences:[
+{zh:"孙|sūn 策|cè 带|dài 着|zhe 借|jiè 来|lái 的|de 兵|bīng 马|mǎ 渡|dù 过|guò 大|dà 江|jiāng ，一|yī 路|lù 上|shàng 招|zhāo 兵|bīng 买|mǎi 马|mǎ ，吸|xī 收|shōu 人|rén 才|cái 。他|tā 年|nián 轻|qīng 气|qì 盛|shèng ，打|dǎ 起|qǐ 仗|zhàng 来|lái 不|bù 要|yào 命|mìng ，江|jiāng 东|dōng 的|de 豪|háo 杰|jié 纷|fēn 纷|fēn 来|lái 投|tóu 靠|kào 。",en:"Sun Ce crossed the great river with the borrowed troops, recruiting soldiers and buying horses along the way and gathering talent. Young and full of fire, he fought with reckless daring, and the heroes of Jiangdong came flocking to join him."},
+{zh:"他|tā 先|xiān 打|dǎ 刘|liú 繇|yáo ，再|zài 打|dǎ 严|yán 白|bái 虎|hǔ ，几|jǐ 仗|zhàng 下|xià 来|lái ，名|míng 声|shēng 大|dà 振|zhèn ，人|rén 们|men 都|dōu 叫|jiào 他|tā “小|xiǎo 霸|bà 王|wáng ”。跟|gēn 着|zhe 他|tā 的|de 人|rén 越|yuè 来|lái 越|yuè 多|duō ，队|duì 伍|wǔ 越|yuè 来|lái 越|yuè 壮|zhuàng 大|dà 。",en:"He first attacked Liu Yao, then White Tiger Yan. After several battles his reputation soared, and people called him the \"Little Tyrant.\" More and more men followed him, and his forces grew steadily."},
+{zh:"孙|sūn 策|cè 打|dǎ 到|dào 曲|qū 阿|ā 的|de 时|shí 候|hòu ，当|dāng 地|dì 的|de 豪|háo 强|qiáng 严|yán 白|bái 虎|hǔ 率|shuài 兵|bīng 迎|yíng 战|zhàn 。孙|sūn 策|cè 手|shǒu 下|xià 有|yǒu 个|gè 猛|měng 将|jiàng 叫|jiào 程|chéng 普|pǔ ，一|yī 马|mǎ 当|dāng 先|xiān 冲|chōng 进|jìn 敌|dí 阵|zhèn ，杀|shā 得|de 严|yán 白|bái 虎|hǔ 大|dà 败|bài 而|ér 逃|táo 。",en:"When Sun Ce reached Qu'a, the local strongman White Tiger Yan led troops against him. Sun Ce had a fierce general named Cheng Pu, who charged into the enemy ranks ahead of everyone and routed White Tiger Yan."}
+]},
+{type:"para",id:"s3",sentences:[
+{zh:"孙|sūn 策|cè 听|tīng 说|shuō 神|shén 亭|tíng 那|nà 边|biān 有|yǒu 敌|dí 军|jūn ，亲|qīn 自|zì 带|dài 着|zhe 几|jǐ 个|gè 骑|qí 兵|bīng 去|qù 侦|zhēn 察|chá 。巧|qiǎo 的|de 是|shì ，对|duì 方|fāng 的|de 太|tài 史|shǐ 慈|cí 也|yě 带|dài 着|zhe 几|jǐ 个|gè 人|rén 来|lái 这|zhè 儿|r 。两|liǎng 拨|bō 人|rén 在|zài 神|shén 亭|tíng 撞|zhuàng 上|shàng 了|le 。",en:"Hearing there were enemy troops near Shenting, Sun Ce went personally with a few horsemen to scout. As it happened, the enemy's Taishi Ci had also come to the same spot with a few men. The two parties ran into each other at Shenting."},
+{zh:"太|tài 史|shǐ 慈|cí 一|yī 点|diǎn 不|bù 怵|chù ，挺|tǐng 枪|qiāng 就|jiù 上|shàng 。孙|sūn 策|cè 也|yě 不|bù 含|hán 糊|hu ，挥|huī 剑|jiàn 迎|yíng 战|zhàn 。两|liǎng 个|gè 人|rén 从|cóng 马|mǎ 上|shàng 打|dǎ 到|dào 马|mǎ 下|xià ，又|yòu 从|cóng 马|mǎ 下|xià 打|dǎ 马|mǎ 上|shàng ，一|yī 直|zhí 打|dǎ 了|le 几|jǐ 十|shí 回|huí 合|hé ，谁|shuí 也|yě 没|méi 赢|yíng 。",en:"Taishi Ci showed not a trace of fear and leveled his spear at once. Sun Ce met him without hesitation, sword in hand. The two fought from horseback to the ground and from the ground back onto horseback, trading dozens of bouts with neither gaining the upper hand."},
+{zh:"打|dǎ 到|dào 后|hòu 来|lái ，孙|sūn 策|cè 一|yī 把|bǎ 抓|zhuā 住|zhù 太|tài 史|shǐ 慈|cí 的|de 短|duǎn 戟|jǐ ，太|tài 史|shǐ 慈|cí 也|yě 一|yī 把|bǎ 揪|jiū 住|zhù 孙|sūn 策|cè 的|de 头|tóu 盔|kuī ，两|liǎng 个|gè 人|rén 扭|niǔ 打|dǎ 在|zài 一|yī 起|qǐ 。最|zuì 后|hòu 两|liǎng 边|biān 的|de 援|yuán 兵|bīng 都|dōu 到|dào 了|le ，两|liǎng 人|rén 才|cái 松|sōng 手|shǒu 。这|zhè 一|yī 仗|zhàng ，两|liǎng 个|gè 人|rén 心|xīn 里|lǐ 都|dōu 佩|pèi 服|fú 对|duì 方|fāng 。",en:"Eventually Sun Ce grabbed Taishi Ci's short halberd, and Taishi Ci seized Sun Ce's helmet, and the two grappled hand to hand. Only when reinforcements arrived on both sides did they let go. After this battle, each man secretly admired the other."}
+]},
+{type:"para",id:"s4",sentences:[
+{zh:"后|hòu 来|lái 太|tài 史|shǐ 慈|cí 兵|bīng 败|bài 被|bèi 擒|qín ，押|yā 到|dào 孙|sūn 策|cè 面|miàn 前|qián 。大|dà 家|jiā 都|dōu 以|yǐ 为|wéi 孙|sūn 策|cè 会|huì 杀|shā 他|tā ，没|méi 想|xiǎng 到|dào 孙|sūn 策|cè 亲|qīn 自|zì 上|shàng 前|qián 解|jiě 开|kāi 绳|shéng 索|suǒ ，还|hái 把|bǎ 自|zì 己|jǐ 的|de 战|zhàn 袍|páo 披|pī 在|zài 他|tā 身|shēn 上|shàng 。",en:"Later Taishi Ci was defeated and captured and brought before Sun Ce. Everyone assumed Sun Ce would have him killed, but instead Sun Ce personally untied his ropes and draped his own battle cloak over his shoulders."},
+{zh:"孙|sūn 策|cè 拉|lā 着|zhe 太|tài 史|shǐ 慈|cí 的|de 手|shǒu 说|shuō ：“神|shén 亭|tíng 那|nà 一|yī 仗|zhàng ，我|wǒ 就|jiù 知|zhī 道|dào 你|nǐ 是|shì 条|tiáo 好|hǎo 汉|hàn 。跟|gēn 我|wǒ 一|yī 起|qǐ 干|gàn 吧|ba ！”太|tài 史|shǐ 慈|cí 见|jiàn 他|tā 这|zhè 么|me 仗|zhàng 义|yì ，心|xīn 里|lǐ 感|gǎn 动|dòng ，当|dāng 场|chǎng 答|dá 应|yìng 归|guī 顺|shùn 。",en:"Sun Ce took Taishi Ci by the hand and said: \"After that fight at Shenting, I knew you were a true man. Join me!\" Seeing such honor and generosity, Taishi Ci was moved and agreed on the spot to submit to him."},
+{zh:"从|cóng 此|cǐ ，孙|sūn 策|cè 手|shǒu 下|xià 又|yòu 多|duō 了|le 一|yī 员|yuán 猛|měng 将|jiàng ，江|jiāng 东|dōng 的|de 地|dì 盘|pán 越|yuè 打|dǎ 越|yuè 大|dà 。他|tā 年|nián 纪|jì 轻|qīng 轻|qīng 就|jiù 闯|chuǎng 出|chū 了|le 一|yī 片|piàn 天|tiān 地|dì ，成|chéng 为|wéi 江|jiāng 东|dōng 的|de 一|yī 方|fāng 霸|bà 主|zhǔ 。",en:"From then on Sun Ce had another fierce general at his side, and his Jiangdong territory grew ever larger. At a young age he had carved out a domain of his own and become the master of Jiangdong."},
+{zh:"江|jiāng 东|dōng 的|de 基|jī 业|yè 就|jiù 这|zhè 样|yàng 一|yī 点|diǎn 一|yī 点|diǎn 打|dǎ 下|xià 来|lái ，后|hòu 来|lái 传|chuán 到|dào 他|tā 弟|dì 弟|di 孙|sūn 权|quán 手|shǒu 里|lǐ ，成|chéng 了|le 三|sān 国|guó 之|zhī 一|yī 的|de 吴|wú 国|guó 。",en:"The Jiangdong enterprise was built up bit by bit in this way. It later passed into the hands of his younger brother Sun Quan and became the state of Wu, one of the Three Kingdoms."}
+]}
 ];
-
-function tokenToHtml(tok) {
-    if (tok.startsWith("RAW")) return tok.slice(3);
-    if (tok.includes("|")) {
-        const [ch, py] = tok.split("|");
-        return `<span class="word" data-pinyin="${py}">${ch}</span>`;
-    }
-    return `<span class="punct">${tok}</span>`;
-}
-
-function renderZh(zh) {
-    return zh.split(/\s+/).filter(Boolean).map(tokenToHtml).join("");
-}
-
-function renderSentence(s) {
-    return `<div class="sentence">
-        <span class="zh-line">${renderZh(s.zh)}</span>
-        <span class="eng-line">${s.en}</span>
-    </div>`;
-}
-
-function render() {
-    const root = document.getElementById("story");
-    let html = "";
-    for (const block of SENTENCES) {
-        if (block.type === "title") {
-            html += `<div class="chapter-title">${renderZh(block.zh)}<span class="eng-title">${block.en}</span></div>`;
-        } else if (block.type === "para") {
-            html += `<div class="paragraph"${block.id ? ` id="${block.id}"` : ""}>${block.sentences.map(renderSentence).join("")}</div>`;
-        }
-    }
-    root.innerHTML = html;
-    bindWords();
-}
-
-function bindWords() {
-    document.querySelectorAll(".word").forEach(function (word) {
-        var pinyinText = word.getAttribute("data-pinyin");
-        if (pinyinText) {
-            var pinyinSpan = document.createElement("span");
-            pinyinSpan.className = "pinyin";
-            pinyinSpan.textContent = pinyinText;
-            word.appendChild(pinyinSpan);
-        }
-        word.addEventListener("click", function (e) {
-            e.stopPropagation();
-            this.classList.toggle("revealed");
-        });
-    });
-}
-
-document.addEventListener("click", function () {
-    document.querySelectorAll(".word.revealed").forEach(function (w) {
-        w.classList.remove("revealed");
-    });
-});
-
+function tokenToHtml(t){if(t.startsWith("RAW"))return t.slice(3);if(t.includes("|")){const[c,p]=t.split("|");return`<span class="word" data-pinyin="${p}">${c}</span>`}return`<span class="punct">${t}</span>`}
+function renderZh(z){return z.split(/\s+/).filter(Boolean).map(tokenToHtml).join("")}
+function renderSentence(s){return`<div class="sentence"><span class="zh-line">${renderZh(s.zh)}</span><span class="eng-line">${s.en}</span></div>`}
+function render(){const r=document.getElementById("story");let h="";for(const b of SENTENCES){if(b.type==="title"){h+=`<div class="chapter-title">${renderZh(b.zh)}<span class="eng-title">${b.en}</span></div>`}else if(b.type==="para"){h+=`<div class="paragraph"${b.id?` id="${b.id}"`:""}>${b.sentences.map(renderSentence).join("")}</div>`}}r.innerHTML=h;bindWords()}
+function bindWords(){document.querySelectorAll(".word").forEach(function(w){var p=w.getAttribute("data-pinyin");if(p){var s=document.createElement("span");s.className="pinyin";s.textContent=p;w.appendChild(s)}w.addEventListener("click",function(e){e.stopPropagation();this.classList.toggle("revealed")})})}
+document.addEventListener("click",function(){document.querySelectorAll(".word.revealed").forEach(function(w){w.classList.remove("revealed")})});
 render();
 </script>
 </body>

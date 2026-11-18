@@ -1,298 +1,77 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>三国演义 · 第十回 · 点击显示拼音 + 英译</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background-color: #f8f5f0;
-            font-family: 'Segoe UI', 'Noto Serif SC', 'KaiTi', '楷体', 'Songti SC', serif;
-            padding: 2rem 1rem;
-            display: flex;
-            justify-content: center;
-            line-height: 2.2;
-        }
-        .container {
-            max-width: 1000px;
-            width: 100%;
-            background: #fffcf8;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            border-radius: 24px;
-            padding: 3rem 2.5rem;
-            border: 1px solid #e6d9cc;
-        }
-        h1 {
-            font-size: 2.2rem;
-            text-align: center;
-            color: #5e3e2b;
-            letter-spacing: 4px;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-            border-bottom: 2px solid #d9c6b0;
-            padding-bottom: 1.2rem;
-        }
-        .subhead {
-            text-align: center;
-            font-size: 1.1rem;
-            color: #8b6f55;
-            margin-bottom: 1rem;
-            letter-spacing: 2px;
-            font-style: italic;
-        }
-        .jumpbar {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.6rem;
-            margin: 1.2rem 0 2.5rem 0;
-            padding: 0.9rem;
-            background: #f4ebe2;
-            border-radius: 14px;
-            border: 1px solid #e6d9cc;
-        }
-        .jumpbar a {
-            text-decoration: none;
-            font-size: 0.92rem;
-            color: #5e3e2b;
-            background: #fffcf8;
-            border: 1px solid #d9c6b0;
-            border-radius: 10px;
-            padding: 0.35rem 0.8rem;
-            transition: background 0.2s, color 0.2s;
-        }
-        .jumpbar a:hover { background: #5e3e2b; color: #fff8f0; }
-        .chapter-title {
-            font-size: 1.6rem;
-            text-align: center;
-            color: #4a3322;
-            margin: 2rem 0 2.5rem 0;
-            font-weight: 600;
-            letter-spacing: 3px;
-            background: linear-gradient(to right, transparent, #efe3d8, transparent);
-            padding: 0.8rem 0;
-            scroll-margin-top: 1.5rem;
-        }
-        .chapter-title .eng-title {
-            display: block;
-            font-size: 1rem;
-            font-weight: 400;
-            color: #8b6f55;
-            letter-spacing: 1px;
-            margin-top: 0.4rem;
-            font-style: italic;
-        }
-        .paragraph { margin-bottom: 2.2rem; text-align: justify; }
-        .sentence { display: block; margin-bottom: 1.5rem; }
-        .zh-line { display: block; margin-bottom: 0.3rem; }
-        .word {
-            display: inline-block;
-            position: relative;
-            cursor: pointer;
-            font-size: 1.25rem;
-            font-family: 'Noto Serif SC', 'KaiTi', serif;
-            color: #1f1a15;
-            margin: 0 0.05em;
-            padding: 0.05em 0.1em;
-            border-radius: 4px;
-            transition: background-color 0.2s;
-            vertical-align: middle;
-        }
-        .word:hover { background-color: #f0e4d8; }
-        .word.revealed {
-            background-color: #f4e8dc;
-            box-shadow: 0 0 0 1px #d9c6b0;
-        }
-        .punct {
-            font-family: 'Noto Serif SC', 'KaiTi', serif;
-            font-size: 1.25rem;
-            color: #1f1a15;
-            vertical-align: middle;
-        }
-        .pinyin {
-            display: none;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: 100%;
-            margin-bottom: 2px;
-            background-color: #5e3e2b;
-            color: #fff8f0;
-            font-size: 0.7rem;
-            font-family: 'Segoe UI', 'Arial', sans-serif;
-            letter-spacing: 0.5px;
-            padding: 0.15em 0.5em;
-            border-radius: 12px;
-            white-space: nowrap;
-            z-index: 10;
-            line-height: 1.4;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-            pointer-events: none;
-        }
-        .word.revealed .pinyin { display: block; }
-        .eng-line {
-            display: block;
-            font-size: 0.95rem;
-            color: #7a6554;
-            font-family: 'Segoe UI', 'Georgia', serif;
-            line-height: 1.6;
-            padding-left: 0.5rem;
-            border-left: 2px solid #d9c6b0;
-            margin-top: 0.2rem;
-            margin-bottom: 0.4rem;
-            font-style: italic;
-        }
-        .note {
-            margin-top: 3rem;
-            padding-top: 1.5rem;
-            border-top: 1px dashed #cdb9a8;
-            font-size: 0.9rem;
-            color: #7a5e4b;
-            text-align: center;
-            font-style: italic;
-        }
-        .hint {
-            text-align: center;
-            font-size: 0.85rem;
-            color: #a0785a;
-            margin-bottom: 1rem;
-            font-style: italic;
-        }
-        @media (max-width: 600px) {
-            .container { padding: 1.8rem 1.2rem; }
-            h1 { font-size: 1.6rem; letter-spacing: 2px; }
-            .word, .punct { font-size: 1.1rem; }
-            .chapter-title { font-size: 1.2rem; }
-            .eng-line { font-size: 0.85rem; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三国演义 · 第十回 · 点击显示拼音 + 英译</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f8f5f0;font-family:'Segoe UI','Noto Serif SC','KaiTi','楷体','Songti SC',serif;padding:2rem 1rem;display:flex;justify-content:center;line-height:2.2}
+.container{max-width:1000px;width:100%;background:#fffcf8;box-shadow:0 10px 30px rgba(0,0,0,.08);border-radius:24px;padding:3rem 2.5rem;border:1px solid #e6d9cc}
+h1{font-size:2.2rem;text-align:center;color:#5e3e2b;letter-spacing:4px;font-weight:500;margin-bottom:.5rem;border-bottom:2px solid #d9c6b0;padding-bottom:1.2rem}
+.subhead{text-align:center;font-size:1.1rem;color:#8b6f55;margin-bottom:1rem;letter-spacing:2px;font-style:italic}
+.jumpbar{display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem;margin:1.2rem 0 2.5rem;padding:.9rem;background:#f4ebe2;border-radius:14px;border:1px solid #e6d9cc}
+.jumpbar a{text-decoration:none;font-size:.92rem;color:#5e3e2b;background:#fffcf8;border:1px solid #d9c6b0;border-radius:10px;padding:.35rem .8rem;transition:background .2s,color .2s}
+.jumpbar a:hover{background:#5e3e2b;color:#fff8f0}
+.chapter-title{font-size:1.6rem;text-align:center;color:#4a3322;margin:2rem 0 2.5rem;font-weight:600;letter-spacing:3px;background:linear-gradient(to right,transparent,#efe3d8,transparent);padding:.8rem 0;scroll-margin-top:1.5rem}
+.chapter-title .eng-title{display:block;font-size:1rem;font-weight:400;color:#8b6f55;letter-spacing:1px;margin-top:.4rem;font-style:italic}
+.paragraph{margin-bottom:2.2rem;text-align:justify}
+.sentence{display:block;margin-bottom:1.5rem}
+.zh-line{display:block;margin-bottom:.3rem}
+.word{display:inline-block;position:relative;cursor:pointer;font-size:1.25rem;font-family:'Noto Serif SC','KaiTi',serif;color:#1f1a15;margin:0 .05em;padding:.05em .1em;border-radius:4px;transition:background-color .2s;vertical-align:middle}
+.word:hover{background:#f0e4d8}
+.word.revealed{background:#f4e8dc;box-shadow:0 0 0 1px #d9c6b0}
+.punct{font-family:'Noto Serif SC','KaiTi',serif;font-size:1.25rem;color:#1f1a15;vertical-align:middle}
+.pinyin{display:none;position:absolute;left:50%;transform:translateX(-50%);bottom:100%;margin-bottom:2px;background:#5e3e2b;color:#fff8f0;font-size:.7rem;font-family:'Segoe UI','Arial',sans-serif;letter-spacing:.5px;padding:.15em .5em;border-radius:12px;white-space:nowrap;z-index:10;line-height:1.4;box-shadow:0 2px 6px rgba(0,0,0,.15);pointer-events:none}
+.word.revealed .pinyin{display:block}
+.eng-line{display:block;font-size:.95rem;color:#7a6554;font-family:'Segoe UI','Georgia',serif;line-height:1.6;padding-left:.5rem;border-left:2px solid #d9c6b0;margin-top:.2rem;margin-bottom:.4rem;font-style:italic}
+.note{margin-top:3rem;padding-top:1.5rem;border-top:1px dashed #cdb9a8;font-size:.9rem;color:#7a5e4b;text-align:center;font-style:italic}
+.hint{text-align:center;font-size:.85rem;color:#a0785a;margin-bottom:1rem;font-style:italic}
+@media(max-width:600px){.container{padding:1.8rem 1.2rem}h1{font-size:1.6rem;letter-spacing:2px}.word,.punct{font-size:1.1rem}.chapter-title{font-size:1.2rem}.eng-line{font-size:.85rem}}
+</style>
 </head>
 <body>
 <div class="container">
-    <h1>三国演义</h1>
-    <div class="subhead">第十回 · 点击汉字显示拼音 + 英译</div>
-    <div class="hint">👆 点击任意汉字即可显示/隐藏其拼音</div>
-
-    <nav class="jumpbar">
-        <a href="#s1">李郭掌权</a>
-        <a href="#s2">马腾举义</a>
-        <a href="#s3">马超逞威</a>
-        <a href="#s4">曹操兴师</a>
-    </nav>
-
-    <div id="story"></div>
-
-    <div class="note">
-        —— 第十回 · 点击汉字显示拼音 + 英译 ——
-    </div>
+<h1>三国演义</h1>
+<div class="subhead">第十回 · 点击汉字显示拼音 + 英译</div>
+<div class="hint">👆 点击任意汉字即可显示/隐藏其拼音</div>
+<nav class="jumpbar">
+<a href="#s1">李郭掌权</a>
+<a href="#s2">马腾举义</a>
+<a href="#s3">马超逞威</a>
+<a href="#s4">曹操兴师</a>
+</nav>
+<div id="story"></div>
+<div class="note">—— 第十回 · 点击汉字显示拼音 + 英译 ——</div>
 </div>
-
 <script>
-const SENTENCES = [
-    {
-        type: "title",
-        zh: "勤|qín 王|wáng 室|shì 马|mǎ 腾|téng 举|jǔ 义|yì · 报|bào 父|fù 仇|chóu 曹|cáo 操|cāo 兴|xīng 师|shī",
-        en: "Supporting the Royal House, Ma Teng Raises Righteous Arms; Avenging His Father, Cao Cao Sends Forth an Army"
-    },
-    {
-        type: "para", id: "s1",
-        sentences: [
-            {
-                zh: "董|dǒng 卓|zhuó 死|sǐ 后|hòu ，李|lǐ 傕|què 、郭|guō 汜|sì 等|děng 人|rén 上|shàng 表|biǎo 求|qiú 封|fēng ，献|xiàn 帝|dì 被|bèi 迫|pò 答|dá 应|yìng 。李|lǐ 傕|què 为|wéi 车|chē 骑|qí 将|jiāng 军|jūn ，郭|guō 汜|sì 为|wéi 后|hòu 将|jiāng 军|jūn ，二|èr 人|rén 共|gòng 掌|zhǎng 朝|cháo 政|zhèng ，残|cán 虐|nüè 百|bǎi 姓|xìng 。",
-                en: "After Dong Zhuo's death, Li Jue, Guo Si, and the others submitted memorials demanding titles, and Emperor Xian was forced to comply. Li Jue became General of Chariots and Cavalry, Guo Si General of the Rear, and the two jointly controlled the court, tyrannizing the people."
-            },
-            {
-                zh: "西|xī 凉|liáng 太|tài 守|shǒu 马|mǎ 腾|téng 与|yǔ 并|bìng 州|zhōu 刺|cì 史|shǐ 韩|hán 遂|suì 联|lián 合|hé 起|qǐ 兵|bīng 十|shí 余|yú 万|wàn ，声|shēng 言|yán 讨|tǎo 伐|fá 李|lǐ 傕|què 、郭|guō 汜|sì ，以|yǐ 清|qīng 君|jūn 侧|cè 。",
-                en: "Ma Teng, the Governor of Xiliang, and Han Sui, the Inspector of Bingzhou, joined forces with over a hundred thousand troops, proclaiming their intent to punish Li Jue and Guo Si and cleanse the court."
-            }
-        ]
-    },
-    {
-        type: "para", id: "s2",
-        sentences: [
-            {
-                zh: "李|lǐ 傕|què 采|cǎi 纳|nà 贾|jiǎ 诩|xǔ 之|zhī 计|jì ，派|pài 张|zhāng 济|jì 、樊|fán 稠|chóu 守|shǒu 险|xian ，李|lǐ 蒙|méng 、王|wáng 方|fāng 率|shuài 兵|bīng 迎|yíng 敌|dí 。贾|jiǎ 诩|xǔ 预|yù 言|yán 此|zì 战|zhàn 必|bì 败|bài ，李|lǐ 蒙|méng 、王|wáng 方|fāng 不|bù 服|fú 。",
-                en: "Li Jue adopted Jia Xu's plan, sending Zhang Ji and Fan Chou to hold the passes while Li Meng and Wang Fang led troops to meet the enemy. Jia Xu predicted this battle would surely be lost, but Li Meng and Wang Fang refused to accept it."
-            }
-        ]
-    },
-    {
-        type: "para", id: "s3",
-        sentences: [
-            {
-                zh: "两|liǎng 军|jūn 对|duì 阵|zhèn ，马|mǎ 腾|téng 之|zhī 子|zǐ 马|mǎ 超|chāo 挺|tǐng 枪|qiāng 出|chū 战|zhàn 。马|mǎ 超|chāo 年|nián 方|fāng 十|shí 七|qī ，英|yīng 勇|yǒng 无|wú 敌|dí ，数|shù 合|hé 之|zhī 间|jiān 便|biàn 刺|zì 王|wáng 方|fāng 于|yú 马|mǎ 下|xià ，又|yòu 生|shēng 擒|qín 李|lǐ 蒙|méng 。西|xī 凉|liáng 军|jūn 大|dà 获|huò 全|quán 胜|shèng 。",
-                en: "The two armies faced each other, and Ma Teng's son Ma Chao rode out with his spear. Ma Chao was only seventeen but unmatched in bravery; within a few bouts he stabbed Wang Fang from his horse and captured Li Meng alive. The Xiliang army won a complete victory."
-            }
-        ]
-    },
-    {
-        type: "para", id: "s4",
-        sentences: [
-            {
-                zh: "曹|cáo 操|cāo 在|zài 兖|yǎn 州|zhōu 招|zhāo 兵|bīng 买|mǎi 马|mǎ ，势|shì 力|lì 渐|jiàn 大|dà 。其|qí 父|fù 曹|cáo 嵩|sōng 路|lù 过|guò 徐|xú 州|zhōu ，被|bèi 徐|xú 州|zhōu 牧|mù 陶|táo 谦|qiān 部|bù 将|jiàng 所|suǒ 杀|shā 。曹|cáo 操|cāo 闻|wén 讯|xùn 大|dà 怒|nù ，亲|qīn 率|shuài 大|dà 军|jūn 杀|shā 奔|bēn 徐|xú 州|zhōu ，誓|shì 报|bào 父|fù 仇|chóu 。",
-                en: "Cao Cao was recruiting soldiers and buying horses in Yanzhou, and his power was growing. His father Cao Song, passing through Xuzhou, was killed by subordinates of Tao Qian, the Governor of Xuzhou. When Cao Cao learned of this he was furious, and personally led a great army to Xuzhou, swearing to avenge his father."
-            }
-        ]
-    }
+const SENTENCES=[
+{type:"title",zh:"勤|qín 王|wáng 室|shì 马|mǎ 腾|téng 举|jǔ 义|yì · 报|bào 父|fù 仇|chóu 曹|cáo 操|cāo 兴|xīng 师|shī",en:"Supporting the Royal House, Ma Teng Raises Righteous Arms; Avenging His Father, Cao Cao Sends Forth an Army"},
+{type:"para",id:"s1",sentences:[
+{zh:"董|dǒng 卓|zhuó 死|sǐ 后|hòu ，李|lǐ 傕|què 、郭|guō 汜|sì 掌|zhǎng 握|wò 了|le 朝|cháo 政|zhèng 。这|zhè 两|liǎng 个|gè 人|rén 比|bǐ 董|dǒng 卓|zhuó 还|hái 贪|tān 婪|lán ，动|dòng 不|bù 动|dòng 就|jiù 抓|zhuā 人|rén 、杀|shā 人|rén ，把|bǎ 长|cháng 安|ān 城|chéng 搞|gǎo 得|de 人|rén 人|rén 自|zì 危|wēi 。献|xiàn 帝|dì 在|zài 宫|gōng 里|lǐ 天|tiān 天|tiān 提|tí 心|xīn 吊|diào 胆|dǎn 。",en:"After Dong Zhuo's death, Li Jue and Guo Si took control of the court. These two were even greedier than Dong Zhuo, seizing and killing people at the slightest excuse and filling Chang'an with fear. Emperor Xian in the palace lived in constant dread."},
+{zh:"西|xī 凉|liáng 太|tài 守|shǒu 马|mǎ 腾|téng 看|kàn 不|bù 下|xià 去|qù 了|le ，联|lián 合|hé 并|bìng 州|zhōu 刺|cì 史|shǐ 韩|hán 遂|suì ，带|dài 着|zhe 十|shí 几|jǐ 万|wàn 人|rén 马|mǎ 杀|shā 奔|bēn 长|cháng 安|ān ，打|dǎ 的|de 旗|qí 号|hào 是|shì “勤|qín 王|wáng ”。消|xiāo 息|xī 传|chuán 到|dào 京|jīng 城|chéng ，李|lǐ 傕|què 、郭|guō 汜|sì 吓|xià 了|le 一|yī 跳|tiào 。",en:"Ma Teng, the Governor of Xiliang, could stand it no longer and joined forces with Han Sui, the Inspector of Bingzhou, marching on Chang'an with over a hundred thousand troops under the banner of \"Supporting the King.\" When the news reached the capital, Li Jue and Guo Si were alarmed."}
+]},
+{type:"para",id:"s2",sentences:[
+{zh:"李|lǐ 傕|què 赶|gǎn 紧|jǐn 找|zhǎo 贾|jiǎ 诩|xǔ 商|shāng 量|liáng 。贾|jiǎ 诩|xǔ 说|shuō ：“马|mǎ 腾|téng 远|yuǎn 道|dào 而|ér 来|lái ，利|lì 在|zài 速|sù 战|zhàn 。我|wǒ 们|men 只|zhǐ 要|yào 坚|jiān 守|shǒu 不|bù 出|chū ，等|děng 他|tā 粮|liáng 草|cǎo 接|jiē 不|bù 上|shàng 了|le ，自|zì 然|rán 就|jiù 退|tuì 兵|bīng 。”李|lǐ 傕|què 依|yī 计|jì 而|ér 行|xíng 。",en:"Li Jue quickly consulted Jia Xu. Jia Xu said: \"Ma Teng has come from far away and needs a quick victory. All we need do is hold fast and not go out; when his supplies run out, he will withdraw on his own.\" Li Jue followed this plan."},
+{zh:"可|kě 李|lǐ 傕|què 手|shǒu 下|xià 的|de 李|lǐ 蒙|méng 、王|wáng 方|fāng 两|liǎng 个|gè 将|jiàng 领|lǐng 不|bù 服|fú 气|qì ，非|fēi 要|yào 出|chū 城|chéng 迎|yíng 战|zhàn 。贾|jiǎ 诩|xǔ 劝|quàn 他|tā 们|men 别|bié 去|qù ，他|tā 们|men 偏|piān 不|bù 听|tīng ，结|jié 果|guǒ 被|bèi 马|mǎ 腾|téng 打|dǎ 得|de 大|dà 败|bài 。",en:"But Li Jue's officers Li Meng and Wang Fang refused to accept this, insisting on going out to fight. Jia Xu warned them not to go, but they would not listen, and as a result Ma Teng crushed them."}
+]},
+{type:"para",id:"s3",sentences:[
+{zh:"马|mǎ 腾|téng 有|yǒu 个|gè 儿|ér 子|zi 叫|jiào 马|mǎ 超|chāo ，当|dāng 时|shí 才|cái 十|shí 七|qī 岁|suì ，可|kě 长|zhǎng 得|de 高|gāo 大|dà 英|yīng 俊|jùn ，武|wǔ 艺|yì 高|gāo 强|qiáng 。他|tā 骑|qí 着|zhe 马|mǎ 冲|chōng 进|jìn 敌|dí 阵|zhèn ，几|jǐ 个|gè 回|huí 合|hé 就|jiù 把|bǎ 王|wáng 方|fāng 刺|cì 于|yú 马|mǎ 下|xià ，又|yòu 活|huó 捉|zhuō 了|le 李|lǐ 蒙|méng 。",en:"Ma Teng had a son named Ma Chao, only seventeen at the time but tall, handsome, and highly skilled in martial arts. He rode into the enemy ranks and within a few bouts ran Wang Fang through and captured Li Meng alive."},
+{zh:"西|xī 凉|liáng 军|jūn 趁|chèn 势|shì 猛|měng 攻|gōng ，长|cháng 安|ān 城|chéng 外|wài 一|yī 片|piàn 喊|hǎn 杀|shā 声|shēng 。李|lǐ 傕|què 、郭|guō 汜|sì 只|zhǐ 好|hǎo 紧|jǐn 闭|bì 城|chéng 门|mén ，不|bù 敢|gǎn 出|chū 来|lái 。",en:"The Xiliang army pressed the attack, and the shouts of battle filled the area outside Chang'an. Li Jue and Guo Si had no choice but to bar the city gates and dare not come out."},
+{zh:"可|kě 西|xī 凉|liáng 军|jūn 远|yuǎn 道|dào 而|ér 来|lái ，粮|liáng 草|cǎo 慢|màn 慢|màn 跟|gēn 不|bù 上|shàng 了|le 。马|mǎ 腾|téng 没|méi 办|bàn 法|fǎ ，只|zhǐ 好|hǎo 先|xiān 退|tuì 兵|bīng 回|huí 西|xī 凉|liáng 。这|zhè 一|yī 仗|zhàng 虽|suī 然|rán 没|méi 打|dǎ 下|xià 长|cháng 安|ān ，可|kě 马|mǎ 超|chāo 的|de 名|míng 声|shēng 传|chuán 开|kāi 了|le 。",en:"But the Xiliang army had come from far away, and their supplies gradually ran short. Ma Teng had no choice but to withdraw his troops back to Xiliang. Though this campaign failed to take Chang'an, Ma Chao's reputation spread far and wide."}
+]},
+{type:"para",id:"s4",sentences:[
+{zh:"另|lìng 一|yī 边|biān ，曹|cáo 操|cāo 在|zài 兖|yǎn 州|zhōu 招|zhāo 兵|bīng 买|mǎi 买|mǎi 马|mǎ ，势|shì 力|lì 越|yuè 来|lái 越|yuè 大|dà 。他|tā 的|de 父|fù 亲|qīn 曹|cáo 嵩|sōng 带|dài 着|zhe 家|jiā 眷|juàn 去|qù 投|tóu 奔|bēn 曹|cáo 操|cāo ，路|lù 过|guò 徐|xú 州|zhōu 的|de 时|shí 候|hòu ，被|bèi 徐|xú 州|zhōu 牧|mù 陶|táo 谦|qiān 的|de 部|bù 下|xià 杀|shā 害|hài 了|le 。",en:"Meanwhile, Cao Cao was recruiting soldiers and buying horses in Yanzhou, growing stronger by the day. His father Cao Song, traveling with the family to join Cao Cao, passed through Xuzhou, where he was killed by subordinates of Tao Qian, the Governor of Xuzhou."},
+{zh:"曹|cáo 操|cāo 听|tīng 到|dào 这|zhè 个|gè 噩|è 耗|hào ，当|dāng 场|chǎng 哭|kū 倒|dǎo 在|zài 地|dì ，醒|xǐng 来|lái 之|zhī 后|hòu 咬|yǎo 牙|yá 切|qiè 齿|chǐ ，发|fā 誓|shì 要|yào 踏|tà 平|píng 徐|xú 州|zhōu ，杀|shā 陶|táo 谦|qiān 报|bào 仇|chóu 。他|tā 亲|qīn 自|zì 带|dài 着|zhe 大|dà 军|jūn 杀|shā 奔|bēn 徐|xú 州|zhōu 。",en:"When Cao Cao heard this terrible news, he collapsed weeping on the spot. After coming to, he ground his teeth and swore to raze Xuzhou and kill Tao Qian for revenge. He personally led a great army against Xuzhou."},
+{zh:"陶|táo 谦|qiān 本|běn 是|shì 个|gè 老|lǎo 好|hǎo 人|rén ，压|yā 根|gēn 不|bù 想|xiǎng 跟|gēn 曹|cáo 操|cāo 打|dǎ 仗|zhàng ，可|kě 曹|cáo 操|cāo 气|qì 头|tóu 上|shàng 哪|nǎ 里|lǐ 听|tīng 得|de 进|jìn 劝|quàn 。徐|xú 州|zhōu 百|bǎi 姓|xìng 眼|yǎn 看|kàn 要|yào 遭|zāo 大|dà 难|nàn 了|le 。",en:"Tao Qian was a kindly old man who had no wish to fight Cao Cao at all, but Cao Cao in his fury would listen to no one. The people of Xuzhou were about to suffer a great calamity."}
+]}
 ];
-
-function tokenToHtml(tok) {
-    if (tok.startsWith("RAW")) return tok.slice(3);
-    if (tok.includes("|")) {
-        const [ch, py] = tok.split("|");
-        return `<span class="word" data-pinyin="${py}">${ch}</span>`;
-    }
-    return `<span class="punct">${tok}</span>`;
-}
-
-function renderZh(zh) {
-    return zh.split(/\s+/).filter(Boolean).map(tokenToHtml).join("");
-}
-
-function renderSentence(s) {
-    return `<div class="sentence">
-        <span class="zh-line">${renderZh(s.zh)}</span>
-        <span class="eng-line">${s.en}</span>
-    </div>`;
-}
-
-function render() {
-    const root = document.getElementById("story");
-    let html = "";
-    for (const block of SENTENCES) {
-        if (block.type === "title") {
-            html += `<div class="chapter-title">${renderZh(block.zh)}<span class="eng-title">${block.en}</span></div>`;
-        } else if (block.type === "para") {
-            html += `<div class="paragraph"${block.id ? ` id="${block.id}"` : ""}>${block.sentences.map(renderSentence).join("")}</div>`;
-        }
-    }
-    root.innerHTML = html;
-    bindWords();
-}
-
-function bindWords() {
-    document.querySelectorAll(".word").forEach(function (word) {
-        var pinyinText = word.getAttribute("data-pinyin");
-        if (pinyinText) {
-            var pinyinSpan = document.createElement("span");
-            pinyinSpan.className = "pinyin";
-            pinyinSpan.textContent = pinyinText;
-            word.appendChild(pinyinSpan);
-        }
-        word.addEventListener("click", function (e) {
-            e.stopPropagation();
-            this.classList.toggle("revealed");
-        });
-    });
-}
-
-document.addEventListener("click", function () {
-    document.querySelectorAll(".word.revealed").forEach(function (w) {
-        w.classList.remove("revealed");
-    });
-});
-
+function tokenToHtml(t){if(t.startsWith("RAW"))return t.slice(3);if(t.includes("|")){const[c,p]=t.split("|");return`<span class="word" data-pinyin="${p}">${c}</span>`}return`<span class="punct">${t}</span>`}
+function renderZh(z){return z.split(/\s+/).filter(Boolean).map(tokenToHtml).join("")}
+function renderSentence(s){return`<div class="sentence"><span class="zh-line">${renderZh(s.zh)}</span><span class="eng-line">${s.en}</span></div>`}
+function render(){const r=document.getElementById("story");let h="";for(const b of SENTENCES){if(b.type==="title"){h+=`<div class="chapter-title">${renderZh(b.zh)}<span class="eng-title">${b.en}</span></div>`}else if(b.type==="para"){h+=`<div class="paragraph"${b.id?` id="${b.id}"`:""}>${b.sentences.map(renderSentence).join("")}</div>`}}r.innerHTML=h;bindWords()}
+function bindWords(){document.querySelectorAll(".word").forEach(function(w){var p=w.getAttribute("data-pinyin");if(p){var s=document.createElement("span");s.className="pinyin";s.textContent=p;w.appendChild(s)}w.addEventListener("click",function(e){e.stopPropagation();this.classList.toggle("revealed")})})}
+document.addEventListener("click",function(){document.querySelectorAll(".word.revealed").forEach(function(w){w.classList.remove("revealed")})});
 render();
 </script>
 </body>

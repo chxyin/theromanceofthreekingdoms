@@ -1,302 +1,85 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>三国演义 · 第九回 · 点击显示拼音 + 英译</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background-color: #f8f5f0;
-            font-family: 'Segoe UI', 'Noto Serif SC', 'KaiTi', '楷体', 'Songti SC', serif;
-            padding: 2rem 1rem;
-            display: flex;
-            justify-content: center;
-            line-height: 2.2;
-        }
-        .container {
-            max-width: 1000px;
-            width: 100%;
-            background: #fffcf8;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            border-radius: 24px;
-            padding: 3rem 2.5rem;
-            border: 1px solid #e6d9cc;
-        }
-        h1 {
-            font-size: 2.2rem;
-            text-align: center;
-            color: #5e3e2b;
-            letter-spacing: 4px;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-            border-bottom: 2px solid #d9c6b0;
-            padding-bottom: 1.2rem;
-        }
-        .subhead {
-            text-align: center;
-            font-size: 1.1rem;
-            color: #8b6f55;
-            margin-bottom: 1rem;
-            letter-spacing: 2px;
-            font-style: italic;
-        }
-        .jumpbar {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.6rem;
-            margin: 1.2rem 0 2.5rem 0;
-            padding: 0.9rem;
-            background: #f4ebe2;
-            border-radius: 14px;
-            border: 1px solid #e6d9cc;
-        }
-        .jumpbar a {
-            text-decoration: none;
-            font-size: 0.92rem;
-            color: #5e3e2b;
-            background: #fffcf8;
-            border: 1px solid #d9c6b0;
-            border-radius: 10px;
-            padding: 0.35rem 0.8rem;
-            transition: background 0.2s, color 0.2s;
-        }
-        .jumpbar a:hover { background: #5e3e2b; color: #fff8f0; }
-        .chapter-title {
-            font-size: 1.6rem;
-            text-align: center;
-            color: #4a3322;
-            margin: 2rem 0 2.5rem 0;
-            font-weight: 600;
-            letter-spacing: 3px;
-            background: linear-gradient(to right, transparent, #efe3d8, transparent);
-            padding: 0.8rem 0;
-            scroll-margin-top: 1.5rem;
-        }
-        .chapter-title .eng-title {
-            display: block;
-            font-size: 1rem;
-            font-weight: 400;
-            color: #8b6f55;
-            letter-spacing: 1px;
-            margin-top: 0.4rem;
-            font-style: italic;
-        }
-        .paragraph { margin-bottom: 2.2rem; text-align: justify; }
-        .sentence { display: block; margin-bottom: 1.5rem; }
-        .zh-line { display: block; margin-bottom: 0.3rem; }
-        .word {
-            display: inline-block;
-            position: relative;
-            cursor: pointer;
-            font-size: 1.25rem;
-            font-family: 'Noto Serif SC', 'KaiTi', serif;
-            color: #1f1a15;
-            margin: 0 0.05em;
-            padding: 0.05em 0.1em;
-            border-radius: 4px;
-            transition: background-color 0.2s;
-            vertical-align: middle;
-        }
-        .word:hover { background-color: #f0e4d8; }
-        .word.revealed {
-            background-color: #f4e8dc;
-            box-shadow: 0 0 0 1px #d9c6b0;
-        }
-        .punct {
-            font-family: 'Noto Serif SC', 'KaiTi', serif;
-            font-size: 1.25rem;
-            color: #1f1a15;
-            vertical-align: middle;
-        }
-        .pinyin {
-            display: none;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: 100%;
-            margin-bottom: 2px;
-            background-color: #5e3e2b;
-            color: #fff8f0;
-            font-size: 0.7rem;
-            font-family: 'Segoe UI', 'Arial', sans-serif;
-            letter-spacing: 0.5px;
-            padding: 0.15em 0.5em;
-            border-radius: 12px;
-            white-space: nowrap;
-            z-index: 10;
-            line-height: 1.4;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-            pointer-events: none;
-        }
-        .word.revealed .pinyin { display: block; }
-        .eng-line {
-            display: block;
-            font-size: 0.95rem;
-            color: #7a6554;
-            font-family: 'Segoe UI', 'Georgia', serif;
-            line-height: 1.6;
-            padding-left: 0.5rem;
-            border-left: 2px solid #d9c6b0;
-            margin-top: 0.2rem;
-            margin-bottom: 0.4rem;
-            font-style: italic;
-        }
-        .note {
-            margin-top: 3rem;
-            padding-top: 1.5rem;
-            border-top: 1px dashed #cdb9a8;
-            font-size: 0.9rem;
-            color: #7a5e4b;
-            text-align: center;
-            font-style: italic;
-        }
-        .hint {
-            text-align: center;
-            font-size: 0.85rem;
-            color: #a0785a;
-            margin-bottom: 1rem;
-            font-style: italic;
-        }
-        @media (max-width: 600px) {
-            .container { padding: 1.8rem 1.2rem; }
-            h1 { font-size: 1.6rem; letter-spacing: 2px; }
-            .word, .punct { font-size: 1.1rem; }
-            .chapter-title { font-size: 1.2rem; }
-            .eng-line { font-size: 0.85rem; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三国演义 · 第九回 · 点击显示拼音 + 英译</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f8f5f0;font-family:'Segoe UI','Noto Serif SC','KaiTi','楷体','Songti SC',serif;padding:2rem 1rem;display:flex;justify-content:center;line-height:2.2}
+.container{max-width:1000px;width:100%;background:#fffcf8;box-shadow:0 10px 30px rgba(0,0,0,.08);border-radius:24px;padding:3rem 2.5rem;border:1px solid #e6d9cc}
+h1{font-size:2.2rem;text-align:center;color:#5e3e2b;letter-spacing:4px;font-weight:500;margin-bottom:.5rem;border-bottom:2px solid #d9c6b0;padding-bottom:1.2rem}
+.subhead{text-align:center;font-size:1.1rem;color:#8b6f55;margin-bottom:1rem;letter-spacing:2px;font-style:italic}
+.jumpbar{display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem;margin:1.2rem 0 2.5rem;padding:.9rem;background:#f4ebe2;border-radius:14px;border:1px solid #e6d9cc}
+.jumpbar a{text-decoration:none;font-size:.92rem;color:#5e3e2b;background:#fffcf8;border:1px solid #d9c6b0;border-radius:10px;padding:.35rem .8rem;transition:background .2s,color .2s}
+.jumpbar a:hover{background:#5e3e2b;color:#fff8f0}
+.chapter-title{font-size:1.6rem;text-align:center;color:#4a3322;margin:2rem 0 2.5rem;font-weight:600;letter-spacing:3px;background:linear-gradient(to right,transparent,#efe3d8,transparent);padding:.8rem 0;scroll-margin-top:1.5rem}
+.chapter-title .eng-title{display:block;font-size:1rem;font-weight:400;color:#8b6f55;letter-spacing:1px;margin-top:.4rem;font-style:italic}
+.paragraph{margin-bottom:2.2rem;text-align:justify}
+.sentence{display:block;margin-bottom:1.5rem}
+.zh-line{display:block;margin-bottom:.3rem}
+.word{display:inline-block;position:relative;cursor:pointer;font-size:1.25rem;font-family:'Noto Serif SC','KaiTi',serif;color:#1f1a15;margin:0 .05em;padding:.05em .1em;border-radius:4px;transition:background-color .2s;vertical-align:middle}
+.word:hover{background:#f0e4d8}
+.word.revealed{background:#f4e8dc;box-shadow:0 0 0 1px #d9c6b0}
+.punct{font-family:'Noto Serif SC','KaiTi',serif;font-size:1.25rem;color:#1f1a15;vertical-align:middle}
+.pinyin{display:none;position:absolute;left:50%;transform:translateX(-50%);bottom:100%;margin-bottom:2px;background:#5e3e2b;color:#fff8f0;font-size:.7rem;font-family:'Segoe UI','Arial',sans-serif;letter-spacing:.5px;padding:.15em .5em;border-radius:12px;white-space:nowrap;z-index:10;line-height:1.4;box-shadow:0 2px 6px rgba(0,0,0,.15);pointer-events:none}
+.word.revealed .pinyin{display:block}
+.eng-line{display:block;font-size:.95rem;color:#7a6554;font-family:'Segoe UI','Georgia',serif;line-height:1.6;padding-left:.5rem;border-left:2px solid #d9c6b0;margin-top:.2rem;margin-bottom:.4rem;font-style:italic}
+.note{margin-top:3rem;padding-top:1.5rem;border-top:1px dashed #cdb9a8;font-size:.9rem;color:#7a5e4b;text-align:center;font-style:italic}
+.hint{text-align:center;font-size:.85rem;color:#a0785a;margin-bottom:1rem;font-style:italic}
+@media(max-width:600px){.container{padding:1.8rem 1.2rem}h1{font-size:1.6rem;letter-spacing:2px}.word,.punct{font-size:1.1rem}.chapter-title{font-size:1.2rem}.eng-line{font-size:.85rem}}
+</style>
 </head>
 <body>
 <div class="container">
-    <h1>三国演义</h1>
-    <div class="subhead">第九回 · 点击汉字显示拼音 + 英译</div>
-    <div class="hint">👆 点击任意汉字即可显示/隐藏其拼音</div>
-
-    <nav class="jumpbar">
-        <a href="#s1">李儒劝解</a>
-        <a href="#s2">貂蝉哭诉</a>
-        <a href="#s3">王允说布</a>
-        <a href="#s4">诛杀董卓</a>
-    </nav>
-
-    <div id="story"></div>
-
-    <div class="note">
-        —— 第九回 · 点击汉字显示拼音 + 英译 ——
-    </div>
+<h1>三国演义</h1>
+<div class="subhead">第九回 · 点击汉字显示拼音 + 英译</div>
+<div class="hint">👆 点击任意汉字即可显示/隐藏其拼音</div>
+<nav class="jumpbar">
+<a href="#s1">李儒劝解</a>
+<a href="#s2">貂蝉哭诉</a>
+<a href="#s3">王允定计</a>
+<a href="#s4">诛杀董卓</a>
+<a href="#s5">李郭反攻</a>
+</nav>
+<div id="story"></div>
+<div class="note">—— 第九回 · 点击汉字显示拼音 + 英译 ——</div>
 </div>
-
 <script>
-const SENTENCES = [
-    {
-        type: "title",
-        zh: "除|chú 暴|bào 凶|xiōng 吕|lǚ 布|bù 助|zhù 司|sī 徒|tú · 犯|fàn 长|cháng 安|ān 李|lǐ 傕|què 听|tīng 贾|jiǎ 诩|xǔ",
-        en: "Removing the Tyrant, Lü Bu Assists the Minister; Raiding Chang'an, Li Jue Heeds Jia Xu"
-    },
-    {
-        type: "para", id: "s1",
-        sentences: [
-            {
-                zh: "撞|zhuàng 倒|dǎo 董|dǒng 卓|zhuó 的|de 人|rén 正|zhèng 是|shì 李|lǐ 儒|rú 。李|lǐ 儒|rú 劝|quàn 董|dǒng 卓|zhuó 道|dào ：“貂|diāo 蝉|chán 不|bù 过|guò 一|yī 女|nǚ 子|zǐ ，吕|lǚ 布|bù 乃|nǎi 太|tài 师|shī 心|xīn 腹|fù 猛|měng 将|jiàng 。不|bù 如|rú 将|jiāng 貂|diāo 蝉|chán 赐|cì 与|yǔ 吕|lǚ 布|bù ，布|bù 必|bì 以|yǐ 死|sǐ 相|xiāng 报|bào 。”董|dǒng 卓|zhuó 沉|chén 吟|yín 良|liáng 久|jiǔ ，说|shuō 他|tā 会|huì 考|kǎo 虑|lǜ 。",
-                en: "The man who collided with Dong Zhuo was Li Ru. Li Ru advised Dong Zhuo: \"Diao Chan is but a woman, while Lü Bu is Your Excellency's trusted fierce general. It would be better to bestow Diao Chan on Lü Bu, and he will repay you with his life.\" Dong Zhuo pondered for a long time and said he would consider it."
-            }
-        ]
-    },
-    {
-        type: "para", id: "s2",
-        sentences: [
-            {
-                zh: "董|dǒng 卓|zhuó 入|rù 后|hòu 堂|táng 问|wèn 貂|diāo 蝉|chán 为|wèi 何|hé 与|yǔ 吕|lǚ 布|bù 私|sī 通|tōng 。貂|diāo 蝉|chán 哭|kū 诉|sù 是|shì 吕|lǚ 布|bù 强|qiáng 逼|bī ，自|zì 己|jǐ 宁|nìng 死|sǐ 不|bù 从|cóng 。董|dǒng 卓|zhuó 说|shuō 要|yào 将|jiāng 她|tā 赐|cì 给|gěi 吕|lǚ 布|bù ，貂|diāo 蝉|chán 大|dà 惊|jīng ，拔|bá 剑|jiàn 欲|yù 自|zì 刎|wěn 。董|dǒng 卓|zhuó 慌|huāng 忙|máng 夺|duó 剑|jiàn ，答|dá 应|yìng 带|dài 她|tā 同|tóng 回|huí 郿|méi 坞|wù 。",
-                en: "Dong Zhuo went to the inner hall and asked Diao Chan why she had been intimate with Lü Bu. Diao Chan wept and said Lü Bu had forced himself on her, and that she would rather die than submit. When Dong Zhuo said he would give her to Lü Bu, Diao Chan was shocked and drew a sword to cut her own throat. Dong Zhuo hurriedly seized the sword and promised to take her back to Meiwu with him."
-            },
-            {
-                zh: "次|rì 李|lǐ 儒|rú 再|zài 劝|quàn ，董|dǒng 卓|zhuó 变|biàn 色|sè 道|dào ：“貂|diāo 蝉|chán 之|zhī 事|shì ，再|zài 勿|wù 多|duō 言|yán ；言|yán 则|zé 必|bì 斩|zhǎn ！”李|lǐ 儒|rú 出|chū 门|mén 仰|yǎng 天|tiān 长|cháng 叹|tàn ：“吾|wú 等|děng 皆|jiē 死|sǐ 于|yú 妇|fù 人|rén 之|zhī 手|shǒu 矣|yǐ ！”",
-                en: "The next day Li Ru urged him again, but Dong Zhuo's expression changed: \"Say no more about Diao Chan; speak of it again and you will be beheaded!\" Li Ru left, looked up at the sky, and sighed: \"We shall all die at the hands of a woman!\""
-            }
-        ]
-    },
-    {
-        type: "para", id: "s3",
-        sentences: [
-            {
-                zh: "董|dǒng 卓|zhuó 带|dài 貂|diāo 蝉|chán 回|huí 郿|méi 坞|wù ，吕|lǚ 布|bù 在|zài 城|chéng 外|wài 遥|yáo 望|wàng 车|chē 尘|chén ，叹|tàn 息|xī 痛|tòng 恨|hèn 。王|wáng 允|yǔn 趁|chèn 机|jī 上|shàng 前|qián ，邀|yāo 吕|lǚ 布|bù 到|dào 家|jiā 中|zhōng 密|mì 谈|tán 。王|wáng 允|yǔn 说|shuō ：“太|tài 师|shī 淫|yín 吾|wú 之|zhī 女|nǚ ，夺|duó 将|jiāng 军|jūn 之|zhī 妻|qī ，天|tiān 下|xià 耻|chǐ 笑|xiào 。”吕|lǚ 布|bù 愤|fèn 怒|nù 不|bù 已|yǐ 。",
-                en: "Dong Zhuo took Diao Chan back to Meiwu. Lü Bu watched the dust of her carriage from afar, sighing with bitter resentment. Wang Yun seized the moment, invited Lü Bu to his home, and spoke with him in secret. Wang Yun said: \"The Grand Preceptor has violated my daughter and stolen your wife—the whole realm laughs at this.\" Lü Bu was overcome with fury."
-            },
-            {
-                zh: "王|wáng 允|yǔn 见|jiàn 时|jī 机|jī 成|chéng 熟|shú ，便|biàn 劝|quàn 吕|lǚ 布|bù 诛|zhū 杀|shā 董|dǒng 卓|zhuó ，以|yǐ 扶|fú 汉|hàn 室|shì 。吕|lǚ 布|bù 犹|yóu 豫|yù 道|dào ：“奈|nài 何|hé 有|yǒu 父|fù 子|zǐ 之|zhī 名|míng ？”王|wáng 允|yǔn 曰|yuē ：“将|jiāng 军|jūn 自|zì 姓|xìng 吕|lǚ ，太|tài 师|shī 自|zì 姓|xìng 董|dǒng ，何|hé 来|ái 父|fù 子|zǐ ？”吕|lǚ 布|bù 遂|suì 下|xià 决|jué 心|wú 。",
-                en: "Seeing the moment ripe, Wang Yun urged Lü Bu to kill Dong Zhuo and restore the Han. Lü Bu hesitated: \"But he is my adoptive father.\" Wang Yun said: \"Your surname is Lü, his is Dong—where is the father-son bond?\" Lü Bu then made up his mind."
-            }
-        ]
-    },
-    {
-        type: "para", id: "s4",
-        sentences: [
-            {
-                zh: "王|wáng 允|yǔn 假|jiǎ 传|chuán 圣|shèng 旨|zhǐ ，召|zhào 董|dǒng 卓|zhuó 入|rù 朝|cháo 议|yì 事|shì 。董|dǒng 卓|zhuó 行|xíng 至|zhì 北|běi 掖|yè 门|mén ，伏|fú 兵|bīng 突|tū 起|qǐ 。董|dǒng 卓|zhuó 大|dà 呼|hū ：“奉|fèng 先|xiān 何|hé 在|zài ？”吕|lǚ 布|bù 应|yìng 声|shēng 而|ér 出|chū ，一|yī 戟|jǐ 刺|zì 死|sǐ 董|dǒng 卓|zhuó 。长|cháng 安|ān 百|bǎi 姓|xìng 听|tīng 闻|wén 董|dǒng 卓|zhuó 已|yǐ 死|sǐ ，皆|jiē 欢|huān 呼|hū 称|chēng 庆|qìng 。",
-                en: "Wang Yun forged an imperial decree summoning Dong Zhuo to court. As Dong Zhuo reached the North Ye Gate, ambushers sprang out. Dong Zhuo cried out: \"Where is Fengxian?\" Lü Bu appeared and ran him through with his halberd. When the people of Chang'an heard Dong Zhuo was dead, they all cheered in celebration."
-            }
-        ]
-    }
+const SENTENCES=[
+{type:"title",zh:"除|chú 暴|bào 凶|xiōng 吕|lǚ 布|bù 助|zhù 司|sī 徒|tú · 犯|fàn 长|cháng 安|ān 李|lǐ 傕|què 听|tīng 贾|jiǎ 诩|xǔ",en:"Removing the Tyrant, Lü Bu Assists the Minister; Raiding Chang'an, Li Jue Heeds Jia Xu"},
+{type:"para",id:"s1",sentences:[
+{zh:"董|dǒng 卓|zhuó 被|bèi 吕|lǚ 布|bù 撞|zhuàng 见|jiàn 和|hé 貂|diāo 蝉|chán 在|zài 凤|fèng 仪|yí 亭|tíng 的|de 事|shì 以|yǐ 后|hòu ，气|qì 得|de 要|yào 杀|shā 吕|lǚ 布|bù 。谋|móu 士|shì 李|lǐ 儒|rú 赶|gǎn 紧|jǐn 劝|quàn 他|tā ：“吕|lǚ 布|bù 是|shì 您|nín 的|de 得|dé 力|lì 猛|měng 将|jiàng ，不|bù 能|néng 因|yīn 为|wèi 一|yī 个|gè 女|nǚ 子|zi 伤|shāng 了|le 和|hé 气|qì 。不|bù 如|rú 把|bǎ 貂|diāo 蝉|chán 赏|shǎng 给|gěi 他|tā 算|suàn 了|le 。”",en:"After Dong Zhuo caught Lü Bu with Diao Chan at the Fengyi Pavilion, he was furious enough to kill him. His advisor Li Ru quickly urged him: \"Lü Bu is your most capable general—you cannot ruin your relationship over a woman. Better to simply give Diao Chan to him.\""},
+{zh:"董|dǒng 卓|zhuó 犹|yóu 豫|yù 了|le 半|bàn 天|tiān ，说|shuō 容|róng 他|tā 再|zài 想|xiǎng 想|xiǎng 。他|tā 回|huí 到|dào 后|hòu 堂|táng ，看|kàn 见|jiàn 貂|diāo 蝉|chán 哭|kū 得|de 梨|lí 花|huā 带|dài 雨|yǔ ，心|xīn 又|yòu 软|ruǎn 了|le 。",en:"Dong Zhuo hesitated for a long while, saying he would think it over. When he returned to the inner hall and saw Diao Chan weeping like a pear blossom in the rain, his heart softened again."}
+]},
+{type:"para",id:"s2",sentences:[
+{zh:"貂|diāo 蝉|chán 一|yī 见|jiàn 董|dǒng 卓|zhuó ，就|jiù 哭|kū 着|zhe 说|shuō ：“吕|lǚ 布|bù 在|zài 凤|fèng 仪|yí 亭|tíng 调|tiáo 戏|xì 我|wǒ ，我|wǒ 本|běn 来|lái 想|xiǎng 跳|tiào 池|chí 自|zì 尽|jìn ，多|duō 亏|kuī 太|tài 师|shī 赶|gǎn 到|dào 才|cái 救|jiù 下|xià 我|wǒ 。要|yào 是|shì 把|bǎ 我|wǒ 赏|shǎng 给|gěi 吕|lǚ 布|bù ，我|wǒ 宁|nìng 可|kě 死|sǐ 也|yě 不|bù 去|qù ！”",en:"The moment Diao Chan saw Dong Zhuo, she wept and said: \"Lü Bu molested me at the Fengyi Pavilion. I meant to throw myself into the pond and end my life—if not for Your Excellency arriving in time, I would be dead. If you give me to Lü Bu, I would rather die than go!\""},
+{zh:"董|dǒng 卓|zhuó 听|tīng 了|le 这|zhè 话|huà ，哪|nǎ 里|lǐ 还|hái 舍|shě 得|de 把|bǎ 貂|diāo 蝉|chán 送|sòng 人|rén ，连|lián 忙|máng 说|shuō ：“我|wǒ 怎|zěn 么|me 会|huì 把|bǎ 你|nǐ 给|gěi 别|bié 人|rén ！我|wǒ 带|dài 你|nǐ 回|huí 郿|méi 坞|wù 去|qù ，谁|shuí 也|yě 别|bié 想|xiǎng 碰|pèng 你|nǐ 。”",en:"Hearing this, Dong Zhuo could not bear to give Diao Chan away at all, and quickly said: \"How could I give you to anyone else! I'll take you back to Meiwu with me, and no one will dare lay a finger on you.\""},
+{zh:"第|dì 二|èr 天|tiān ，李|lǐ 儒|rú 又|yòu 来|lái 劝|quàn ，董|dǒng 卓|zhuó 脸|liǎn 一|yī 沉|chén ：“貂|diāo 蝉|chán 的|de 事|shì 你|nǐ 少|shǎo 管|guǎn ，再|zài 多|duō 嘴|zuǐ 我|wǒ 就|jiù 砍|kǎn 了|le 你|nǐ ！”李|lǐ 儒|rú 退|tuì 出|chū 去|qù ，仰|yǎng 天|tiān 长|cháng 叹|tàn ：“我|wǒ 们|men 这|zhè 些|xiē 人|rén ，早|zǎo 晚|wǎn 要|yào 死|sǐ 在|zài 一|yī 个|gè 女|nǚ 人|rén 手|shǒu 里|lǐ ！”",en:"The next day Li Ru urged him again, but Dong Zhuo's face darkened: \"Keep out of the matter of Diao Chan—say one more word and I'll have your head!\" Li Ru withdrew, looked up at the sky, and sighed: \"We shall all die at the hands of a woman sooner or later!\""}
+]},
+{type:"para",id:"s3",sentences:[
+{zh:"董|dǒng 卓|zhuó 带|dài 着|zhe 貂|diāo 蝉|chán 回|huí 了|le 郿|méi 坞|wù ，吕|lǚ 布|bù 站|zhàn 在|zài 城|chéng 外|wài 远|yuǎn 远|yuǎn 望|wàng 着|zhe 车|chē 队|duì 扬|yáng 起|qǐ 的|de 尘|chén 土|tǔ ，恨|hèn 得|de 直|zhí 咬|yǎo 牙|yá 。王|wáng 允|yǔn 趁|chèn 机|jī 把|bǎ 他|tā 请|qǐng 到|dào 家|jiā 里|lǐ ，两|liǎng 个|gè 人|rén 密|mì 谈|tán 。",en:"Dong Zhuo took Diao Chan back to Meiwu. Lü Bu stood outside the city watching the dust raised by the carriage in the distance, grinding his teeth in hatred. Wang Yun seized the chance to invite him home, and the two talked in secret."},
+{zh:"王|wáng 允|yǔn 说|shuō ：“太|tài 师|shī 霸|bà 占|zhàn 了|le 将|jiāng 军|jūn 的|de 妻|qī 子|zi ，传|chuán 出|chū 去|qù 天|tiān 下|xià 人|rén 都|dōu 笑|xiào 话|huà 。将|jiāng 军|jūn 是|shì 顶|dǐng 天|tiān 立|lì 地|dì 的|de 男|nán 子|zǐ 汉|hàn ，难|nán 道|dào 就|jiù 这|zhè 么|me 忍|rěn 了|le ？”吕|lǚ 布|bù 气|qì 得|de 拍|pāi 桌|zhuō 子|zi ：“不|bù 是|shì 我|wǒ 不|bù 想|xiǎng 杀|shā 他|tā ，只|zhǐ 是|shì 他|tā 毕|bì 竟|jìng 是|shì 我|wǒ 义|yì 父|fù 。”",en:"Wang Yun said: \"The Grand Preceptor has stolen your wife—if this gets out, the whole world will laugh at you. Are you, General, a man of standing, going to simply endure this?\" Lü Bu slammed the table in anger: \"It's not that I don't want to kill him—but after all, he is my adoptive father.\""},
+{zh:"王|wáng 允|yǔn 摇|yáo 头|tóu 说|shuō ：“将|jiāng 军|jūn 姓|xìng 吕|lǚ ，他|tā 姓|xìng 董|dǒng ，哪|nǎ 来|lái 的|de 父|fù 子|zi ？再|zài 说|shuō 他|tā 作|zuò 恶|è 多|duō 端|duān ，杀|shā 他|tā 是|shì 为|wèi 国|guó 除|chú 害|hài ，是|shì 大|dà 功|gōng 一|yī 件|jiàn 。”吕|lǚ 布|bù 听|tīng 了|le ，当|dāng 场|chǎng 下|xià 定|dìng 决|jué 心|xīn ，跟|gēn 王|wáng 允|yǔn 商|shāng 量|liáng 好|hǎo 了|le 除|chú 掉|diào 董|dǒng 卓|zhuó 的|de 计|jì 策|cè 。",en:"Wang Yun shook his head: \"Your surname is Lü, his is Dong—where is the father-son bond? Besides, he has committed countless evils; killing him is ridding the country of a scourge, a great merit.\" Hearing this, Lü Bu made up his mind on the spot and worked out with Wang Yun a plan to remove Dong Zhuo."}
+]},
+{type:"para",id:"s4",sentences:[
+{zh:"王|wáng 允|yǔn 假|jiǎ 传|chuán 皇|huáng 帝|dì 的|de 命|mìng 令|lìng ，说|shuō 皇|huáng 帝|dì 要|yào 把|bǎ 皇|huáng 位|wèi 让|ràng 给|gěi 董|dǒng 卓|zhuó ，召|zhào 他|tā 进|jìn 宫|gōng 受|shòu 禅|shàn 。董|dǒng 卓|zhuó 听|tīng 说|shuō 要|yào 当|dāng 皇|huáng 帝|dì ，高|gāo 兴|xìng 得|de 不|bù 得|dé 了|le ，带|dài 着|zhe 人|rén 马|mǎ 大|dà 摇|yáo 大|dà 摆|bǎi 地|de 进|jìn 了|le 京|jīng 城|chéng 。",en:"Wang Yun forged an imperial order, saying the Emperor wished to abdicate in Dong Zhuo's favor and summoning him into the palace to receive the throne. When Dong Zhuo heard he was to become emperor, he was overjoyed and swaggered into the capital with his troops."},
+{zh:"董|dǒng 卓|zhuó 走|zǒu 到|dào 北|běi 掖|yè 门|mén 的|de 时|shí 候|hòu ，埋|mái 伏|fú 的|de 士|shì 兵|bīng 一|yī 拥|yōng 而|ér 上|shàng 。董|dǒng 卓|zhuó 大|dà 喊|hǎn ：“奉|fèng 先|xiān 在|zài 哪|nǎ 里|lǐ ？”吕|lǚ 布|bù 应|yìng 声|shēng 冲|chōng 出|chū ，一|yī 戟|jǐ 刺|cì 中|zhòng 董|dǒng 卓|zhuó 的|de 咽|yān 喉|hóu 。董|dǒng 卓|zhuó 当|dāng 场|chǎng 毙|bì 命|mìng 。",en:"As Dong Zhuo reached the North Ye Gate, the hidden soldiers rushed out. Dong Zhuo shouted: \"Where is Fengxian?\" Lü Bu charged out at the call and ran him through the throat with his halberd. Dong Zhuo died on the spot."},
+{zh:"长|cháng 安|ān 的|de 百|bǎi 姓|xìng 听|tīng 说|shuō 董|dǒng 卓|zhuó 死|sǐ 了|le ，个|gè 个|gè 跑|pǎo 上|shàng 街|jiē 头|tóu 欢|huān 呼|hū ，还|hái 有|yǒu 人|rén 跑|pǎo 到|dào 董|dǒng 卓|zhuó 的|de 尸|shī 体|tǐ 上|shàng 踩|cǎi 了|le 几|jǐ 脚|jiǎo ，骂|mà 他|tā 祸|huò 国|guó 殃|yāng 民|mín 。",en:"When the people of Chang'an heard Dong Zhuo was dead, they ran into the streets cheering, and some even ran to trample on his corpse, cursing him for bringing disaster to the country and the people."}
+]},
+{type:"para",id:"s5",sentences:[
+{zh:"可|kě 是|shì 好|hǎo 景|jǐng 不|bù 长|cháng 。董|dǒng 卓|zhuó 的|de 旧|jiù 部|bù 李|lǐ 傕|què 、郭|guō 汜|sì 不|bù 肯|kěn 就|jiù 这|zhè 么|me 算|suàn 了|le ，打|dǎ 着|zhe 给|gěi 董|dǒng 卓|zhuó 报|bào 仇|chóu 的|de 旗|qí 号|hào ，联|lián 合|hé 起|qǐ 兵|bīng 杀|shā 奔|bēn 长|cháng 安|ān 。",en:"But the good times did not last. Dong Zhuo's former subordinates Li Jue and Guo Si refused to let it go; under the banner of avenging Dong Zhuo, they joined forces and marched on Chang'an."},
+{zh:"李|lǐ 傕|què 手|shǒu 下|xià 有|yǒu 个|gè 谋|móu 士|shì 叫|jiào 贾|jiǎ 诩|xǔ ，给|gěi 他|tā 出|chū 了|le 个|gè 主|zhǔ 意|yì ：沿|yán 路|lù 招|zhāo 收|shōu 散|sàn 兵|bīng ，壮|zhuàng 大|dà 队|duì 伍|wǔ 。李|lǐ 傕|què 听|tīng 了|le 贾|jiǎ 诩|xǔ 的|de 话|huà ，人|rén 马|mǎ 越|yuè 来|lái 越|yuè 多|duō ，声|shēng 势|shì 浩|hào 大|dà 。",en:"Li Jue had an advisor named Jia Xu, who gave him a plan: recruit scattered soldiers along the way to swell their ranks. Li Jue followed Jia Xu's advice, and his forces grew larger and larger, becoming a mighty host."},
+{zh:"王|wáng 允|yǔn 这|zhè 边|biān 抵|dǐ 挡|dǎng 不|bù 住|zhù ，长|cháng 安|ān 很|hěn 快|kuài 就|jiù 被|bèi 攻|gōng 破|pò 。李|lǐ 傕|què 、郭|guō 汜|sì 重|zhòng 新|xīn 掌|zhǎng 握|wò 了|le 朝|cháo 政|zhèng ，比|bǐ 董|dǒng 卓|zhuó 在|zài 的|de 时|shí 候|hòu 还|hái 要|yào 乱|luàn 。王|wáng 允|yǔn 不|bù 肯|kěn 逃|táo 走|zǒu ，最|zuì 后|hòu 被|bèi 杀|shā 。",en:"Wang Yun's side could not hold out, and Chang'an soon fell. Li Jue and Guo Si seized control of the court once more, and things became even more chaotic than under Dong Zhuo. Wang Yun refused to flee and was killed in the end."},
+{zh:"天|tiān 下|xià 就|jiù 这|zhè 样|yàng 又|yòu 陷|xiàn 入|rù 了|le 一|yī 片|piàn 混|hùn 乱|luàn ，各|gè 地|dì 的|de 诸|zhū 侯|hóu 谁|shuí 也|yě 管|guǎn 不|bù 了|le 谁|shuí ，老|lǎo 百|bǎi 姓|xìng 的|de 日|rì 子|zi 越|yuè 来|lái 越|yuè 难|nán 过|guò 。",en:"The realm thus fell into chaos once more; the warlords of various regions could no longer control one another, and the common people's lives grew harder and harder."}
+]}
 ];
-
-function tokenToHtml(tok) {
-    if (tok.startsWith("RAW")) return tok.slice(3);
-    if (tok.includes("|")) {
-        const [ch, py] = tok.split("|");
-        return `<span class="word" data-pinyin="${py}">${ch}</span>`;
-    }
-    return `<span class="punct">${tok}</span>`;
-}
-
-function renderZh(zh) {
-    return zh.split(/\s+/).filter(Boolean).map(tokenToHtml).join("");
-}
-
-function renderSentence(s) {
-    return `<div class="sentence">
-        <span class="zh-line">${renderZh(s.zh)}</span>
-        <span class="eng-line">${s.en}</span>
-    </div>`;
-}
-
-function render() {
-    const root = document.getElementById("story");
-    let html = "";
-    for (const block of SENTENCES) {
-        if (block.type === "title") {
-            html += `<div class="chapter-title">${renderZh(block.zh)}<span class="eng-title">${block.en}</span></div>`;
-        } else if (block.type === "para") {
-            html += `<div class="paragraph"${block.id ? ` id="${block.id}"` : ""}>${block.sentences.map(renderSentence).join("")}</div>`;
-        }
-    }
-    root.innerHTML = html;
-    bindWords();
-}
-
-function bindWords() {
-    document.querySelectorAll(".word").forEach(function (word) {
-        var pinyinText = word.getAttribute("data-pinyin");
-        if (pinyinText) {
-            var pinyinSpan = document.createElement("span");
-            pinyinSpan.className = "pinyin";
-            pinyinSpan.textContent = pinyinText;
-            word.appendChild(pinyinSpan);
-        }
-        word.addEventListener("click", function (e) {
-            e.stopPropagation();
-            this.classList.toggle("revealed");
-        });
-    });
-}
-
-document.addEventListener("click", function () {
-    document.querySelectorAll(".word.revealed").forEach(function (w) {
-        w.classList.remove("revealed");
-    });
-});
-
+function tokenToHtml(t){if(t.startsWith("RAW"))return t.slice(3);if(t.includes("|")){const[c,p]=t.split("|");return`<span class="word" data-pinyin="${p}">${c}</span>`}return`<span class="punct">${t}</span>`}
+function renderZh(z){return z.split(/\s+/).filter(Boolean).map(tokenToHtml).join("")}
+function renderSentence(s){return`<div class="sentence"><span class="zh-line">${renderZh(s.zh)}</span><span class="eng-line">${s.en}</span></div>`}
+function render(){const r=document.getElementById("story");let h="";for(const b of SENTENCES){if(b.type==="title"){h+=`<div class="chapter-title">${renderZh(b.zh)}<span class="eng-title">${b.en}</span></div>`}else if(b.type==="para"){h+=`<div class="paragraph"${b.id?` id="${b.id}"`:""}>${b.sentences.map(renderSentence).join("")}</div>`}}r.innerHTML=h;bindWords()}
+function bindWords(){document.querySelectorAll(".word").forEach(function(w){var p=w.getAttribute("data-pinyin");if(p){var s=document.createElement("span");s.className="pinyin";s.textContent=p;w.appendChild(s)}w.addEventListener("click",function(e){e.stopPropagation();this.classList.toggle("revealed")})})}
+document.addEventListener("click",function(){document.querySelectorAll(".word.revealed").forEach(function(w){w.classList.remove("revealed")})});
 render();
 </script>
 </body>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三国演义 · 第一回 · 点击显示拼音 + 英译</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f8f5f0;font-family:'Segoe UI','Noto Serif SC','KaiTi','楷体','Songti SC',serif;padding:2rem 1rem;display:flex;justify-content:center;line-height:2.2}
+.container{max-width:1000px;width:100%;background:#fffcf8;box-shadow:0 10px 30px rgba(0,0,0,.08);border-radius:24px;padding:3rem 2.5rem;border:1px solid #e6d9cc}
+h1{font-size:2.2rem;text-align:center;color:#5e3e2b;letter-spacing:4px;font-weight:500;margin-bottom:.5rem;border-bottom:2px solid #d9c6b0;padding-bottom:1.2rem}
+.subhead{text-align:center;font-size:1.1rem;color:#8b6f55;margin-bottom:1rem;letter-spacing:2px;font-style:italic}
+.jumpbar{display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem;margin:1.2rem 0 2.5rem;padding:.9rem;background:#f4ebe2;border-radius:14px;border:1px solid #e6d9cc}
+.jumpbar a{text-decoration:none;font-size:.92rem;color:#5e3e2b;background:#fffcf8;border:1px solid #d9c6b0;border-radius:10px;padding:.35rem .8rem;transition:background .2s,color .2s}
+.jumpbar a:hover{background:#5e3e2b;color:#fff8f0}
+.chapter-title{font-size:1.6rem;text-align:center;color:#4a3322;margin:2rem 0 2.5rem;font-weight:600;letter-spacing:3px;background:linear-gradient(to right,transparent,#efe3d8,transparent);padding:.8rem 0;scroll-margin-top:1.5rem}
+.chapter-title .eng-title{display:block;font-size:1rem;font-weight:400;color:#8b6f55;letter-spacing:1px;margin-top:.4rem;font-style:italic}
+.paragraph{margin-bottom:2.2rem;text-align:justify}
+.sentence{display:block;margin-bottom:1.5rem}
+.zh-line{display:block;margin-bottom:.3rem}
+.word{display:inline-block;position:relative;cursor:pointer;font-size:1.25rem;font-family:'Noto Serif SC','KaiTi',serif;color:#1f1a15;margin:0 .05em;padding:.05em .1em;border-radius:4px;transition:background-color .2s;vertical-align:middle}
+.word:hover{background:#f0e4d8}
+.word.revealed{background:#f4e8dc;box-shadow:0 0 0 1px #d9c6b0}
+.punct{font-family:'Noto Serif SC','KaiTi',serif;font-size:1.25rem;color:#1f1a15;vertical-align:middle}
+.pinyin{display:none;position:absolute;left:50%;transform:translateX(-50%);bottom:100%;margin-bottom:2px;background:#5e3e2b;color:#fff8f0;font-size:.7rem;font-family:'Segoe UI','Arial',sans-serif;letter-spacing:.5px;padding:.15em .5em;border-radius:12px;white-space:nowrap;z-index:10;line-height:1.4;box-shadow:0 2px 6px rgba(0,0,0,.15);pointer-events:none}
+.word.revealed .pinyin{display:block}
+.eng-line{display:block;font-size:.95rem;color:#7a6554;font-family:'Segoe UI','Georgia',serif;line-height:1.6;padding-left:.5rem;border-left:2px solid #d9c6b0;margin-top:.2rem;margin-bottom:.4rem;font-style:italic}
+.note{margin-top:3rem;padding-top:1.5rem;border-top:1px dashed #cdb9a8;font-size:.9rem;color:#7a5e4b;text-align:center;font-style:italic}
+.hint{text-align:center;font-size:.85rem;color:#a0785a;margin-bottom:1rem;font-style:italic}
+@media(max-width:600px){.container{padding:1.8rem 1.2rem}h1{font-size:1.6rem;letter-spacing:2px}.word,.punct{font-size:1.1rem}.chapter-title{font-size:1.2rem}.eng-line{font-size:.85rem}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>三国演义</h1>
+<div class="subhead">第一回 · 点击汉字显示拼音 + 英译</div>
+<div class="hint">👆 点击任意汉字即可显示/隐藏其拼音</div>
+<nav class="jumpbar">
+<a href="#s1">天下大势</a>
+<a href="#s2">黄巾起义</a>
+<a href="#s3">桃园结义</a>
+<a href="#s4">初战立功</a>
+</nav>
+<div id="story"></div>
+<div class="note">—— 第一回 · 点击汉字显示拼音 + 英译 ——</div>
+</div>
+<script>
+const SENTENCES=[
+{type:"title",zh:"宴|yàn 桃|táo 园|yuán 豪|háo 杰|jié 三|sān 结|jié 义|yì · 斩|zhǎn 黄|huáng 巾|jīn 英|yīng 雄|xióng 首|shǒu 立|lì 功|gōng",en:"Feasting in the Peach Garden, Three Heroes Swear Brotherhood; Slaying the Yellow Turbans, a Hero Achieves His First Merit"},
+{type:"para",id:"s1",sentences:[
+{zh:"话|huà 说|shuō 天|tiān 下|xià 大|dà 势|shì ，分|fēn 久|jiǔ 必|bì 合|hé ，合|hé 久|jiǔ 必|bì 分|fēn 。东|dōng 汉|hàn 末|mò 年|nián ，朝|cháo 廷|tíng 腐|fǔ 败|bài ，皇|huáng 帝|dì 软|ruǎn 弱|ruò ，外|wài 戚|qī 和|hé 宦|huàn 官|guān 轮|lún 流|liú 掌|zhǎng 权|quán ，把|bǎ 国|guó 家|jiā 搞|gǎo 得|de 一|yī 团|tuán 糟|zāo 。",en:"They say the great trends of the world must divide after long union and unite after long division. In the final years of the Eastern Han, the court was corrupt, the Emperor weak, and relatives of the empress and the eunuchs took turns seizing power, throwing the country into chaos."},
+{zh:"加|jiā 上|shàng 连|lián 年|nián 天|tiān 灾|zāi ，粮|liáng 食|shí 歉|qiàn 收|shōu ，老|lǎo 百|bǎi 姓|xìng 吃|chī 不|bù 饱|bǎo 、穿|chuān 不|bù 暖|nuǎn ，各|gè 地|dì 怨|yuàn 声|shēng 载|zài 道|dào 。就|jiù 在|zài 这|zhè 样|yàng 的|de 年|nián 头|tóu ，巨|jù 鹿|lù 郡|jùn 出|chū 了|le 三|sān 个|gè 兄|xiōng 弟|dì ：张|zhāng 角|jiǎo 、张|zhāng 宝|bǎo 、张|zhāng 梁|liáng 。",en:"On top of that, years of natural disaster and poor harvests left the common people without enough food or warm clothing, and complaints could be heard everywhere. In such times, three brothers appeared in Julu Commandery: Zhang Jiao, Zhang Bao, and Zhang Liang."},
+{zh:"张|zhāng 角|jiǎo 本|běn 是|shì 个|gè 落|luò 第|dì 的|de 秀|xiù 才|cái ，懂|dǒng 些|xiē 医|yī 术|shù 。他|tā 用|yòng 符|fú 水|shuǐ 给|gěi 人|rén 治|zhì 病|bìng ，治|zhì 好|hǎo 了|le 不|bù 少|shǎo 人|rén ，名|míng 声|shēng 越|yuè 来|lái 越|yuè 大|dà 。他|tā 自|zì 称|chēng “大|dà 贤|xián 良|liáng 师|shī ”，到|dào 处|chù 收|shōu 徒|tú 弟|dì ，势|shì 力|lì 一|yī 天|tiān 比|bǐ 一|yī 天|tiān 大|dà 。",en:"Zhang Jiao had originally been a failed scholar who knew some medicine. He healed people with talisman water, curing quite a few, and his reputation grew. He called himself the \"Great Worthy and Good Teacher,\" took disciples everywhere, and his following grew day by day."},
+{zh:"后|hòu 来|lái ，张|zhāng 角|jiǎo 聚|jù 集|jí 了|le 几|jǐ 十|shí 万|wàn 人|rén ，喊|hǎn 出|chū “苍|cāng 天|tiān 已|yǐ 死|sǐ ，黄|huáng 天|tiān 当|dāng 立|lì ”的|de 口|kǒu 号|hào ，发|fā 动|dòng 起|qǐ 义|yì 。因|yīn 为|wèi 他|tā 们|men 头|tóu 上|shàng 都|dōu 裹|guǒ 着|zhe 黄|huáng 巾|jīn ，所|suǒ 以|yǐ 人|rén 们|men 叫|jiào 他|tā 们|men “黄|huáng 巾|jīn 军|jūn ”。",en:"Later, Zhang Jiao gathered hundreds of thousands of people and raised the slogan \"The Blue Heaven is dead, the Yellow Heaven shall rise,\" launching an uprising. Because they wrapped yellow cloth around their heads, people called them the \"Yellow Turban Army.\""}
+]},
+{type:"para",id:"s2",sentences:[
+{zh:"黄|huáng 巾|jīn 军|jūn 声|shēng 势|shì 浩|hào 大|dà ，官|guān 兵|bīng 连|lián 连|lián 打|dǎ 败|bài 仗|zhàng ，消|xiāo 息|xī 传|chuán 到|dào 京|jīng 城|chéng ，朝|cháo 廷|tíng 上|shàng 下|xià 慌|huāng 成|chéng 一|yī 团|tuán 。皇|huáng 帝|dì 赶|gǎn 紧|jǐn 下|xià 令|lìng 各|gè 地|dì 招|zhāo 兵|bīng 买|mǎi 马|mǎ ，加|jiā 强|qiáng 防|fáng 守|shǒu 。",en:"The Yellow Turbans grew so powerful that the government troops lost battle after battle, and when the news reached the capital, the court was thrown into a panic. The Emperor hastily ordered every region to recruit soldiers and buy horses to strengthen its defenses."},
+{zh:"招|zhāo 兵|bīng 的|de 榜|bǎng 文|wén 贴|tiē 到|dào 了|le 幽|yōu 州|zhōu 涿|zhuō 县|xiàn 。街|jiē 上|shàng 有|yǒu 个|gè 青|qīng 年|nián 看|kàn 着|zhe 榜|bǎng 文|wén 长|cháng 长|cháng 叹|tàn 了|le 一|yī 口|kǒu 气|qì 。这|zhè 人|rén 姓|xìng 刘|liú 名|míng 备|bèi ，字|zì 玄|xuán 德|dé ，是|shì 汉|hàn 室|shì 的|de 远|yuǎn 房|fáng 亲|qīn 戚|qī ，家|jiā 道|dào 中|zhōng 落|luò ，靠|kào 卖|mài 草|cǎo 鞋|xié 和|hé 编|biān 席|xí 子|zi 过|guò 日|rì 子|zi 。",en:"The recruitment notice was posted in Zhuo County of Youzhou. On the street, a young man looked at the notice and gave a long sigh. This man was Liu Bei, courtesy name Xuande, a distant relative of the Han imperial house whose family had fallen on hard times; he made his living selling straw sandals and weaving mats."},
+{zh:"刘|liú 备|bèi 身|shēn 后|hòu 忽|hū 然|rán 有|yǒu 人|rén 大|dà 喝|hè 一|yī 声|shēng ：“大|dà 丈|zhàng 夫|fū 不|bù 去|qù 为|wèi 国|guó 家|jiā 出|chū 力|lì ，在|zài 这|zhè 儿|r 叹|tàn 什|shén 么|me 气|qì ！”刘|liú 备|bèi 回|huí 头|tóu 一|yī 看|kàn ，只|zhǐ 见|jiàn 一|yī 个|gè 黑|hēi 脸|liǎn 大|dà 汉|hàn ，豹|bào 头|tóu 环|huán 眼|yǎn ，满|mǎn 脸|liǎn 胡|hú 须|xū ，声|shēng 音|yīn 像|xiàng 打|dǎ 雷|léi 一|yī 样|yàng 。此|cǐ 人|rén 姓|xìng 张|zhāng 名|míng 飞|fēi ，字|zì 翼|yì 德|dé ，是|shì 个|gè 卖|mài 酒|jiǔ 屠|tú 猪|zhū 的|de ，家|jiā 里|lǐ 有|yǒu 些|xiē 田|tián 产|chǎn 。",en:"Suddenly someone behind Liu Bei shouted: \"If you're a real man, why not serve your country instead of sighing here?\" Liu Bei turned and saw a big dark-faced man with a leopard's head, round eyes, and a full beard, whose voice boomed like thunder. This was Zhang Fei, courtesy name Yide, a butcher and wine seller who owned some farmland."},
+{zh:"两|liǎng 人|rén 越|yuè 说|shuō 越|yuè 投|tóu 机|jī ，就|jiù 一|yī 起|qǐ 到|dào 酒|jiǔ 馆|guǎn 喝|hē 酒|jiǔ 。正|zhèng 喝|hē 着|zhe ，又|yòu 进|jìn 来|lái 一|yī 个|gè 大|dà 汉|hàn ，推|tuī 着|zhe 一|yī 辆|liàng 车|chē 子|zi 在|zài 门|mén 口|kǒu 歇|xiē 脚|jiǎo 。这|zhè 人|rén 身|shēn 材|cái 高|gāo 大|dà ，脸|liǎn 色|sè 发|fā 红|hóng ，留|liú 着|zhe 长|cháng 长|cháng 的|de 胡|hú 子|zi ，一|yī 看|kàn 就|jiù 不|bù 是|shì 普|pǔ 通|tōng 人|rén 。",en:"The two hit it off at once and went to a tavern to drink together. As they were drinking, another big man came in, pushing a cart and stopping at the door to rest. This man was tall and powerfully built, with a reddish face and a long beard—clearly no ordinary person."},
+{zh:"此|cǐ 人|rén 姓|xìng 关|guān 名|míng 羽|yǔ ，字|zì 云|yún 长|cháng ，因|yīn 为|wèi 在|zài 家|jiā 乡|xiāng 杀|shā 了|le 恶|è 霸|bà ，逃|táo 出|chū 来|lái 已|yǐ 经|jīng 五|wǔ 六|liù 年|nián 了|le 。三|sān 个|gè 人|rén 一|yī 聊|liáo ，发|fā 现|xiàn 志|zhì 同|tóng 道|dào 合|hé ，都|dōu 想|xiǎng 干|gàn 一|yī 番|fān 大|dà 事|shì 。",en:"This man was Guan Yu, courtesy name Yunchang, who had fled his hometown five or six years earlier after killing a local bully. The three talked and found they shared the same ideals, all wanting to accomplish something great."}
+]},
+{type:"para",id:"s3",sentences:[
+{zh:"张|zhāng 飞|fēi 说|shuō ：“我|wǒ 家|jiā 后|hòu 面|miàn 有|yǒu 个|gè 桃|táo 园|yuán ，花|huā 开|kāi 得|de 正|zhèng 好|hǎo 。明|míng 天|tiān 咱|zán 们|men 就|jiù 在|zài 园|yuán 里|lǐ 结|jié 拜|bài 为|wéi 兄|xiōng 弟|dì ，齐|qí 心|xīn 协|xié 力|lì ，共|gòng 图|tú 大|dà 业|yè 。”刘|liú 备|bèi 和|hé 关|guān 羽|yǔ 都|dōu 赞|zàn 成|chéng 。",en:"Zhang Fei said: \"There's a peach garden behind my house, and the flowers are in full bloom. Tomorrow let's swear brotherhood there, unite our hearts, and strive together for a great cause.\" Liu Bei and Guan Yu both agreed."},
+{zh:"第|dì 二|èr 天|tiān ，桃|táo 园|yuán 里|lǐ 摆|bǎi 好|hǎo 了|le 香|xiāng 案|àn 、祭|jì 品|pǐn 。三|sān 个|gè 人|rén 跪|guì 下|xià 起|qǐ 誓|shì ：“念|niàn 刘|liú 备|bèi 、关|guān 羽|yǔ 、张|zhāng 飞|fēi 三|sān 人|rén ，虽|suī 然|rán 不|bù 是|shì 同|tóng 姓|xìng ，但|dàn 愿|yuàn 结|jié 为|wéi 异|yì 姓|xìng 兄|xiōng 弟|dì ，同|tóng 生|shēng 同|tóng 死|sǐ ，患|huàn 难|nàn 相|xiāng 扶|fú 。上|shàng 报|bào 国|guó 家|jiā ，下|xià 安|ān 百|bǎi 姓|xìng 。”",en:"The next day, an incense table and offerings were set up in the peach garden. The three knelt and swore: \"We, Liu Bei, Guan Yu, and Zhang Fei, though of different surnames, wish to become brothers, sharing life and death and supporting each other in hardship. Above, we shall serve the country; below, we shall bring peace to the people.\""},
+{zh:"誓|shì 罢|bà ，三|sān 人|rén 按|àn 年|nián 龄|líng 排|pái 了|le 长|zhǎng 幼|yòu ：刘|liú 备|bèi 为|wéi 大|dà 哥|gē ，关|guān 羽|yǔ 为|wéi 二|èr 哥|gē ，张|zhāng 飞|fēi 为|wéi 三|sān 弟|dì 。从|cóng 此|cǐ ，三|sān 人|rén 同|tóng 吃|chī 同|tóng 住|zhù ，形|xíng 影|yǐng 不|bù 离|lí 。",en:"After the oath, the three ranked themselves by age: Liu Bei as eldest brother, Guan Yu as second, and Zhang Fei as third. From then on they ate and lived together, inseparable as shadow and form."}
+]},
+{type:"para",id:"s4",sentences:[
+{zh:"三|sān 人|rén 招|zhāo 募|mù 了|le 五|wǔ 百|bǎi 多|duō 名|míng 乡|xiāng 勇|yǒng ，带|dài 着|zhe 队|duì 伍|wǔ 去|qù 投|tóu 奔|bēn 幽|yōu 州|zhōu 太|tài 守|shǒu 刘|liú 焉|yān 。刘|liú 焉|yān 见|jiàn 他|tā 们|men 来|lái 得|de 正|zhèng 是|shì 时|shí 候|hòu ，十|shí 分|fēn 高|gāo 兴|xìng ，当|dāng 场|chǎng 认|rèn 了|le 刘|liú 备|bèi 做|zuò 侄|zhí 儿|r ，让|ràng 他|tā 们|men 领|lǐng 兵|bīng 作|zuò 战|zhàn 。",en:"The three recruited over five hundred local volunteers and led them to join Liu Yan, the Governor of Youzhou. Liu Yan, seeing they had arrived at just the right moment, was delighted, recognized Liu Bei as his nephew on the spot, and had them lead troops into battle."},
+{zh:"不|bù 久|jiǔ ，黄|huáng 巾|jīn 军|jūn 将|jiàng 领|lǐng 程|chéng 远|yuǎn 志|zhì 带|dài 兵|bīng 来|lái 攻|gōng 。刘|liú 备|bèi 率|shuài 领|lǐng 关|guān 羽|yǔ 、张|zhāng 飞|fēi 迎|yíng 战|zhàn ，三|sān 人|rén 冲|chōng 入|rù 敌|dí 阵|zhèn ，如|rú 入|rù 无|wú 人|rén 之|zhī 境|jìng 。张|zhāng 飞|fēi 一|yī 枪|qiāng 刺|cì 死|sǐ 了|le 程|chéng 远|yuǎn 志|zhì ，黄|huáng 巾|jīn 军|jūn 大|dà 败|bài 而|ér 逃|táo 。",en:"Before long, the Yellow Turban commander Cheng Yuanzhi brought troops to attack. Liu Bei led Guan Yu and Zhang Fei to meet them, and the three charged into the enemy ranks as if into an empty land. Zhang Fei ran Cheng Yuanzhi through with a single spear thrust, and the Yellow Turban army fled in defeat."},
+{zh:"这|zhè 一|yī 仗|zhàng 打|dǎ 得|de 漂|piào 亮|liàng ，三|sān 人|rén 的|de 名|míng 声|shēng 很|hěn 快|kuài 传|chuán 开|kāi 了|le 。此|cǐ 后|hòu ，他|tā 们|men 跟|gēn 随|suí 官|guān 军|jūn 南|nán 征|zhēng 北|běi 战|zhàn ，立|lì 下|xià 不|bù 少|shǎo 功|gōng 劳|láo ，逐|zhú 渐|jiàn 成|chéng 为|wéi 一|yī 支|zhī 不|bù 可|kě 小|xiǎo 看|kàn 的|de 力|lì 量|liàng 。",en:"The battle was fought brilliantly, and the three men's reputation spread quickly. After that they followed the government army through many campaigns, won considerable merit, and gradually became a force not to be underestimated."}
+]}
+];
+function tokenToHtml(t){if(t.startsWith("RAW"))return t.slice(3);if(t.includes("|")){const[c,p]=t.split("|");return`<span class="word" data-pinyin="${p}">${c}</span>`}return`<span class="punct">${t}</span>`}
+function renderZh(z){return z.split(/\s+/).filter(Boolean).map(tokenToHtml).join("")}
+function renderSentence(s){return`<div class="sentence"><span class="zh-line">${renderZh(s.zh)}</span><span class="eng-line">${s.en}</span></div>`}
+function render(){const r=document.getElementById("story");let h="";for(const b of SENTENCES){if(b.type==="title"){h+=`<div class="chapter-title">${renderZh(b.zh)}<span class="eng-title">${b.en}</span></div>`}else if(b.type==="para"){h+=`<div class="paragraph"${b.id?` id="${b.id}"`:""}>${b.sentences.map(renderSentence).join("")}</div>`}}r.innerHTML=h;bindWords()}
+function bindWords(){document.querySelectorAll(".word").forEach(function(w){var p=w.getAttribute("data-pinyin");if(p){var s=document.createElement("span");s.className="pinyin";s.textContent=p;w.appendChild(s)}w.addEventListener("click",function(e){e.stopPropagation();this.classList.toggle("revealed")})})}
+document.addEventListener("click",function(){document.querySelectorAll(".word.revealed").forEach(function(w){w.classList.remove("revealed")})});
+render();
+</script>
+</body>
+</html>

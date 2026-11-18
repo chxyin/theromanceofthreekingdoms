@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三国演义 · 第二回 · 点击显示拼音 + 英译</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f8f5f0;font-family:'Segoe UI','Noto Serif SC','KaiTi','楷体','Songti SC',serif;padding:2rem 1rem;display:flex;justify-content:center;line-height:2.2}
+.container{max-width:1000px;width:100%;background:#fffcf8;box-shadow:0 10px 30px rgba(0,0,0,.08);border-radius:24px;padding:3rem 2.5rem;border:1px solid #e6d9cc}
+h1{font-size:2.2rem;text-align:center;color:#5e3e2b;letter-spacing:4px;font-weight:500;margin-bottom:.5rem;border-bottom:2px solid #d9c6b0;padding-bottom:1.2rem}
+.subhead{text-align:center;font-size:1.1rem;color:#8b6f55;margin-bottom:1rem;letter-spacing:2px;font-style:italic}
+.jumpbar{display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem;margin:1.2rem 0 2.5rem;padding:.9rem;background:#f4ebe2;border-radius:14px;border:1px solid #e6d9cc}
+.jumpbar a{text-decoration:none;font-size:.92rem;color:#5e3e2b;background:#fffcf8;border:1px solid #d9c6b0;border-radius:10px;padding:.35rem .8rem;transition:background .2s,color .2s}
+.jumpbar a:hover{background:#5e3e2b;color:#fff8f0}
+.chapter-title{font-size:1.6rem;text-align:center;color:#4a3322;margin:2rem 0 2.5rem;font-weight:600;letter-spacing:3px;background:linear-gradient(to right,transparent,#efe3d8,transparent);padding:.8rem 0;scroll-margin-top:1.5rem}
+.chapter-title .eng-title{display:block;font-size:1rem;font-weight:400;color:#8b6f55;letter-spacing:1px;margin-top:.4rem;font-style:italic}
+.paragraph{margin-bottom:2.2rem;text-align:justify}
+.sentence{display:block;margin-bottom:1.5rem}
+.zh-line{display:block;margin-bottom:.3rem}
+.word{display:inline-block;position:relative;cursor:pointer;font-size:1.25rem;font-family:'Noto Serif SC','KaiTi',serif;color:#1f1a15;margin:0 .05em;padding:.05em .1em;border-radius:4px;transition:background-color .2s;vertical-align:middle}
+.word:hover{background:#f0e4d8}
+.word.revealed{background:#f4e8dc;box-shadow:0 0 0 1px #d9c6b0}
+.punct{font-family:'Noto Serif SC','KaiTi',serif;font-size:1.25rem;color:#1f1a15;vertical-align:middle}
+.pinyin{display:none;position:absolute;left:50%;transform:translateX(-50%);bottom:100%;margin-bottom:2px;background:#5e3e2b;color:#fff8f0;font-size:.7rem;font-family:'Segoe UI','Arial',sans-serif;letter-spacing:.5px;padding:.15em .5em;border-radius:12px;white-space:nowrap;z-index:10;line-height:1.4;box-shadow:0 2px 6px rgba(0,0,0,.15);pointer-events:none}
+.word.revealed .pinyin{display:block}
+.eng-line{display:block;font-size:.95rem;color:#7a6554;font-family:'Segoe UI','Georgia',serif;line-height:1.6;padding-left:.5rem;border-left:2px solid #d9c6b0;margin-top:.2rem;margin-bottom:.4rem;font-style:italic}
+.note{margin-top:3rem;padding-top:1.5rem;border-top:1px dashed #cdb9a8;font-size:.9rem;color:#7a5e4b;text-align:center;font-style:italic}
+.hint{text-align:center;font-size:.85rem;color:#a0785a;margin-bottom:1rem;font-style:italic}
+@media(max-width:600px){.container{padding:1.8rem 1.2rem}h1{font-size:1.6rem;letter-spacing:2px}.word,.punct{font-size:1.1rem}.chapter-title{font-size:1.2rem}.eng-line{font-size:.85rem}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>三国演义</h1>
+<div class="subhead">第二回 · 点击汉字显示拼音 + 英译</div>
+<div class="hint">👆 点击任意汉字即可显示/隐藏其拼音</div>
+<nav class="jumpbar">
+<a href="#s1">鞭打督邮</a>
+<a href="#s2">弃官出走</a>
+<a href="#s3">宦官乱政</a>
+<a href="#s4">何进被杀</a>
+</nav>
+<div id="story"></div>
+<div class="note">—— 第二回 · 点击汉字显示拼音 + 英译 ——</div>
+</div>
+<script>
+const SENTENCES=[
+{type:"title",zh:"张|zhāng 翼|yì 德|dé 怒|nù 鞭|biān 督|dū 邮|yóu · 何|hé 国|guó 舅|jiù 谋|móu 杀|shā 宦|huàn 官|guān",en:"Zhang Yide in Anger Whips the Inspector; Uncle He Plots the Death of the Eunuchs"},
+{type:"para",id:"s1",sentences:[
+{zh:"黄|huáng 巾|jīn 军|jūn 被|bèi 平|píng 定|dìng 以|yǐ 后|hòu ，刘|liú 备|bèi 因|yīn 为|wèi 立|lì 了|le 功|gōng ，被|bèi 任|rèn 命|mìng 为|wéi 安|ān 喜|xǐ 县|xiàn 的|de 县|xiàn 尉|wèi 。官|guān 不|bù 大|dà ，但|dàn 总|zǒng 算|suàn 有|yǒu 了|le 个|gè 正|zhèng 经|jīng 差|chāi 事|shì 。刘|liú 备|bèi 带|dài 着|zhe 关|guān 羽|yǔ 、张|zhāng 飞|fēi 上|shàng 任|rèn ，处|chǔ 处|chù 小|xiǎo 心|xīn 谨|jǐn 慎|shèn ，对|duì 百|bǎi 姓|xìng 也|yě 很|hěn 客|kè 气|qì 。",en:"After the Yellow Turban Rebellion was put down, Liu Bei was appointed county defender of Anxi for his merits. It was not a high office, but at least it was a proper post. Liu Bei took Guan Yu and Zhang Fei with him to take up the position, acting cautiously in everything and treating the people kindly."},
+{zh:"不|bù 料|liào 上|shàng 面|miàn 派|pài 了|le 一|yī 个|gè 督|dū 邮|yóu 来|lái 巡|xún 视|shì 。这|zhè 督|dū 邮|yóu 为|wéi 人|rén 贪|tān 婪|lán ，到|dào 了|le 安|ān 喜|xǐ 县|xiàn 就|jiù 伸|shēn 手|shǒu 要|yào 钱|qián ，嫌|xián 刘|liú 备|bèi 给|gěi 得|de 少|shǎo ，便|biàn 处|chù 处|chù 刁|diāo 难|nán ，还|hái 当|dāng 众|zhòng 羞|xiū 辱|rǔ 刘|liú 备|bèi 。",en:"Unexpectedly, a superior sent an inspector to review the county. This inspector was greedy; upon reaching Anxi County he stretched out his hand for money, and complaining that Liu Bei gave too little, he made trouble at every turn and even humiliated Liu Bei in public."},
+{zh:"张|zhāng 飞|fēi 本|běn 来|lái 就|jiù 脾|pí 气|qì 火|huǒ 爆|bào ，听|tīng 说|shuō 督|dū 邮|yóu 欺|qī 负|fù 大|dà 哥|gē ，气|qì 得|de 直|zhí 跳|tiào 。他|tā 喝|hē 了|le 几|jǐ 碗|wǎn 闷|mèn 酒|jiǔ ，带|dài 着|zhe 几|jǐ 个|gè 士|shì 兵|bīng 冲|chōng 进|jìn 驿|yì 站|zhàn ，一|yī 把|bǎ 将|jiāng 督|dū 邮|yóu 从|cóng 床|chuáng 上|shàng 拖|tuō 了|le 下|xià 来|lái 。",en:"Zhang Fei was hot-tempered to begin with, and when he heard the inspector had bullied his elder brother, he was furious. After downing a few bowls of wine, he took some soldiers, stormed into the post station, and dragged the inspector right off his bed."},
+{zh:"张|zhāng 飞|fēi 把|bǎ 督|dū 邮|yóu 绑|bǎng 在|zài 门|mén 外|wài 的|de 一|yī 棵|kē 柳|liǔ 树|shù 上|shàng ，折|zhé 下|xià 柳|liǔ 条|tiáo 就|jiù 往|wǎng 他|tā 身|shēn 上|shàng 抽|chōu 。一|yī 下|xià 下|xià 打|dǎ 得|de 又|yòu 狠|hěn 又|yòu 重|zhòng ，督|dū 邮|yóu 疼|téng 得|de 哇|wā 哇|wā 乱|luàn 叫|jiào ，连|lián 声|shēng 求|qiú 饶|ráo 。",en:"Zhang Fei bound the inspector to a willow tree outside the gate and broke off willow branches to lash him. Each blow was fierce and heavy, and the inspector screamed in pain and begged for mercy again and again."}
+]},
+{type:"para",id:"s2",sentences:[
+{zh:"刘|liú 备|bèi 听|tīng 到|dào 动|dòng 静|jìng 赶|gǎn 来|lái ，赶|gǎn 紧|jǐn 劝|quàn 张|zhāng 飞|fēi 住|zhù 手|shǒu ，又|yòu 替|tì 督|dū 邮|yóu 说|shuō 情|qíng 。可|kě 督|dū 邮|yóu 心|xīn 怀|huái 恨|hèn 意|yì ，放|fàng 话|huà 说|shuō 一|yī 定|dìng 要|yào 上|shàng 报|bào 报|bào 复|fù 。刘|liú 备|bèi 叹|tàn 了|le 口|kǒu 气|qì ，知|zhī 道|dào 这|zhè 官|guān 是|shì 做|zuò 不|bù 下|xià 去|qù 了|le 。",en:"Liu Bei heard the commotion, hurried over, and quickly urged Zhang Fei to stop, then pleaded on the inspector's behalf. But the inspector harbored a grudge and threatened to report them and take revenge. Liu Bei sighed, knowing this post could no longer be held."},
+{zh:"当|dāng 天|tiān 夜|yè 里|lǐ ，刘|liú 备|bèi 带|dài 着|zhe 关|guān 羽|yǔ 、张|zhāng 飞|fēi ，把|bǎ 官|guān 印|yìn 挂|guà 在|zài 县|xiàn 衙|yá 大|dà 堂|táng 上|shàng ，悄|qiāo 悄|qiāo 离|lí 开|kāi 了|le 安|ān 喜|xǐ 县|xiàn 。三|sān 人|rén 一|yī 时|shí 没|méi 了|le 去|qù 处|chù ，只|zhǐ 好|hǎo 先|xiān 去|qù 投|tóu 奔|bēn 别|bié 的|de 地|dì 方|fāng 。",en:"That night, Liu Bei took Guan Yu and Zhang Fei, hung the official seal in the county hall, and quietly left Anxi County. With nowhere to go for the moment, the three had no choice but to seek refuge elsewhere."}
+]},
+{type:"para",id:"s3",sentences:[
+{zh:"这|zhè 时|shí 京|jīng 城|chéng 洛|luò 阳|yáng 里|lǐ ，朝|cháo 廷|tíng 的|de 争|zhēng 斗|dòu 越|yuè 来|lái 越|yuè 激|jī 烈|liè 。皇|huáng 帝|dì 年|nián 纪|jì 小|xiǎo ，不|bù 懂|dǒng 事|shì ，大|dà 权|quán 落|luò 在|zài 十|shí 个|gè 有|yǒu 名|míng 的|de 宦|huàn 官|guān 手|shǒu 里|lǐ ，人|rén 们|men 叫|jiào 他|tā 们|men “十|shí 常|cháng 侍|shì ”。这|zhè 些|xiē 人|rén 勾|gōu 结|jié 亲|qīn 戚|qī ，贪|tān 污|wū 受|shòu 贿|huì ，把|bǎ 朝|cháo 政|zhèng 搞|gǎo 得|de 乌|wū 烟|yān 瘴|zhàng 气|qì 。",en:"At this time in the capital Luoyang, the struggles at court grew fiercer by the day. The Emperor was young and knew nothing of affairs, and real power fell into the hands of ten notorious eunuchs whom people called the \"Ten Regular Attendants.\" These men colluded with their relatives, took bribes, and threw the government into utter chaos."},
+{zh:"大|dà 将|jiàng 军|jūn 何|hé 进|jìn 是|shì 皇|huáng 帝|dì 的|de 舅|jiù 舅|jiù ，手|shǒu 里|lǐ 掌|zhǎng 握|wò 着|zhe 兵|bīng 权|quán ，早|zǎo 就|jiù 看|kàn 不|bù 惯|guàn 这|zhè 帮|bāng 宦|huàn 官|guān 。他|tā 和|hé 手|shǒu 下|xià 的|de 人|rén 商|shāng 量|liáng ，想|xiǎng 找|zhǎo 个|gè 机|jī 会|huì 把|bǎ 这|zhè 些|xiē 人|rén 一|yī 网|wǎng 打|dǎ 尽|jìn 。",en:"General He Jin was the Emperor's uncle by marriage and held military power in his hands; he had long been disgusted by these eunuchs. He discussed with his subordinates, hoping to find a chance to wipe them all out in one sweep."},
+{zh:"可|kě 惜|xī 何|hé 进|jìn 这|zhè 个|gè 人|rén 犹|yóu 豫|yù 不|bù 决|jué ，办|bàn 事|shì 拖|tuō 拖|tuō 拉|lā 拉|lā 。他|tā 秘|mì 密|mì 调|diào 外|wài 地|dì 的|de 兵|bīng 马|mǎ 进|jìn 京|jīng ，想|xiǎng 借|jiè 外|wài 力|lì 除|chú 掉|diào 宦|huàn 官|guān ，结|jié 果|guǒ 消|xiāo 息|xī 走|zǒu 漏|lòu ，反|fǎn 而|ér 打|dǎ 草|cǎo 惊|jīng 蛇|shé 。",en:"Unfortunately, He Jin was indecisive and dragged his feet in everything. He secretly summoned troops from outside the capital, hoping to use outside force to remove the eunuchs, but the news leaked and only alerted the enemy."}
+]},
+{type:"para",id:"s4",sentences:[
+{zh:"十|shí 常|cháng 侍|shì 得|dé 知|zhī 何|hé 进|jìn 要|yào 对|duì 付|fù 他|tā 们|men ，抢|qiǎng 先|xiān 下|xià 手|shǒu 。他|tā 们|men 假|jiǎ 传|chuán 太|tài 后|hòu 的|de 命|mìng 令|lìng ，召|zhào 何|hé 进|jìn 进|jìn 宫|gōng 议|yì 事|shì 。何|hé 进|jìn 没|méi 有|yǒu 防|fáng 备|bèi ，刚|gāng 走|zǒu 进|jìn 宫|gōng 门|mén ，就|jiù 被|bèi 埋|mái 伏|fú 的|de 刀|dāo 斧|fǔ 手|shǒu 砍|kǎn 倒|dǎo 在|zài 地|dì 。",en:"When the Ten Regular Attendants learned that He Jin meant to move against them, they struck first. They forged an order from the Empress Dowager summoning He Jin into the palace to discuss affairs. He Jin, unprepared, had just stepped through the palace gate when hidden axemen cut him down."},
+{zh:"何|hé 进|jìn 一|yī 死|sǐ ，宫|gōng 里|lǐ 顿|dùn 时|shí 大|dà 乱|luàn 。袁|yuán 绍|shào 等|děng 人|rén 早|zǎo 就|jiù 忍|rěn 不|bù 住|zhù 了|le ，带|dài 着|zhe 兵|bīng 马|mǎ 冲|chōng 进|jìn 皇|huáng 宫|gōng ，见|jiàn 到|dào 宦|huàn 官|guān 就|jiù 杀|shā 。一|yī 时|shí 间|jiān ，宫|gōng 中|zhōng 血|xuè 流|liú 成|chéng 河|hé ，太|tài 监|jiān 们|men 四|sì 处|chù 逃|táo 窜|cuàn 。",en:"With He Jin dead, the palace was thrown into chaos. Yuan Shao and others had long been unable to contain themselves; they led troops into the imperial palace and killed every eunuch they saw. For a time, blood flowed like a river in the palace, and the eunuchs fled in all directions."},
+{zh:"混|hùn 乱|luàn 之|zhī 中|zhōng ，皇|huáng 帝|dì 和|hé 陈|chén 留|liú 王|wáng 被|bèi 几|jǐ 个|gè 宦|huàn 官|guān 挟|xié 持|chí 着|zhe 逃|táo 出|chū 宫|gōng 去|qù ，不|bù 知|zhī 去|qù 向|xiàng 。京|jīng 城|chéng 里|lǐ 一|yī 片|piàn 混|hùn 乱|luàn ，各|gè 路|lù 人|rén 马|mǎ 心|xīn 思|sī 各|gè 异|yì ，谁|shuí 也|yě 不|bù 知|zhī 道|dào 接|jiē 下|xià 来|lái 会|huì 发|fā 生|shēng 什|shén 么|me 。",en:"In the confusion, the Emperor and the Prince of Chenliu were seized by a few eunuchs and fled the palace, their whereabouts unknown. The capital was in complete disorder, each faction with its own designs, and no one knew what would happen next."}
+]}
+];
+function tokenToHtml(t){if(t.startsWith("RAW"))return t.slice(3);if(t.includes("|")){const[c,p]=t.split("|");return`<span class="word" data-pinyin="${p}">${c}</span>`}return`<span class="punct">${t}</span>`}
+function renderZh(z){return z.split(/\s+/).filter(Boolean).map(tokenToHtml).join("")}
+function renderSentence(s){return`<div class="sentence"><span class="zh-line">${renderZh(s.zh)}</span><span class="eng-line">${s.en}</span></div>`}
+function render(){const r=document.getElementById("story");let h="";for(const b of SENTENCES){if(b.type==="title"){h+=`<div class="chapter-title">${renderZh(b.zh)}<span class="eng-title">${b.en}</span></div>`}else if(b.type==="para"){h+=`<div class="paragraph"${b.id?` id="${b.id}"`:""}>${b.sentences.map(renderSentence).join("")}</div>`}}r.innerHTML=h;bindWords()}
+function bindWords(){document.querySelectorAll(".word").forEach(function(w){var p=w.getAttribute("data-pinyin");if(p){var s=document.createElement("span");s.className="pinyin";s.textContent=p;w.appendChild(s)}w.addEventListener("click",function(e){e.stopPropagation();this.classList.toggle("revealed")})})}
+document.addEventListener("click",function(){document.querySelectorAll(".word.revealed").forEach(function(w){w.classList.remove("revealed")})});
+render();
+</script>
+</body>
+</html>

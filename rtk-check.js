@@ -39,7 +39,7 @@ function sourceTexts() {
   const out = [];
   for (const f of SOURCES) {
     const t = fs.readFileSync(path.join(DIR, f), 'utf8');
-    const m = t.match(/const SENTENCES = (\[[\s\S]*?\n\]);/);
+    const m = t.match(/const SENTENCES\s*=\s*(\[[\s\S]*?\n\]);/);
     const data = new Function('return ' + m[1])();
     for (const b of data) {
       if (b.type === 'title') out.push(b.zh);

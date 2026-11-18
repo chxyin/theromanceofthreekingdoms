@@ -20,7 +20,7 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;',
 /* ---------- 读取数据 ---------- */
 function loadBlocks(file) {
   const src = fs.readFileSync(path.join(DIR, file), 'utf8');
-  const m = src.match(/const SENTENCES = (\[[\s\S]*?\n\]);/);
+  const m = src.match(/const SENTENCES\s*=\s*(\[[\s\S]*?\n\]);/);
   if (!m) throw new Error('无法在 ' + file + ' 中找到 SENTENCES');
   const blocks = new Function('return ' + m[1])();
   const navMatch = src.match(/<nav class="jumpbar">([\s\S]*?)<\/nav>/);

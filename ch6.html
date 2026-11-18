@@ -1,292 +1,80 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>三国演义 · 第六回 · 点击显示拼音 + 英译</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background-color: #f8f5f0;
-            font-family: 'Segoe UI', 'Noto Serif SC', 'KaiTi', '楷体', 'Songti SC', serif;
-            padding: 2rem 1rem;
-            display: flex;
-            justify-content: center;
-            line-height: 2.2;
-        }
-        .container {
-            max-width: 1000px;
-            width: 100%;
-            background: #fffcf8;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            border-radius: 24px;
-            padding: 3rem 2.5rem;
-            border: 1px solid #e6d9cc;
-        }
-        h1 {
-            font-size: 2.2rem;
-            text-align: center;
-            color: #5e3e2b;
-            letter-spacing: 4px;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-            border-bottom: 2px solid #d9c6b0;
-            padding-bottom: 1.2rem;
-        }
-        .subhead {
-            text-align: center;
-            font-size: 1.1rem;
-            color: #8b6f55;
-            margin-bottom: 1rem;
-            letter-spacing: 2px;
-            font-style: italic;
-        }
-        .jumpbar {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.6rem;
-            margin: 1.2rem 0 2.5rem 0;
-            padding: 0.9rem;
-            background: #f4ebe2;
-            border-radius: 14px;
-            border: 1px solid #e6d9cc;
-        }
-        .jumpbar a {
-            text-decoration: none;
-            font-size: 0.92rem;
-            color: #5e3e2b;
-            background: #fffcf8;
-            border: 1px solid #d9c6b0;
-            border-radius: 10px;
-            padding: 0.35rem 0.8rem;
-            transition: background 0.2s, color 0.2s;
-        }
-        .jumpbar a:hover { background: #5e3e2b; color: #fff8f0; }
-        .chapter-title {
-            font-size: 1.6rem;
-            text-align: center;
-            color: #4a3322;
-            margin: 2rem 0 2.5rem 0;
-            font-weight: 600;
-            letter-spacing: 3px;
-            background: linear-gradient(to right, transparent, #efe3d8, transparent);
-            padding: 0.8rem 0;
-            scroll-margin-top: 1.5rem;
-        }
-        .chapter-title .eng-title {
-            display: block;
-            font-size: 1rem;
-            font-weight: 400;
-            color: #8b6f55;
-            letter-spacing: 1px;
-            margin-top: 0.4rem;
-            font-style: italic;
-        }
-        .paragraph { margin-bottom: 2.2rem; text-align: justify; }
-        .sentence { display: block; margin-bottom: 1.5rem; }
-        .zh-line { display: block; margin-bottom: 0.3rem; }
-        .word {
-            display: inline-block;
-            position: relative;
-            cursor: pointer;
-            font-size: 1.25rem;
-            font-family: 'Noto Serif SC', 'KaiTi', serif;
-            color: #1f1a15;
-            margin: 0 0.05em;
-            padding: 0.05em 0.1em;
-            border-radius: 4px;
-            transition: background-color 0.2s;
-            vertical-align: middle;
-        }
-        .word:hover { background-color: #f0e4d8; }
-        .word.revealed {
-            background-color: #f4e8dc;
-            box-shadow: 0 0 0 1px #d9c6b0;
-        }
-        .punct {
-            font-family: 'Noto Serif SC', 'KaiTi', serif;
-            font-size: 1.25rem;
-            color: #1f1a15;
-            vertical-align: middle;
-        }
-        .pinyin {
-            display: none;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: 100%;
-            margin-bottom: 2px;
-            background-color: #5e3e2b;
-            color: #fff8f0;
-            font-size: 0.7rem;
-            font-family: 'Segoe UI', 'Arial', sans-serif;
-            letter-spacing: 0.5px;
-            padding: 0.15em 0.5em;
-            border-radius: 12px;
-            white-space: nowrap;
-            z-index: 10;
-            line-height: 1.4;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-            pointer-events: none;
-        }
-        .word.revealed .pinyin { display: block; }
-        .eng-line {
-            display: block;
-            font-size: 0.95rem;
-            color: #7a6554;
-            font-family: 'Segoe UI', 'Georgia', serif;
-            line-height: 1.6;
-            padding-left: 0.5rem;
-            border-left: 2px solid #d9c6b0;
-            margin-top: 0.2rem;
-            margin-bottom: 0.4rem;
-            font-style: italic;
-        }
-        .note {
-            margin-top: 3rem;
-            padding-top: 1.5rem;
-            border-top: 1px dashed #cdb9a8;
-            font-size: 0.9rem;
-            color: #7a5e4b;
-            text-align: center;
-            font-style: italic;
-        }
-        .hint {
-            text-align: center;
-            font-size: 0.85rem;
-            color: #a0785a;
-            margin-bottom: 1rem;
-            font-style: italic;
-        }
-        @media (max-width: 600px) {
-            .container { padding: 1.8rem 1.2rem; }
-            h1 { font-size: 1.6rem; letter-spacing: 2px; }
-            .word, .punct { font-size: 1.1rem; }
-            .chapter-title { font-size: 1.2rem; }
-            .eng-line { font-size: 0.85rem; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三国演义 · 第六回 · 点击显示拼音 + 英译</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f8f5f0;font-family:'Segoe UI','Noto Serif SC','KaiTi','楷体','Songti SC',serif;padding:2rem 1rem;display:flex;justify-content:center;line-height:2.2}
+.container{max-width:1000px;width:100%;background:#fffcf8;box-shadow:0 10px 30px rgba(0,0,0,.08);border-radius:24px;padding:3rem 2.5rem;border:1px solid #e6d9cc}
+h1{font-size:2.2rem;text-align:center;color:#5e3e2b;letter-spacing:4px;font-weight:500;margin-bottom:.5rem;border-bottom:2px solid #d9c6b0;padding-bottom:1.2rem}
+.subhead{text-align:center;font-size:1.1rem;color:#8b6f55;margin-bottom:1rem;letter-spacing:2px;font-style:italic}
+.jumpbar{display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem;margin:1.2rem 0 2.5rem;padding:.9rem;background:#f4ebe2;border-radius:14px;border:1px solid #e6d9cc}
+.jumpbar a{text-decoration:none;font-size:.92rem;color:#5e3e2b;background:#fffcf8;border:1px solid #d9c6b0;border-radius:10px;padding:.35rem .8rem;transition:background .2s,color .2s}
+.jumpbar a:hover{background:#5e3e2b;color:#fff8f0}
+.chapter-title{font-size:1.6rem;text-align:center;color:#4a3322;margin:2rem 0 2.5rem;font-weight:600;letter-spacing:3px;background:linear-gradient(to right,transparent,#efe3d8,transparent);padding:.8rem 0;scroll-margin-top:1.5rem}
+.chapter-title .eng-title{display:block;font-size:1rem;font-weight:400;color:#8b6f55;letter-spacing:1px;margin-top:.4rem;font-style:italic}
+.paragraph{margin-bottom:2.2rem;text-align:justify}
+.sentence{display:block;margin-bottom:1.5rem}
+.zh-line{display:block;margin-bottom:.3rem}
+.word{display:inline-block;position:relative;cursor:pointer;font-size:1.25rem;font-family:'Noto Serif SC','KaiTi',serif;color:#1f1a15;margin:0 .05em;padding:.05em .1em;border-radius:4px;transition:background-color .2s;vertical-align:middle}
+.word:hover{background:#f0e4d8}
+.word.revealed{background:#f4e8dc;box-shadow:0 0 0 1px #d9c6b0}
+.punct{font-family:'Noto Serif SC','KaiTi',serif;font-size:1.25rem;color:#1f1a15;vertical-align:middle}
+.pinyin{display:none;position:absolute;left:50%;transform:translateX(-50%);bottom:100%;margin-bottom:2px;background:#5e3e2b;color:#fff8f0;font-size:.7rem;font-family:'Segoe UI','Arial',sans-serif;letter-spacing:.5px;padding:.15em .5em;border-radius:12px;white-space:nowrap;z-index:10;line-height:1.4;box-shadow:0 2px 6px rgba(0,0,0,.15);pointer-events:none}
+.word.revealed .pinyin{display:block}
+.eng-line{display:block;font-size:.95rem;color:#7a6554;font-family:'Segoe UI','Georgia',serif;line-height:1.6;padding-left:.5rem;border-left:2px solid #d9c6b0;margin-top:.2rem;margin-bottom:.4rem;font-style:italic}
+.note{margin-top:3rem;padding-top:1.5rem;border-top:1px dashed #cdb9a8;font-size:.9rem;color:#7a5e4b;text-align:center;font-style:italic}
+.hint{text-align:center;font-size:.85rem;color:#a0785a;margin-bottom:1rem;font-style:italic}
+@media(max-width:600px){.container{padding:1.8rem 1.2rem}h1{font-size:1.6rem;letter-spacing:2px}.word,.punct{font-size:1.1rem}.chapter-title{font-size:1.2rem}.eng-line{font-size:.85rem}}
+</style>
 </head>
 <body>
 <div class="container">
-    <h1>三国演义</h1>
-    <div class="subhead">第六回 · 点击汉字显示拼音 + 英译</div>
-    <div class="hint">👆 点击任意汉字即可显示/隐藏其拼音</div>
-
-    <nav class="jumpbar">
-        <a href="#s1">焚宫</a>
-        <a href="#s2">追董</a>
-        <a href="#s3">玉玺</a>
-    </nav>
-
-    <div id="story"></div>
-
-    <div class="note">
-        —— 第六回 · 点击汉字显示拼音 + 英译 ——
-    </div>
+<h1>三国演义</h1>
+<div class="subhead">第六回 · 点击汉字显示拼音 + 英译</div>
+<div class="hint">👆 点击任意汉字即可显示/隐藏其拼音</div>
+<nav class="jumpbar">
+<a href="#s1">焚毁洛阳</a>
+<a href="#s2">曹操追击</a>
+<a href="#s3">孙坚入城</a>
+<a href="#s4">玉玺之争</a>
+</nav>
+<div id="story"></div>
+<div class="note">—— 第六回 · 点击汉字显示拼音 + 英译 ——</div>
 </div>
-
 <script>
-const SENTENCES = [
-    {
-        type: "title",
-        zh: "焚|fén 金|jīn 阙|què 董|dǒng 卓|zhuó 行|xíng 凶|xiōng · 匿|nì 玉|yù 玺|xǐ 孙|sūn 坚|jiān 背|bèi 约|yuē",
-        en: "Burning the Golden Palace, Dong Zhuo Commits Atrocities; Hiding the Imperial Seal, Sun Jian Breaks the Oath"
-    },
-    {
-        type: "para", id: "s1",
-        sentences: [
-            {
-                zh: "董|dǒng 卓|zhuó 见|jiàn 诸|zhū 侯|hóu 势|shì 大|dà ，决|jué 定|dìng 迁|qiān 都|dū 长|cháng 安|ān 。临|lín 行|xíng 之|zhī 前|qián ，他|tā 焚|fén 烧|shāo 洛|luò 阳|yáng 宫|gōng 殿|diàn 、民|mín 房|fáng ，劫|jié 掠|lüè 百|bǎi 姓|xìng ，一|yī 片|piàn 火|huǒ 海|hǎi 。",
-                en: "Seeing the strength of the allied lords, Dong Zhuo decided to move the capital to Chang'an. Before leaving, he burned the palaces and homes of Luoyang, plundered the people, and left a sea of fire."
-            },
-            {
-                zh: "曹|cáo 操|cāo 劝|quàn 袁|yuán 绍|shào 乘|chéng 胜|shèng 追|zhuī 击|jī ，袁|yuán 绍|shào 等|děng 人|rén 不|bù 肯|kěn 。曹|cáo 操|cāo 独|dú 自|zì 率|shuài 兵|bīng 追|zhuī 赶|gǎn ，却|què 被|bèi 董|dǒng 卓|zhuó 伏|fú 兵|bīng 击|jī 败|bài ，损|sǔn 兵|bīng 折|zhé 将|jiàng 。",
-                en: "Cao Cao urged Yuan Shao to pursue the retreating enemy while they were still off balance, but Yuan Shao and the others refused. Cao Cao led his troops in pursuit alone, but was ambushed by Dong Zhuo's hidden forces and suffered heavy losses."
-            }
-        ]
-    },
-    {
-        type: "para", id: "s2",
-        sentences: [
-            {
-                zh: "孙|sūn 坚|jiān 率|shuài 军|jūn 先|xiān 入|rù 洛|luò 阳|yáng ，扑|pū 灭|miè 大|dà 火|huǒ ，安|ān 抚|fǔ 百|bǎi 姓|xìng 。他|tā 在|zài 宫|gōng 中|zhōng 废|fèi 墟|wū 之|zhī 上|shàng 屯|tún 兵|bīng ，夜|yè 间|jiān 见|jiàn 殿|diàn 南|nán 有|yǒu 五|wǔ 色|sè 光|guāng 芒|máng 冲|chōng 天|tiān 。",
-                en: "Sun Jian led his troops into Luoyang first, extinguished the great fire, and comforted the people. He encamped amid the ruins of the palace, and at night saw a five-colored radiance rising into the sky south of the hall."
-            }
-        ]
-    },
-    {
-        type: "para", id: "s3",
-        sentences: [
-            {
-                zh: "孙|sūn 坚|jiān 命|mìng 人|rén 挖|wā 掘|jué ，得|dé 一|yī 玉|yù 玺|xǐ ，上|shàng 刻|kè “受|shòu 命|mìng 于|yú 天|tiān ，既|jì 寿|shòu 永|yǒng 昌|chāng ”八|bā 字|zì ，乃|nǎi 传|chuán 国|guó 玉|yù 玺|xǐ 。孙|sūn 坚|jiān 暗|àn 藏|cáng 之|zhī ，诈|zhà 称|chēng 有|yǒu 病|bìng ，欲|yù 回|huí 江|jiāng 东|dōng 。",
-                en: "Sun Jian ordered his men to dig and found a jade seal inscribed with the eight characters \"By the mandate of Heaven, may your reign be long and prosperous\" — the Imperial Seal. Sun Jian secretly concealed it, feigned illness, and wished to return to Jiangdong."
-            },
-            {
-                zh: "袁|yuán 绍|shào 得|dé 知|zhī 此|zhǐ 事|shì ，前|qián 来|lái 索|suǒ 要|yào ，孙|sūn 坚|jiān 矢|shǐ 口|kǒu 否|fǒu 认|rèn 。两|liǎng 人|rén 由|yóu 此|cǐ 结|jié 怨|yuàn ，盟|méng 军|jūn 离|lí 心|xīn 解|jiě 体|tǐ 。",
-                en: "When Yuan Shao learned of this, he came to demand the seal, but Sun Jian denied it categorically. The two became enemies because of this, and the alliance began to fall apart."
-            }
-        ]
-    }
+const SENTENCES=[
+{type:"title",zh:"焚|fén 金|jīn 阙|què 董|dǒng 卓|zhuó 行|xíng 凶|xiōng · 匿|nì 玉|yù 玺|xǐ 孙|sūn 坚|jiān 背|bèi 约|yuē",en:"Burning the Golden Palace, Dong Zhuo Commits Atrocities; Hiding the Imperial Seal, Sun Jian Breaks the Oath"},
+{type:"para",id:"s1",sentences:[
+{zh:"董|dǒng 卓|zhuó 见|jiàn 十|shí 八|bā 路|lù 诸|zhū 侯|hóu 联|lián 合|hé 起|qǐ 兵|bīng ，声|shēng 势|shì 浩|hào 大|dà ，心|xīn 里|lǐ 也|yě 有|yǒu 些|xiē 害|hài 怕|pà 。他|tā 跟|gēn 手|shǒu 下|xià 的|de 人|rén 一|yī 商|shāng 量|liáng ，决|jué 定|dìng 放|fàng 弃|qì 洛|luò 阳|yáng ，把|bǎ 都|dū 城|chéng 迁|qiān 到|dào 长|cháng 安|ān 去|qù 。",en:"Seeing the eighteen warlords raise troops together in such a mighty host, Dong Zhuo was somewhat afraid. He discussed it with his subordinates and decided to abandon Luoyang and move the capital to Chang'an."},
+{zh:"临|lín 走|zǒu 之|zhī 前|qián ，董|dǒng 卓|zhuó 下|xià 了|le 一|yī 道|dào 狠|hěn 心|xīn 的|de 命|mìng 令|lìng ：把|bǎ 洛|luò 阳|yáng 的|de 宫|gōng 殿|diàn 、官|guān 府|fǔ 、民|mín 房|fáng 统|tǒng 统|tǒng 烧|shāo 掉|diào 。士|shì 兵|bīng 们|men 挨|āi 家|jiā 挨|āi 户|hù 放|fàng 火|huǒ ，一|yī 时|shí 间|jiān 浓|nóng 烟|yān 滚|gǔn 滚|gǔn ，火|huǒ 光|guāng 冲|chōng 天|tiān ，几|jǐ 十|shí 里|lǐ 外|wài 都|dōu 能|néng 看|kàn 见|jiàn 。",en:"Before leaving, Dong Zhuo gave a ruthless order: burn all the palaces, government offices, and homes of Luoyang to the ground. Soldiers set fire to every house, and in moments thick smoke billowed and flames leapt to the sky, visible from dozens of miles away."},
+{zh:"他|tā 还|hái 派|pài 人|rén 挖|wā 开|kāi 先|xiān 帝|dì 的|de 陵|líng 墓|mù ，把|bǎ 里|lǐ 面|miàn 的|de 金|jīn 银|yín 财|cái 宝|bǎo 全|quán 搬|bān 走|zǒu 。百|bǎi 姓|xìng 们|men 被|bèi 迫|pò 离|lí 开|kāi 家|jiā 园|yuán ，一|yī 路|lù 上|shàng 哭|kū 声|shēng 震|zhèn 天|tiān ，死|sǐ 的|de 人|rén 不|bù 计|jì 其|qí 数|shù 。",en:"He also sent men to dig open the tombs of former emperors and carry off all the gold, silver, and treasure inside. The common people were forced from their homes, their wailing filling the road, and countless died along the way."}
+]},
+{type:"para",id:"s2",sentences:[
+{zh:"盟|méng 军|jūn 打|dǎ 进|jìn 洛|luò 阳|yáng 时|shí ，只|zhǐ 见|jiàn 一|yī 片|piàn 废|fèi 墟|xū ，到|dào 处|chù 是|shì 烧|shāo 焦|jiāo 的|de 房|fáng 子|zi 和|hé 老|lǎo 百|bǎi 姓|xìng 的|de 尸|shī 体|tǐ 。曹|cáo 操|cāo 看|kàn 到|dào 这|zhè 幅|fú 惨|cǎn 状|zhuàng ，心|xīn 里|lǐ 又|yòu 气|qì 又|yòu 急|jí ，劝|quàn 袁|yuán 绍|shào 趁|chèn 胜|shèng 追|zhuī 击|jī 董|dǒng 卓|zhuó 。",en:"When the allied army entered Luoyang, they found nothing but ruins—burned-out houses and the bodies of common folk everywhere. Seeing this devastation, Cao Cao was both furious and anxious, and urged Yuan Shao to pursue Dong Zhuo while they had the advantage."},
+{zh:"可|kě 袁|yuán 绍|shào 这|zhè 些|xiē 人|rén 都|dōu 不|bù 想|xiǎng 再|zài 打|dǎ 了|le ，说|shuō 士|shì 兵|bīng 疲|pí 劳|láo ，需|xū 要|yào 休|xiū 整|zhěng 。曹|cáo 操|cāo 气|qì 得|de 直|zhí 摇|yáo 头|tóu ，干|gān 脆|cuì 自|zì 己|jǐ 带|dài 着|zhe 本|běn 部|bù 兵|bīng 马|mǎ 去|qù 追|zhuī 。",en:"But Yuan Shao and the others did not want to fight anymore, saying the soldiers were exhausted and needed rest. Cao Cao shook his head in frustration and simply led his own troops in pursuit."},
+{zh:"不|bù 料|liào 董|dǒng 卓|zhuó 早|zǎo 就|jiù 埋|mái 伏|fú 好|hǎo 了|le 人|rén 马|mǎ 。曹|cáo 操|cāo 的|de 队|duì 伍|wǔ 刚|gāng 追|zhuī 到|dào 荥|xíng 阳|yáng 一|yī 带|dài ，四|sì 面|miàn 伏|fú 兵|bīng 杀|shā 出|chū ，箭|jiàn 如|rú 雨|yǔ 下|xià 。曹|cáo 操|cāo 大|dà 败|bài ，损|sǔn 兵|bīng 折|zhé 将|jiàng ，自|zì 己|jǐ 也|yě 中|zhòng 了|le 一|yī 箭|jiàn ，狼|láng 狈|bèi 逃|táo 回|huí 。",en:"But Dong Zhuo had already set an ambush. Cao Cao's troops had only reached the Xingyang area when ambushers surged out on all sides and arrows fell like rain. Cao Cao was badly defeated, losing men and officers; he himself took an arrow wound and fled back in a sorry state."}
+]},
+{type:"para",id:"s3",sentences:[
+{zh:"孙|sūn 坚|jiān 带|dài 着|zhe 自|zì 己|jǐ 的|de 人|rén 马|mǎ 第|dì 一|yī 个|gè 杀|shā 进|jìn 洛|luò 阳|yáng ，忙|máng 着|zhe 救|jiù 火|huǒ 、安|ān 抚|fǔ 百|bǎi 姓|xìng 。他|tā 的|de 队|duì 伍|wǔ 就|jiù 驻|zhù 扎|zhā 在|zài 皇|huáng 宫|gōng 的|de 废|fèi 墟|xū 上|shàng 。",en:"Sun Jian led his men into Luoyang first, busy putting out fires and comforting the people. His troops camped on the ruins of the imperial palace."},
+{zh:"当|dāng 天|tiān 夜|yè 里|lǐ ，有|yǒu 士|shì 兵|bīng 来|lái 报|bào ，说|shuō 看|kàn 见|jiàn 宫|gōng 殿|diàn 南|nán 边|biān 有|yǒu 五|wǔ 彩|cǎi 的|de 光|guāng 往|wǎng 天|tiān 上|shàng 冒|mào 。孙|sūn 坚|jiān 亲|qīn 自|zì 去|qù 看|kàn ，果|guǒ 然|rán 见|jiàn 一|yī 口|kǒu 井|jǐng 里|lǐ 闪|shǎn 着|zhe 光|guāng 。他|tā 命|mìng 人|rén 下|xià 井|jǐng 打|dǎ 捞|lāo 。",en:"That night, a soldier reported seeing five-colored light rising into the sky south of the palace. Sun Jian went to look himself and indeed saw light shining from a well. He ordered men down into the well to retrieve whatever was there."},
+{zh:"打|dǎ 捞|lāo 上|shàng 来|lái 一|yī 看|kàn ，是|shì 个|gè 锦|jǐn 袋|dài ，里|lǐ 面|miàn 包|bāo 着|zhe 一|yī 个|gè 玉|yù 玺|xǐ 。这|zhè 玉|yù 玺|xǐ 四|sì 方|fāng 四|sì 寸|cùn ，上|shàng 面|miàn 刻|kè 着|zhe 八|bā 个|gè 字|zì ：“受|shòu 命|mìng 于|yú 天|tiān ，既|jì 寿|shòu 永|yǒng 昌|chāng 。”这|zhè 正|zhèng 是|shì 传|chuán 国|guó 玉|yù 玺|xǐ 。",en:"What they brought up was a brocade bag containing a jade seal. The seal was four inches square and inscribed with eight characters: \"By the mandate of Heaven, may your reign be long and prosperous.\" This was the Imperial Seal itself."},
+{zh:"孙|sūn 坚|jiān 见|jiàn 了|le 玉|yù 玺|xǐ ，心|xīn 里|lǐ 又|yòu 惊|jīng 又|yòu 喜|xǐ ，暗|àn 暗|àn 想|xiǎng ：“这|zhè 是|shì 皇|huáng 帝|dì 的|de 宝|bǎo 印|yìn ，谁|shuí 得|dé 了|le 它|tā ，谁|shuí 就|jiù 有|yǒu 天|tiān 下|xià 。”他|tā 赶|gǎn 紧|jǐn 把|bǎ 玉|yù 玺|xǐ 藏|cáng 好|hǎo ，吩|fēn 咐|fù 手|shǒu 下|xià 不|bù 许|xǔ 走|zǒu 漏|lòu 半|bàn 点|diǎn 风|fēng 声|shēng 。",en:"When Sun Jian saw the seal, he was both startled and delighted, secretly thinking: \"This is the Emperor's seal—whoever holds it holds the realm.\" He quickly hid the seal away and ordered his men not to breathe a word of it."}
+]},
+{type:"para",id:"s4",sentences:[
+{zh:"可|kě 是|shì 消|xiāo 息|xī 还|hái 是|shì 传|chuán 了|le 出|chū 去|qù ，袁|yuán 绍|shào 很|hěn 快|kuài 就|jiù 知|zhī 道|dào 了|le 。他|tā 把|bǎ 孙|sūn 坚|jiān 请|qǐng 来|lái ，当|dāng 面|miàn 要|yào 他|tā 交|jiāo 出|chū 玉|yù 玺|xǐ 。孙|sūn 坚|jiān 死|sǐ 也|yě 不|bù 承|chéng 认|rèn ，还|hái 发|fā 了|le 毒|dú 誓|shì ，说|shuō 自|zì 己|jǐ 要|yào 是|shì 藏|cáng 了|le 玉|yù 玺|xǐ ，就|jiù 不|bù 得|dé 好|hǎo 死|sǐ 。",en:"But the news leaked out, and Yuan Shao soon learned of it. He summoned Sun Jian and demanded the seal to his face. Sun Jian denied it to the death and even swore a terrible oath, saying that if he had hidden the seal, may he die a horrible death."},
+{zh:"两|liǎng 个|gè 人|rén 就|jiù 这|zhè 样|yàng 闹|nào 翻|fān 了|le 。孙|sūn 坚|jiān 带|dài 着|zhe 人|rén 马|mǎ 连|lián 夜|yè 离|lí 开|kāi 洛|luò 阳|yáng ，回|huí 江|jiāng 东|dōng 去|qù 了|le 。袁|yuán 绍|shào 气|qì 得|de 不|bù 行|xíng ，从|cóng 此|cǐ 跟|gēn 孙|sūn 家|jiā 结|jié 下|xià 了|le 仇|chóu 。",en:"The two fell out over this. Sun Jian took his troops and left Luoyang that very night, returning to Jiangdong. Yuan Shao was furious, and from then on the two families became enemies."},
+{zh:"十|shí 八|bā 路|lù 诸|zhū 侯|hóu 本|běn 来|lái 就|jiù 各|gè 怀|huái 心|xīn 事|shì ，经|jīng 过|guò 这|zhè 一|yī 闹|nào ，联|lián 盟|méng 很|hěn 快|kuài 就|jiù 散|sàn 了|le 。各|gè 地|dì 诸|zhū 侯|hóu 带|dài 着|zhe 自|zì 己|jǐ 的|de 兵|bīng 马|mǎ 回|huí 去|qù ，天|tiān 下|xià 又|yòu 恢|huī 复|fù 了|le 各|gè 自|zì 为|wéi 政|zhèng 的|de 局|jú 面|miàn 。",en:"The eighteen warlords had each harbored their own ambitions all along, and after this quarrel the alliance quickly fell apart. Each lord took his troops home, and the realm returned to a state of separate warlords each ruling their own territory."}
+]}
 ];
-
-function tokenToHtml(tok) {
-    if (tok.startsWith("RAW")) return tok.slice(3);
-    if (tok.includes("|")) {
-        const [ch, py] = tok.split("|");
-        return `<span class="word" data-pinyin="${py}">${ch}</span>`;
-    }
-    return `<span class="punct">${tok}</span>`;
-}
-
-function renderZh(zh) {
-    return zh.split(/\s+/).filter(Boolean).map(tokenToHtml).join("");
-}
-
-function renderSentence(s) {
-    return `<div class="sentence">
-        <span class="zh-line">${renderZh(s.zh)}</span>
-        <span class="eng-line">${s.en}</span>
-    </div>`;
-}
-
-function render() {
-    const root = document.getElementById("story");
-    let html = "";
-    for (const block of SENTENCES) {
-        if (block.type === "title") {
-            html += `<div class="chapter-title">${renderZh(block.zh)}<span class="eng-title">${block.en}</span></div>`;
-        } else if (block.type === "para") {
-            html += `<div class="paragraph"${block.id ? ` id="${block.id}"` : ""}>${block.sentences.map(renderSentence).join("")}</div>`;
-        }
-    }
-    root.innerHTML = html;
-    bindWords();
-}
-
-function bindWords() {
-    document.querySelectorAll(".word").forEach(function (word) {
-        var pinyinText = word.getAttribute("data-pinyin");
-        if (pinyinText) {
-            var pinyinSpan = document.createElement("span");
-            pinyinSpan.className = "pinyin";
-            pinyinSpan.textContent = pinyinText;
-            word.appendChild(pinyinSpan);
-        }
-        word.addEventListener("click", function (e) {
-            e.stopPropagation();
-            this.classList.toggle("revealed");
-        });
-    });
-}
-
-document.addEventListener("click", function () {
-    document.querySelectorAll(".word.revealed").forEach(function (w) {
-        w.classList.remove("revealed");
-    });
-});
-
+function tokenToHtml(t){if(t.startsWith("RAW"))return t.slice(3);if(t.includes("|")){const[c,p]=t.split("|");return`<span class="word" data-pinyin="${p}">${c}</span>`}return`<span class="punct">${t}</span>`}
+function renderZh(z){return z.split(/\s+/).filter(Boolean).map(tokenToHtml).join("")}
+function renderSentence(s){return`<div class="sentence"><span class="zh-line">${renderZh(s.zh)}</span><span class="eng-line">${s.en}</span></div>`}
+function render(){const r=document.getElementById("story");let h="";for(const b of SENTENCES){if(b.type==="title"){h+=`<div class="chapter-title">${renderZh(b.zh)}<span class="eng-title">${b.en}</span></div>`}else if(b.type==="para"){h+=`<div class="paragraph"${b.id?` id="${b.id}"`:""}>${b.sentences.map(renderSentence).join("")}</div>`}}r.innerHTML=h;bindWords()}
+function bindWords(){document.querySelectorAll(".word").forEach(function(w){var p=w.getAttribute("data-pinyin");if(p){var s=document.createElement("span");s.className="pinyin";s.textContent=p;w.appendChild(s)}w.addEventListener("click",function(e){e.stopPropagation();this.classList.toggle("revealed")})})}
+document.addEventListener("click",function(){document.querySelectorAll(".word.revealed").forEach(function(w){w.classList.remove("revealed")})});
 render();
 </script>
 </body>

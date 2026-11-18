@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三国演义 · 第三回 · 点击显示拼音 + 英译</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f8f5f0;font-family:'Segoe UI','Noto Serif SC','KaiTi','楷体','Songti SC',serif;padding:2rem 1rem;display:flex;justify-content:center;line-height:2.2}
+.container{max-width:1000px;width:100%;background:#fffcf8;box-shadow:0 10px 30px rgba(0,0,0,.08);border-radius:24px;padding:3rem 2.5rem;border:1px solid #e6d9cc}
+h1{font-size:2.2rem;text-align:center;color:#5e3e2b;letter-spacing:4px;font-weight:500;margin-bottom:.5rem;border-bottom:2px solid #d9c6b0;padding-bottom:1.2rem}
+.subhead{text-align:center;font-size:1.1rem;color:#8b6f55;margin-bottom:1rem;letter-spacing:2px;font-style:italic}
+.jumpbar{display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem;margin:1.2rem 0 2.5rem;padding:.9rem;background:#f4ebe2;border-radius:14px;border:1px solid #e6d9cc}
+.jumpbar a{text-decoration:none;font-size:.92rem;color:#5e3e2b;background:#fffcf8;border:1px solid #d9c6b0;border-radius:10px;padding:.35rem .8rem;transition:background .2s,color .2s}
+.jumpbar a:hover{background:#5e3e2b;color:#fff8f0}
+.chapter-title{font-size:1.6rem;text-align:center;color:#4a3322;margin:2rem 0 2.5rem;font-weight:600;letter-spacing:3px;background:linear-gradient(to right,transparent,#efe3d8,transparent);padding:.8rem 0;scroll-margin-top:1.5rem}
+.chapter-title .eng-title{display:block;font-size:1rem;font-weight:400;color:#8b6f55;letter-spacing:1px;margin-top:.4rem;font-style:italic}
+.paragraph{margin-bottom:2.2rem;text-align:justify}
+.sentence{display:block;margin-bottom:1.5rem}
+.zh-line{display:block;margin-bottom:.3rem}
+.word{display:inline-block;position:relative;cursor:pointer;font-size:1.25rem;font-family:'Noto Serif SC','KaiTi',serif;color:#1f1a15;margin:0 .05em;padding:.05em .1em;border-radius:4px;transition:background-color .2s;vertical-align:middle}
+.word:hover{background:#f0e4d8}
+.word.revealed{background:#f4e8dc;box-shadow:0 0 0 1px #d9c6b0}
+.punct{font-family:'Noto Serif SC','KaiTi',serif;font-size:1.25rem;color:#1f1a15;vertical-align:middle}
+.pinyin{display:none;position:absolute;left:50%;transform:translateX(-50%);bottom:100%;margin-bottom:2px;background:#5e3e2b;color:#fff8f0;font-size:.7rem;font-family:'Segoe UI','Arial',sans-serif;letter-spacing:.5px;padding:.15em .5em;border-radius:12px;white-space:nowrap;z-index:10;line-height:1.4;box-shadow:0 2px 6px rgba(0,0,0,.15);pointer-events:none}
+.word.revealed .pinyin{display:block}
+.eng-line{display:block;font-size:.95rem;color:#7a6554;font-family:'Segoe UI','Georgia',serif;line-height:1.6;padding-left:.5rem;border-left:2px solid #d9c6b0;margin-top:.2rem;margin-bottom:.4rem;font-style:italic}
+.note{margin-top:3rem;padding-top:1.5rem;border-top:1px dashed #cdb9a8;font-size:.9rem;color:#7a5e4b;text-align:center;font-style:italic}
+.hint{text-align:center;font-size:.85rem;color:#a0785a;margin-bottom:1rem;font-style:italic}
+@media(max-width:600px){.container{padding:1.8rem 1.2rem}h1{font-size:1.6rem;letter-spacing:2px}.word,.punct{font-size:1.1rem}.chapter-title{font-size:1.2rem}.eng-line{font-size:.85rem}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>三国演义</h1>
+<div class="subhead">第三回 · 点击汉字显示拼音 + 英译</div>
+<div class="hint">👆 点击任意汉字即可显示/隐藏其拼音</div>
+<nav class="jumpbar">
+<a href="#s1">董卓入京</a>
+<a href="#s2">温明园</a>
+<a href="#s3">李肃说布</a>
+<a href="#s4">吕布杀丁原</a>
+</nav>
+<div id="story"></div>
+<div class="note">—— 第三回 · 点击汉字显示拼音 + 英译 ——</div>
+</div>
+<script>
+const SENTENCES=[
+{type:"title",zh:"议|yì 温|wēn 明|míng 董|dǒng 卓|zhuó 叱|chì 丁|dīng 原|yuán · 馈|kuì 金|jīn 珠|zhū 李|lǐ 肃|sù 说|shuì 吕|lǚ 布|bù",en:"At Wenming Garden Dong Zhuo Rebukes Ding Yuan; With Gold and Pearls Li Su Persuades Lü Bu"},
+{type:"para",id:"s1",sentences:[
+{zh:"京|jīng 城|chéng 大|dà 乱|luàn 之|zhī 际|jì ，西|xī 凉|liáng 的|de 军|jūn 阀|fá 董|dǒng 卓|zhuó 看|kàn 准|zhǔn 时|shí 机|jī ，带|dài 着|zhe 二|èr 十|shí 万|wàn 大|dà 军|jūn 开|kāi 进|jìn 洛|luò 阳|yáng 。他|tā 的|de 兵|bīng 马|mǎ 人|rén 强|qiáng 马|mǎ 壮|zhuàng ，来|lái 势|shì 汹|xiōng 汹|xiōng ，京|jīng 城|chéng 里|lǐ 谁|shuí 也|yě 不|bù 敢|gǎn 阻|zǔ 拦|lán 。",en:"Amid the chaos in the capital, the Xiliang warlord Dong Zhuo seized the moment and marched his two hundred thousand troops into Luoyang. His soldiers were strong and his horses sturdy, his approach overawing; no one in the capital dared to stop him."},
+{zh:"董|dǒng 卓|zhuó 进|jìn 了|le 京|jīng 城|chéng ，很|hěn 快|kuài 就|jiù 把|bǎ 朝|cháo 政|zhèng 大|dà 权|quán 抓|zhuā 在|zài 手|shǒu 里|lǐ 。他|tā 看|kàn 当|dāng 今|jīn 的|de 少|shào 帝|dì 年|nián 纪|jì 小|xiǎo 、性|xìng 格|gé 软|ruǎn 弱|ruò ，心|xīn 里|lǐ 就|jiù 打|dǎ 起|qǐ 了|le 废|fèi 掉|diào 少|shào 帝|dì 的|de 主|zhǔ 意|yì ，想|xiǎng 改|gǎi 立|lì 陈|chén 留|liú 王|wáng 。",en:"Once in the capital, Dong Zhuo quickly seized control of the court. Seeing that the young Emperor was young and weak-willed, he began to scheme about deposing him and installing the Prince of Chenliu instead."},
+{zh:"消|xiāo 息|xī 传|chuán 出|chū 去|qù ，满|mǎn 朝|cháo 文|wén 武|wǔ 议|yì 论|lùn 纷|fēn 纷|fēn 。有|yǒu 人|rén 怕|pà 董|dǒng 卓|zhuó 的|de 势|shì 力|lì ，不|bù 敢|gǎn 吭|kēng 声|shēng ；也|yě 有|yǒu 人|rén 心|xīn 里|lǐ 不|bù 服|fú ，暗|àn 中|zhōng 商|shāng 量|liáng 对|duì 策|cè 。",en:"When the news spread, the whole court buzzed with discussion. Some feared Dong Zhuo's power and dared not make a sound; others were secretly unconvinced and quietly discussed what to do."}
+]},
+{type:"para",id:"s2",sentences:[
+{zh:"一|yī 天|tiān ，董|dǒng 卓|zhuó 在|zài 温|wēn 明|míng 园|yuán 摆|bǎi 下|xià 酒|jiǔ 席|xí ，请|qǐng 百|bǎi 官|guān 赴|fù 宴|yàn ，商|shāng 量|liáng 废|fèi 立|lì 之|zhī 事|shì 。席|xí 间|jiān ，董|dǒng 卓|zhuó 又|yòu 提|tí 出|chū 要|yào 废|fèi 少|shào 帝|dì ，说|shuō 得|de 趾|zhǐ 高|gāo 气|qì 扬|yáng 。",en:"One day Dong Zhuo held a banquet at Wenming Garden, inviting all the officials to discuss the matter of deposing and installing an emperor. During the feast, Dong Zhuo again raised the proposal to depose the young Emperor, speaking with arrogant swagger."},
+{zh:"荆|jīng 州|zhōu 刺|cì 史|shǐ 丁|dīng 原|yuán 当|dāng 场|chǎng 站|zhàn 了|le 起|qǐ 来|lái ，大|dà 声|shēng 反|fǎn 对|duì ：“皇|huáng 帝|dì 是|shì 先|xiān 帝|dì 的|de 儿|ér 子|zi ，又|yòu 没|méi 有|yǒu 过|guò 错|cuò ，怎|zěn 么|me 能|néng 随|suí 便|biàn 废|fèi 掉|diào ！”董|dǒng 卓|zhuó 恼|nǎo 羞|xiū 成|chéng 怒|nù ，一|yī 把|bǎ 拔|bá 出|chū 剑|jiàn 来|lái ，要|yào 杀|shā 丁|dīng 原|yuán 。",en:"Ding Yuan, the Inspector of Jingzhou, stood up on the spot and objected loudly: \"The Emperor is the late Emperor's son and has done nothing wrong—how can he simply be deposed!\" Dong Zhuo flew into a rage and drew his sword to kill Ding Yuan."},
+{zh:"当|dāng 时|shí 丁|dīng 原|yuán 身|shēn 后|hòu 站|zhàn 着|zhe 一|yī 员|yuán 猛|měng 将|jiàng ，生|shēng 得|de 威|wēi 风|fēng 凛|lǐn 凛|lǐn ，手|shǒu 持|chí 方|fāng 天|tiān 画|huà 戟|jǐ ，两|liǎng 眼|yǎn 圆|yuán 睁|zhēng 。此|cǐ 人|rén 正|zhèng 是|shì 丁|dīng 原|yuán 的|de 义|yì 子|zi 吕|lǚ 布|bù ，武|wǔ 艺|yì 天|tiān 下|xià 无|wú 敌|dí 。董|dǒng 卓|zhuó 一|yī 看|kàn 这|zhè 架|jià 势|shì ，心|xīn 里|lǐ 也|yě 有|yǒu 些|xiē 发|fā 怵|chù ，只|zhǐ 好|hǎo 暂|zàn 时|shí 忍|rěn 住|zhù 了|le 怒|nù 气|qì 。",en:"Standing behind Ding Yuan at that moment was a fierce general of imposing presence, gripping a halberd with his eyes glaring wide. This was Ding Yuan's adopted son Lü Bu, whose martial skill was unmatched in the world. Seeing this, Dong Zhuo felt a flicker of fear and had to swallow his anger for the time being."},
+{zh:"宴|yàn 席|xí 不|bù 欢|huān 而|ér 散|sàn 。丁|dīng 原|yuán 带|dài 着|zhe 吕|lǚ 布|bù 离|lí 开|kāi 洛|luò 阳|yáng ，退|tuì 到|dào 城|chéng 外|wài 屯|tún 兵|bīng 。董|dǒng 卓|zhuó 回|huí 到|dào 府|fǔ 中|zhōng ，越|yuè 想|xiǎng 越|yuè 气|qì ，又|yòu 忌|jì 惮|dàn 吕|lǚ 布|bù 的|de 勇|yǒng 猛|měng ，一|yī 时|shí 不|bù 敢|gǎn 轻|qīng 举|jǔ 妄|wàng 动|dòng 。",en:"The banquet broke up in discord. Ding Yuan left Luoyang with Lü Bu and stationed his troops outside the city. Dong Zhuo returned to his residence, growing angrier the more he thought about it, yet wary of Lü Bu's ferocity and not daring to act rashly for the moment."}
+]},
+{type:"para",id:"s3",sentences:[
+{zh:"董|dǒng 卓|zhuó 手|shǒu 下|xià 有|yǒu 个|gè 谋|móu 士|shì 叫|jiào 李|lǐ 肃|sù ，和|hé 吕|lǚ 布|bù 是|shì 同|tóng 乡|xiāng ，知|zhī 道|dào 吕|lǚ 布|bù 这|zhè 个|gè 人|rén 勇|yǒng 猛|měng 但|dàn 贪|tān 财|cái 利|lì 。李|lǐ 肃|sù 向|xiàng 董|dǒng 卓|zhuó 献|xiàn 计|jì ：“要|yào 收|shōu 服|fú 吕|lǚ 布|bù ，只|zhǐ 需|xū 送|sòng 他|tā 一|yī 匹|pǐ 好|hǎo 马|mǎ 、一|yī 些|xiē 金|jīn 银|yín 珠|zhū 宝|bǎo 就|jiù 行|xíng 了|le 。”",en:"Dong Zhuo had an advisor named Li Su, who came from the same hometown as Lü Bu and knew that Lü Bu was fierce but greedy for wealth. Li Su proposed a plan to Dong Zhuo: \"To win over Lü Bu, all you need is to give him a fine horse and some gold, silver, and jewels.\""},
+{zh:"董|dǒng 卓|zhuó 舍|shě 得|de 下|xià 本|běn 钱|qián ，拿|ná 出|chū 了|le 千|qiān 两|liǎng 黄|huáng 金|jīn 、几|jǐ 十|shí 颗|kē 明|míng 珠|zhū ，还|hái 有|yǒu 那|nà 匹|pǐ 日|rì 行|xíng 千|qiān 里|lǐ 的|de 赤|chì 兔|tù 马|mǎ 。李|lǐ 肃|sù 带|dài 着|zhe 这|zhè 些|xiē 东|dōng 西|xi ，连|lián 夜|yè 去|qù 见|jiàn 吕|lǚ 布|bù 。",en:"Dong Zhuo was willing to spend generously; he brought out a thousand taels of gold, several dozen bright pearls, and that Red Hare horse capable of running a thousand li a day. Li Su took these things and went to see Lü Bu that very night."},
+{zh:"吕|lǚ 布|bù 见|jiàn 了|le 赤|chì 兔|tù 马|mǎ ，眼|yǎn 睛|jīng 都|dōu 亮|liàng 了|le 。这|zhè 匹|pǐ 马|mǎ 通|tōng 体|tǐ 火|huǒ 红|hóng ，没|méi 有|yǒu 半|bàn 根|gēn 杂|zá 毛|máo ，跑|pǎo 起|qǐ 来|lái 像|xiàng 一|yī 团|tuán 火|huǒ 。李|lǐ 肃|sù 又|yòu 把|bǎ 董|dǒng 卓|zhuó 的|de 好|hǎo 处|chù 说|shuō 了|le 一|yī 大|dà 堆|duī ，劝|quàn 吕|lǚ 布|bù 投|tóu 靠|kào 董|dǒng 卓|zhuó 。",en:"When Lü Bu saw the Red Hare, his eyes lit up. The horse was red as fire all over, without a single stray hair, and galloped like a ball of flame. Li Su then sang Dong Zhuo's praises at length and urged Lü Bu to throw in his lot with Dong Zhuo."},
+{zh:"吕|lǚ 布|bù 本|běn 就|jiù 是|shì 个|gè 见|jiàn 利|lì 忘|wàng 义|yì 的|de 人|rén ，被|bèi 这|zhè 些|xiē 金|jīn 银|yín 珠|zhū 宝|bǎo 和|hé 宝|bǎo 马|mǎ 一|yī 哄|hǒng ，心|xīn 里|lǐ 就|jiù 活|huó 动|dòng 了|le 。他|tā 答|dá 应|yìng 李|lǐ 肃|sù ，愿|yuàn 意|yì 归|guī 顺|shùn 董|dǒng 卓|zhuó 。",en:"Lü Bu was by nature a man who forgot loyalty at the sight of profit; dazzled by the gold, silver, pearls, and fine horse, his heart wavered. He agreed to Li Su's proposal and was willing to submit to Dong Zhuo."}
+]},
+{type:"para",id:"s4",sentences:[
+{zh:"当|dāng 天|tiān 夜|yè 里|lǐ ，吕|lǚ 布|bù 提|tí 着|zhe 刀|dāo 来|lái 到|dào 丁|dīng 原|yuán 帐|zhàng 中|zhōng 。丁|dīng 原|yuán 正|zhèng 在|zài 灯|dēng 下|xià 看|kàn 书|shū ，见|jiàn 吕|lǚ 布|bù 进|jìn 来|lái ，还|hái 以|yǐ 为|wéi 他|tā 有|yǒu 事|shì 商|shāng 量|liáng 。吕|lǚ 布|bù 二|èr 话|huà 不|bù 说|shuō ，一|yī 刀|dāo 就|jiù 砍|kǎn 下|xià 了|le 丁|dīng 原|yuán 的|de 头|tóu 。",en:"That night, Lü Bu came to Ding Yuan's tent with a blade. Ding Yuan was reading under the lamplight and, seeing Lü Bu enter, thought he had something to discuss. Without a word, Lü Bu cut off Ding Yuan's head with one stroke."},
+{zh:"第|dì 二|èr 天|tiān ，吕|lǚ 布|bù 带|dài 着|zhe 丁|dīng 原|yuán 的|de 首|shǒu 级|jí 去|qù 见|jiàn 董|dǒng 卓|zhuó 。董|dǒng 卓|zhuó 大|dà 喜|xǐ ，摆|bǎi 酒|jiǔ 款|kuǎn 待|dài ，当|dāng 场|chǎng 认|rèn 吕|lǚ 布|bù 做|zuò 义|yì 子|zi 。从|cóng 此|cǐ ，吕|lǚ 布|bù 成|chéng 了|le 董|dǒng 卓|zhuó 身|shēn 边|biān 最|zuì 得|dé 力|lì 的|de 打|dǎ 手|shǒu 。",en:"The next day, Lü Bu brought Ding Yuan's head to Dong Zhuo. Dong Zhuo was overjoyed, held a feast in his honor, and took Lü Bu as his adopted son on the spot. From then on, Lü Bu became the most capable enforcer at Dong Zhuo's side."},
+{zh:"董|dǒng 卓|zhuó 得|dé 了|le 吕|lǚ 布|bù 相|xiāng 助|zhù ，更|gèng 加|jiā 肆|sì 无|wú 忌|jì 惮|dàn ，废|fèi 帝|dì 之|zhī 事|shì 再|zài 也|yě 没|méi 有|yǒu 人|rén 敢|gǎn 拦|lán 阻|zǔ 。朝|cháo 中|zhōng 大|dà 臣|chén 个|gè 个|gè 提|tí 心|xīn 吊|diào 胆|dǎn ，却|què 无|wú 可|kě 奈|nài 何|hé 。",en:"With Lü Bu's help, Dong Zhuo became even more reckless, and no one dared stand in the way of his plan to depose the Emperor. Every minister at court lived in constant fear, yet there was nothing they could do."}
+]}
+];
+function tokenToHtml(t){if(t.startsWith("RAW"))return t.slice(3);if(t.includes("|")){const[c,p]=t.split("|");return`<span class="word" data-pinyin="${p}">${c}</span>`}return`<span class="punct">${t}</span>`}
+function renderZh(z){return z.split(/\s+/).filter(Boolean).map(tokenToHtml).join("")}
+function renderSentence(s){return`<div class="sentence"><span class="zh-line">${renderZh(s.zh)}</span><span class="eng-line">${s.en}</span></div>`}
+function render(){const r=document.getElementById("story");let h="";for(const b of SENTENCES){if(b.type==="title"){h+=`<div class="chapter-title">${renderZh(b.zh)}<span class="eng-title">${b.en}</span></div>`}else if(b.type==="para"){h+=`<div class="paragraph"${b.id?` id="${b.id}"`:""}>${b.sentences.map(renderSentence).join("")}</div>`}}r.innerHTML=h;bindWords()}
+function bindWords(){document.querySelectorAll(".word").forEach(function(w){var p=w.getAttribute("data-pinyin");if(p){var s=document.createElement("span");s.className="pinyin";s.textContent=p;w.appendChild(s)}w.addEventListener("click",function(e){e.stopPropagation();this.classList.toggle("revealed")})})}
+document.addEventListener("click",function(){document.querySelectorAll(".word.revealed").forEach(function(w){w.classList.remove("revealed")})});
+render();
+</script>
+</body>
+</html>

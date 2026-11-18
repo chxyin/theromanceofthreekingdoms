@@ -1,288 +1,77 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>三国演义 · 第十三回 · 点击显示拼音 + 英译</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background-color: #f8f5f0;
-            font-family: 'Segoe UI', 'Noto Serif SC', 'KaiTi', '楷体', 'Songti SC', serif;
-            padding: 2rem 1rem;
-            display: flex;
-            justify-content: center;
-            line-height: 2.2;
-        }
-        .container {
-            max-width: 1000px;
-            width: 100%;
-            background: #fffcf8;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            border-radius: 24px;
-            padding: 3rem 2.5rem;
-            border: 1px solid #e6d9cc;
-        }
-        h1 {
-            font-size: 2.2rem;
-            text-align: center;
-            color: #5e3e2b;
-            letter-spacing: 4px;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-            border-bottom: 2px solid #d9c6b0;
-            padding-bottom: 1.2rem;
-        }
-        .subhead {
-            text-align: center;
-            font-size: 1.1rem;
-            color: #8b6f55;
-            margin-bottom: 1rem;
-            letter-spacing: 2px;
-            font-style: italic;
-        }
-        .jumpbar {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.6rem;
-            margin: 1.2rem 0 2.5rem 0;
-            padding: 0.9rem;
-            background: #f4ebe2;
-            border-radius: 14px;
-            border: 1px solid #e6d9cc;
-        }
-        .jumpbar a {
-            text-decoration: none;
-            font-size: 0.92rem;
-            color: #5e3e2b;
-            background: #fffcf8;
-            border: 1px solid #d9c6b0;
-            border-radius: 10px;
-            padding: 0.35rem 0.8rem;
-            transition: background 0.2s, color 0.2s;
-        }
-        .jumpbar a:hover { background: #5e3e2b; color: #fff8f0; }
-        .chapter-title {
-            font-size: 1.6rem;
-            text-align: center;
-            color: #4a3322;
-            margin: 2rem 0 2.5rem 0;
-            font-weight: 600;
-            letter-spacing: 3px;
-            background: linear-gradient(to right, transparent, #efe3d8, transparent);
-            padding: 0.8rem 0;
-            scroll-margin-top: 1.5rem;
-        }
-        .chapter-title .eng-title {
-            display: block;
-            font-size: 1rem;
-            font-weight: 400;
-            color: #8b6f55;
-            letter-spacing: 1px;
-            margin-top: 0.4rem;
-            font-style: italic;
-        }
-        .paragraph { margin-bottom: 2.2rem; text-align: justify; }
-        .sentence { display: block; margin-bottom: 1.5rem; }
-        .zh-line { display: block; margin-bottom: 0.3rem; }
-        .word {
-            display: inline-block;
-            position: relative;
-            cursor: pointer;
-            font-size: 1.25rem;
-            font-family: 'Noto Serif SC', 'KaiTi', serif;
-            color: #1f1a15;
-            margin: 0 0.05em;
-            padding: 0.05em 0.1em;
-            border-radius: 4px;
-            transition: background-color 0.2s;
-            vertical-align: middle;
-        }
-        .word:hover { background-color: #f0e4d8; }
-        .word.revealed {
-            background-color: #f4e8dc;
-            box-shadow: 0 0 0 1px #d9c6b0;
-        }
-        .punct {
-            font-family: 'Noto Serif SC', 'KaiTi', serif;
-            font-size: 1.25rem;
-            color: #1f1a15;
-            vertical-align: middle;
-        }
-        .pinyin {
-            display: none;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: 100%;
-            margin-bottom: 2px;
-            background-color: #5e3e2b;
-            color: #fff8f0;
-            font-size: 0.7rem;
-            font-family: 'Segoe UI', 'Arial', sans-serif;
-            letter-spacing: 0.5px;
-            padding: 0.15em 0.5em;
-            border-radius: 12px;
-            white-space: nowrap;
-            z-index: 10;
-            line-height: 1.4;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-            pointer-events: none;
-        }
-        .word.revealed .pinyin { display: block; }
-        .eng-line {
-            display: block;
-            font-size: 0.95rem;
-            color: #7a6554;
-            font-family: 'Segoe UI', 'Georgia', serif;
-            line-height: 1.6;
-            padding-left: 0.5rem;
-            border-left: 2px solid #d9c6b0;
-            margin-top: 0.2rem;
-            margin-bottom: 0.4rem;
-            font-style: italic;
-        }
-        .note {
-            margin-top: 3rem;
-            padding-top: 1.5rem;
-            border-top: 1px dashed #cdb9a8;
-            font-size: 0.9rem;
-            color: #7a5e4b;
-            text-align: center;
-            font-style: italic;
-        }
-        .hint {
-            text-align: center;
-            font-size: 0.85rem;
-            color: #a0785a;
-            margin-bottom: 1rem;
-            font-style: italic;
-        }
-        @media (max-width: 600px) {
-            .container { padding: 1.8rem 1.2rem; }
-            h1 { font-size: 1.6rem; letter-spacing: 2px; }
-            .word, .punct { font-size: 1.1rem; }
-            .chapter-title { font-size: 1.2rem; }
-            .eng-line { font-size: 0.85rem; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三国演义 · 第十三回 · 点击显示拼音 + 英译</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f8f5f0;font-family:'Segoe UI','Noto Serif SC','KaiTi','楷体','Songti SC',serif;padding:2rem 1rem;display:flex;justify-content:center;line-height:2.2}
+.container{max-width:1000px;width:100%;background:#fffcf8;box-shadow:0 10px 30px rgba(0,0,0,.08);border-radius:24px;padding:3rem 2.5rem;border:1px solid #e6d9cc}
+h1{font-size:2.2rem;text-align:center;color:#5e3e2b;letter-spacing:4px;font-weight:500;margin-bottom:.5rem;border-bottom:2px solid #d9c6b0;padding-bottom:1.2rem}
+.subhead{text-align:center;font-size:1.1rem;color:#8b6f55;margin-bottom:1rem;letter-spacing:2px;font-style:italic}
+.jumpbar{display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem;margin:1.2rem 0 2.5rem;padding:.9rem;background:#f4ebe2;border-radius:14px;border:1px solid #e6d9cc}
+.jumpbar a{text-decoration:none;font-size:.92rem;color:#5e3e2b;background:#fffcf8;border:1px solid #d9c6b0;border-radius:10px;padding:.35rem .8rem;transition:background .2s,color .2s}
+.jumpbar a:hover{background:#5e3e2b;color:#fff8f0}
+.chapter-title{font-size:1.6rem;text-align:center;color:#4a3322;margin:2rem 0 2.5rem;font-weight:600;letter-spacing:3px;background:linear-gradient(to right,transparent,#efe3d8,transparent);padding:.8rem 0;scroll-margin-top:1.5rem}
+.chapter-title .eng-title{display:block;font-size:1rem;font-weight:400;color:#8b6f55;letter-spacing:1px;margin-top:.4rem;font-style:italic}
+.paragraph{margin-bottom:2.2rem;text-align:justify}
+.sentence{display:block;margin-bottom:1.5rem}
+.zh-line{display:block;margin-bottom:.3rem}
+.word{display:inline-block;position:relative;cursor:pointer;font-size:1.25rem;font-family:'Noto Serif SC','KaiTi',serif;color:#1f1a15;margin:0 .05em;padding:.05em .1em;border-radius:4px;transition:background-color .2s;vertical-align:middle}
+.word:hover{background:#f0e4d8}
+.word.revealed{background:#f4e8dc;box-shadow:0 0 0 1px #d9c6b0}
+.punct{font-family:'Noto Serif SC','KaiTi',serif;font-size:1.25rem;color:#1f1a15;vertical-align:middle}
+.pinyin{display:none;position:absolute;left:50%;transform:translateX(-50%);bottom:100%;margin-bottom:2px;background:#5e3e2b;color:#fff8f0;font-size:.7rem;font-family:'Segoe UI','Arial',sans-serif;letter-spacing:.5px;padding:.15em .5em;border-radius:12px;white-space:nowrap;z-index:10;line-height:1.4;box-shadow:0 2px 6px rgba(0,0,0,.15);pointer-events:none}
+.word.revealed .pinyin{display:block}
+.eng-line{display:block;font-size:.95rem;color:#7a6554;font-family:'Segoe UI','Georgia',serif;line-height:1.6;padding-left:.5rem;border-left:2px solid #d9c6b0;margin-top:.2rem;margin-bottom:.4rem;font-style:italic}
+.note{margin-top:3rem;padding-top:1.5rem;border-top:1px dashed #cdb9a8;font-size:.9rem;color:#7a5e4b;text-align:center;font-style:italic}
+.hint{text-align:center;font-size:.85rem;color:#a0785a;margin-bottom:1rem;font-style:italic}
+@media(max-width:600px){.container{padding:1.8rem 1.2rem}h1{font-size:1.6rem;letter-spacing:2px}.word,.punct{font-size:1.1rem}.chapter-title{font-size:1.2rem}.eng-line{font-size:.85rem}}
+</style>
 </head>
 <body>
 <div class="container">
-    <h1>三国演义</h1>
-    <div class="subhead">第十三回 · 点击汉字显示拼音 + 英译</div>
-    <div class="hint">👆 点击任意汉字即可显示/隐藏其拼音</div>
-
-    <nav class="jumpbar">
-        <a href="#s1">李郭内讧</a>
-        <a href="#s2">献帝东迁</a>
-        <a href="#s3">曹操迎驾</a>
-    </nav>
-
-    <div id="story"></div>
-
-    <div class="note">
-        —— 第十三回 · 点击汉字显示拼音 + 英译 ——
-    </div>
+<h1>三国演义</h1>
+<div class="subhead">第十三回 · 点击汉字显示拼音 + 英译</div>
+<div class="hint">👆 点击任意汉字即可显示/隐藏其拼音</div>
+<nav class="jumpbar">
+<a href="#s1">李郭内讧</a>
+<a href="#s2">献帝东迁</a>
+<a href="#s3">曹操迎驾</a>
+</nav>
+<div id="story"></div>
+<div class="note">—— 第十三回 · 点击汉字显示拼音 + 英译 ——</div>
 </div>
-
 <script>
-const SENTENCES = [
-    {
-        type: "title",
-        zh: "李|lǐ 傕|què 郭|guō 汜|sì 大|dà 交|jiāo 兵|bīng · 杨|yáng 奉|fèng 董|dǒng 承|chéng 双|shuāng 救|jiù 驾|jià",
-        en: "Li Jue and Guo Si Wage Great War; Yang Feng and Dong Cheng Both Rescue the Emperor"
-    },
-    {
-        type: "para", id: "s1",
-        sentences: [
-            {
-                zh: "李|lǐ 傕|què 与|yǔ 郭|guō 汜|sì 本|běn 是|shì 同|tóng 党|dǎng ，后|hòu 因|yīn 争|zhēng 权|quán 而|ér 反|fǎn 目|mù ，各|gè 拥|yōng 重|zhòng 兵|bīng ，在|zài 长|cháng 安|ān 城|chéng 中|zhōng 大|dà 战|zhàn 。百|bǎi 姓|xìng 遭|zāo 殃|yāng ，死|sǐ 伤|shāng 无|wú 数|shù 。",
-                en: "Li Jue and Guo Si had once been allies, but fell out over power and each commanded a large army, fighting a great battle within Chang'an. The common people suffered terribly, with countless dead and wounded."
-            },
-            {
-                zh: "汉|hàn 献|xiàn 帝|dì 被|bèi 困|kùn 宫|gōng 中|zhōng ，粮|liáng 食|shí 断|duàn 绝|jué ，苦|kǔ 不|bù 堪|kān 言|yán 。骑|qí 都|dū 尉|wèi 杨|yáng 奉|fèng 、国|guó 舅|jiù 董|dǒng 承|chéng 设|shè 法|fǎ 保|bǎo 护|hù 献|xiàn 帝|dì ，伺|cì 机|jī 东|dōng 迁|qiān 。",
-                en: "Emperor Xian was trapped in the palace, food supplies cut off, in unbearable misery. Yang Feng, a Cavalry Commandant, and Dong Cheng, the Emperor's uncle by marriage, did what they could to protect the Emperor and watched for a chance to move east."
-            }
-        ]
-    },
-    {
-        type: "para", id: "s2",
-        sentences: [
-            {
-                zh: "杨|yáng 奉|fèng 、董|dǒng 承|chéng 保|bǎo 护|hù 献|xiàn 帝|dì 与|yǔ 百|bǎi 官|guān 逃|táo 出|chū 长|cháng 安|ān ，一|yī 路|lù 艰|jiān 辛|xīn ，奔|bēn 向|xiàng 洛|luò 阳|yáng 。李|lǐ 傕|què 、郭|guō 汜|sì 发|fā 觉|jué 后|hòu 派|pài 兵|bīng 追|zhuī 赶|gǎn ，献|xiàn 帝|dì 一|yī 行|xíng 狼|láng 狈|bèi 不|bù 堪|kān 。",
-                en: "Yang Feng and Dong Cheng escorted Emperor Xian and the officials out of Chang'an on a hard journey toward Luoyang. When Li Jue and Guo Si discovered this, they sent troops in pursuit, and the Emperor's party was reduced to a desperate scramble."
-            }
-        ]
-    },
-    {
-        type: "para", id: "s3",
-        sentences: [
-            {
-                zh: "曹|cáo 操|cāo 在|zài 兖|yǎn 州|zhōu 闻|wén 献|xiàn 帝|dì 东|dōng 归|guī ，采|cǎi 纳|nà 荀|xún 彧|yù “奉|fèng 天|tiān 子|zǐ 以|yǐ 令|lìng 诸|zhū 侯|hóu ”之|zhī 策|cè ，亲|qīn 率|shuài 大|dà 军|jūn 前|qián 往|wǎng 迎|yíng 驾|jià 。曹|cáo 操|cāo 击|jī 退|tuì 追|zhuī 兵|bīng ，将|jiāng 献|xiàn 帝|dì 迎|yíng 入|rù 许|jú 都|dū ，自|zì 此|cǐ 挟|xié 天|tiān 子|zǐ 以|yǐ 号|hào 令|lìng 天|tiān 下|xià 。",
-                en: "When Cao Cao in Yanzhou learned that Emperor Xian was returning east, he adopted Xun Yu's strategy of \"supporting the Emperor to command the lords\" and personally led a great army to welcome the Emperor. Cao Cao drove off the pursuing troops and brought Emperor Xian to Xudu, and from then on he controlled the Emperor to issue orders to the realm."
-            }
-        ]
-    }
+const SENTENCES=[
+{type:"title",zh:"李|lǐ 傕|què 郭|guō 汜|sì 大|dà 交|jiāo 兵|bīng · 杨|yáng 奉|fèng 董|dǒng 承|chéng 双|shuāng 救|jiù 驾|jià",en:"Li Jue and Guo Si Wage Great War; Yang Feng and Dong Cheng Both Rescue the Emperor"},
+{type:"para",id:"s1",sentences:[
+{zh:"李|lǐ 傕|què 和|hé 郭|guō 汜|sì 本|běn 来|lái 是|shì 一|yī 伙|huǒ 的|de ，一|yī 起|qǐ 把|bǎ 持|chí 朝|cháo 政|zhèng 。可|kě 时|shí 间|jiān 一|yī 长|cháng ，两|liǎng 个|gè 人|rén 为|wèi 了|le 争|zhēng 权|quán 闹|nào 翻|fān 了|le ，各|gè 带|dài 着|zhe 兵|bīng 马|mǎ 在|zài 长|cháng 安|ān 城|chéng 里|lǐ 打|dǎ 了|le 起|qǐ 来|lái 。",en:"Li Jue and Guo Si had been allies, jointly controlling the court. But as time passed, the two fell out over power and brought their troops to fight each other right inside Chang'an."},
+{zh:"这|zhè 一|yī 打|dǎ 可|kě 苦|kǔ 了|le 老|lǎo 百|bǎi 姓|xìng 。街|jiē 上|shàng 到|dào 处|chù 是|shì 乱|luàn 兵|bīng ，房|fáng 子|zi 被|bèi 烧|shāo ，粮|liáng 食|shí 被|bèi 抢|qiǎng ，死|sǐ 伤|shāng 的|de 人|rén 不|bù 计|jì 其|qí 数|shù 。献|xiàn 帝|dì 被|bèi 困|kùn 在|zài 宫|gōng 里|lǐ ，连|lián 饭|fàn 都|dōu 吃|chī 不|bù 上|shàng 。",en:"The common people suffered terribly from this fighting. Armed soldiers were everywhere in the streets, houses were burned, food was plundered, and countless were killed or wounded. Emperor Xian was trapped in the palace and could not even get a meal."},
+{zh:"宫|gōng 里|lǐ 的|de 粮|liáng 食|shí 断|duàn 绝|jué 了|le ，大|dà 臣|chén 们|men 饿|è 得|de 面|miàn 黄|huáng 肌|jī 瘦|shòu ，有|yǒu 的|de 人|rén 甚|shèn 至|zhì 饿|è 死|sǐ 了|le 。献|xiàn 帝|dì 实|shí 在|zài 撑|chēng 不|bù 下|xià 去|qù 了|le ，派|pài 人|rén 去|qù 求|qiú 李|lǐ 傕|què 和|hé 郭|guō 汜|sì 停|tíng 战|zhàn ，可|kě 两|liǎng 个|gè 人|rén 谁|shuí 也|yě 不|bù 听|tīng 。",en:"Food in the palace ran out completely. The ministers grew gaunt with hunger, and some even starved to death. Emperor Xian could bear it no longer and sent men to beg Li Jue and Guo Si to stop fighting, but neither would listen."}
+]},
+{type:"para",id:"s2",sentences:[
+{zh:"就|jiù 在|zài 这|zhè 时|shí ，骑|qí 都|dū 尉|wèi 杨|yáng 奉|fèng 和|hé 国|guó 舅|jiù 董|dǒng 承|chéng 站|zhàn 了|le 出|chū 来|lái 。他|tā 们|men 暗|àn 中|zhōng 商|shāng 量|liáng 好|hǎo ，趁|chèn 着|zhe 李|lǐ 傕|què 、郭|guō 汜|sì 打|dǎ 得|de 正|zhèng 凶|xiōng 的|de 时|shí 候|hòu ，连|lián 夜|yè 带|dài 着|zhe 献|xiàn 帝|dì 和|hé 百|bǎi 官|guān 逃|táo 出|chū 了|le 长|cháng 安|ān 。",en:"At this moment, Cavalry Commandant Yang Feng and the Emperor's uncle Dong Cheng stepped forward. They secretly made plans and, while Li Jue and Guo Si were fighting fiercely, slipped out of Chang'an that very night with Emperor Xian and the officials."},
+{zh:"这|zhè 一|yī 路|lù 走|zǒu 得|de 别|bié 提|tí 多|duō 惨|cǎn 。没|méi 有|yǒu 粮|liáng 食|shí ，没|méi 有|yǒu 车|chē 马|mǎ ，皇|huáng 帝|dì 和|hé 百|bǎi 官|guān 只|zhǐ 能|néng 步|bù 行|xíng ，走|zǒu 得|de 脚|jiǎo 都|dōu 磨|mó 破|pò 了|le 。",en:"The journey was unspeakably wretched. There was no food and no carriages or horses; the Emperor and officials could only go on foot, walking until their feet were blistered and bleeding."},
+{zh:"李|lǐ 傕|què 、郭|guō 汜|sì 听|tīng 说|shuō 皇|huáng 帝|dì 跑|pǎo 了|le ，也|yě 不|bù 打|dǎ 了|le ，赶|gǎn 紧|jǐn 合|hé 兵|bīng 一|yī 处|chù 追|zhuī 了|le 上|shàng 来|lái 。献|xiàn 帝|dì 一|yī 行|xíng 人|rén 被|bèi 追|zhuī 得|de 狼|láng 狈|bèi 不|bù 堪|kān ，几|jǐ 次|cì 差|chà 点|diǎn 被|bèi 追|zhuī 兵|bīng 赶|gǎn 上|shàng 。",en:"When Li Jue and Guo Si learned the Emperor had fled, they stopped fighting each other and quickly joined forces in pursuit. The Emperor's party was hounded mercilessly and several times nearly overtaken."},
+{zh:"多|duō 亏|kuī 杨|yáng 奉|fèng 、董|dǒng 承|chéng 拼|pīn 死|sǐ 保|bǎo 护|hù ，一|yī 路|lù 上|shàng 打|dǎ 打|dǎ 停|tíng 停|tíng ，好|hǎo 不|bù 容|róng 易|yì 才|cái 摆|bǎi 脱|tuō 了|le 追|zhuī 兵|bīng ，向|xiàng 洛|luò 阳|yáng 方|fāng 向|xiàng 走|zǒu 去|qù 。",en:"Thanks to Yang Feng and Dong Cheng fighting desperately to protect him, with fighting and halting all along the way, they finally managed to shake off the pursuers and head toward Luoyang."}
+]},
+{type:"para",id:"s3",sentences:[
+{zh:"洛|luò 阳|yáng 早|zǎo 已|yǐ 被|bèi 董|dǒng 卓|zhuó 烧|shāo 成|chéng 了|le 一|yī 片|piàn 废|fèi 墟|xū ，皇|huáng 帝|dì 到|dào 了|le 那|nà 儿|r ，连|lián 个|gè 像|xiàng 样|yàng 的|de 房|fáng 子|zi 都|dōu 找|zhǎo 不|bù 到|dào 。百|bǎi 官|guān 们|men 只|zhǐ 好|hǎo 在|zài 断|duàn 墙|qiáng 残|cán 壁|bì 底|dǐ 下|xià 搭|dā 个|gè 棚|péng 子|zi 凑|còu 合|hé 住|zhù 。",en:"Luoyang had long since been burned to ruins by Dong Zhuo. When the Emperor arrived, he could not even find a decent house. The officials had no choice but to put up makeshift shelters among the broken walls."},
+{zh:"这|zhè 边|biān 刚|gāng 安|ān 顿|dùn 下|xià 来|lái ，李|lǐ 傕|què 、郭|guō 汜|sì 的|de 追|zhuī 兵|bīng 又|yòu 逼|bī 近|jìn 了|le 。杨|yáng 奉|fèng 眼|yǎn 看|kàn 抵|dǐ 挡|dǎng 不|bù 住|zhù ，赶|gǎn 紧|jǐn 派|pài 人|rén 去|qù 各|gè 地|dì 求|qiú 救|jiù 。",en:"They had barely settled in when Li Jue and Guo Si's pursuing troops closed in again. Seeing he could not hold them off, Yang Feng quickly sent men to seek help from the regional lords."},
+{zh:"这|zhè 时|shí 曹|cáo 操|cāo 在|zài 兖|yǎn 州|zhōu 已|yǐ 经|jīng 站|zhàn 稳|wěn 了|le 脚|jiǎo ，手|shǒu 下|xià 谋|móu 士|shì 荀|xún 彧|yù 劝|quàn 他|tā ：“皇|huáng 帝|dì 如|rú 今|jīn 落|luò 难|nàn ，正|zhèng 是|shì 迎|yíng 接|jiē 的|de 好|hǎo 时|shí 候|hòu 。把|bǎ 皇|huáng 帝|dì 接|jiē 到|dào 我|wǒ 们|men 这|zhè 儿|r ，就|jiù 能|néng 打|dǎ 着|zhe 皇|huáng 帝|dì 的|de 旗|qí 号|hào 号|hào 令|lìng 天|tiān 下|xià 。”",en:"By this time Cao Cao had secured his footing in Yanzhou. His advisor Xun Yu urged him: \"The Emperor is in dire straits—now is the perfect time to welcome him. If we bring the Emperor here, we can use his banner to command the realm.\""},
+{zh:"曹|cáo 操|cāo 一|yī 听|tīng ，正|zhèng 合|hé 心|xīn 意|yì ，亲|qīn 自|zì 带|dài 着|zhe 大|dà 军|jūn 赶|gǎn 到|dào 洛|luò 阳|yáng 护|hù 驾|jià 。他|tā 一|yī 到|dào ，就|jiù 把|bǎ 李|lǐ 傕|què 、郭|guō 汜|sì 的|de 追|zhuī 兵|bīng 打|dǎ 得|de 大|dà 败|bài 而|ér 逃|táo 。",en:"Cao Cao saw at once that this suited him perfectly and personally led a great army to Luoyang to protect the Emperor. The moment he arrived, he routed Li Jue and Guo Si's pursuing troops."},
+{zh:"曹|cáo 操|cāo 见|jiàn 洛|luò 阳|yáng 破|pò 败|bài 得|de 不|bù 成|chéng 样|yàng 子|zi ，就|jiù 劝|quàn 献|xiàn 帝|dì 迁|qiān 都|dū 到|dào 许|xǔ 都|dū 去|qù 。献|xiàn 帝|dì 没|méi 有|yǒu 别|bié 的|de 办|bàn 法|fǎ ，只|zhǐ 好|hǎo 答|dá 应|yìng 。到|dào 了|le 许|xǔ 都|dū ，曹|cáo 操|cāo 自|zì 任|rèn 大|dà 将|jiàng 军|jūn ，朝|cháo 政|zhèng 大|dà 权|quán 全|quán 落|luò 到|dào 了|le 他|tā 手|shǒu 里|lǐ 。",en:"Seeing Luoyang in such ruin, Cao Cao persuaded Emperor Xian to move the capital to Xudu. The Emperor had no other choice and agreed. Once at Xudu, Cao Cao made himself General-in-Chief, and all real power at court fell into his hands."},
+{zh:"从|cóng 此|cǐ ，曹|cáo 操|cāo 就|jiù 像|xiàng 董|dǒng 卓|zhuó 一|yī 样|yàng ，把|bǎ 皇|huáng 帝|dì 攥|zuàn 在|zài 手|shǒu 心|xīn 里|lǐ ，打|dǎ 着|zhe 天|tiān 子|zǐ 的|de 旗|qí 号|hào 号|hào 令|lìng 天|tiān 下|xià 。只|zhǐ 是|shì 他|tā 比|bǐ 董|dǒng 卓|zhuó 会|huì 做|zuò 人|rén ，表|biǎo 面|miàn 上|shàng 对|duì 皇|huáng 帝|dì 恭|gōng 恭|gōng 敬|jìng 敬|jìng 。",en:"From then on, Cao Cao, like Dong Zhuo before him, held the Emperor in the palm of his hand, using the imperial banner to command the realm. The difference was that he knew how to play the game, and on the surface treated the Emperor with great respect."}
+]}
 ];
-
-function tokenToHtml(tok) {
-    if (tok.startsWith("RAW")) return tok.slice(3);
-    if (tok.includes("|")) {
-        const [ch, py] = tok.split("|");
-        return `<span class="word" data-pinyin="${py}">${ch}</span>`;
-    }
-    return `<span class="punct">${tok}</span>`;
-}
-
-function renderZh(zh) {
-    return zh.split(/\s+/).filter(Boolean).map(tokenToHtml).join("");
-}
-
-function renderSentence(s) {
-    return `<div class="sentence">
-        <span class="zh-line">${renderZh(s.zh)}</span>
-        <span class="eng-line">${s.en}</span>
-    </div>`;
-}
-
-function render() {
-    const root = document.getElementById("story");
-    let html = "";
-    for (const block of SENTENCES) {
-        if (block.type === "title") {
-            html += `<div class="chapter-title">${renderZh(block.zh)}<span class="eng-title">${block.en}</span></div>`;
-        } else if (block.type === "para") {
-            html += `<div class="paragraph"${block.id ? ` id="${block.id}"` : ""}>${block.sentences.map(renderSentence).join("")}</div>`;
-        }
-    }
-    root.innerHTML = html;
-    bindWords();
-}
-
-function bindWords() {
-    document.querySelectorAll(".word").forEach(function (word) {
-        var pinyinText = word.getAttribute("data-pinyin");
-        if (pinyinText) {
-            var pinyinSpan = document.createElement("span");
-            pinyinSpan.className = "pinyin";
-            pinyinSpan.textContent = pinyinText;
-            word.appendChild(pinyinSpan);
-        }
-        word.addEventListener("click", function (e) {
-            e.stopPropagation();
-            this.classList.toggle("revealed");
-        });
-    });
-}
-
-document.addEventListener("click", function () {
-    document.querySelectorAll(".word.revealed").forEach(function (w) {
-        w.classList.remove("revealed");
-    });
-});
-
+function tokenToHtml(t){if(t.startsWith("RAW"))return t.slice(3);if(t.includes("|")){const[c,p]=t.split("|");return`<span class="word" data-pinyin="${p}">${c}</span>`}return`<span class="punct">${t}</span>`}
+function renderZh(z){return z.split(/\s+/).filter(Boolean).map(tokenToHtml).join("")}
+function renderSentence(s){return`<div class="sentence"><span class="zh-line">${renderZh(s.zh)}</span><span class="eng-line">${s.en}</span></div>`}
+function render(){const r=document.getElementById("story");let h="";for(const b of SENTENCES){if(b.type==="title"){h+=`<div class="chapter-title">${renderZh(b.zh)}<span class="eng-title">${b.en}</span></div>`}else if(b.type==="para"){h+=`<div class="paragraph"${b.id?` id="${b.id}"`:""}>${b.sentences.map(renderSentence).join("")}</div>`}}r.innerHTML=h;bindWords()}
+function bindWords(){document.querySelectorAll(".word").forEach(function(w){var p=w.getAttribute("data-pinyin");if(p){var s=document.createElement("span");s.className="pinyin";s.textContent=p;w.appendChild(s)}w.addEventListener("click",function(e){e.stopPropagation();this.classList.toggle("revealed")})})}
+document.addEventListener("click",function(){document.querySelectorAll(".word.revealed").forEach(function(w){w.classList.remove("revealed")})});
 render();
 </script>
 </body>

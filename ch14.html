@@ -1,302 +1,80 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>三国演义 · 第十四回 · 点击显示拼音 + 英译</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background-color: #f8f5f0;
-            font-family: 'Segoe UI', 'Noto Serif SC', 'KaiTi', '楷体', 'Songti SC', serif;
-            padding: 2rem 1rem;
-            display: flex;
-            justify-content: center;
-            line-height: 2.2;
-        }
-        .container {
-            max-width: 1000px;
-            width: 100%;
-            background: #fffcf8;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            border-radius: 24px;
-            padding: 3rem 2.5rem;
-            border: 1px solid #e6d9cc;
-        }
-        h1 {
-            font-size: 2.2rem;
-            text-align: center;
-            color: #5e3e2b;
-            letter-spacing: 4px;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-            border-bottom: 2px solid #d9c6b0;
-            padding-bottom: 1.2rem;
-        }
-        .subhead {
-            text-align: center;
-            font-size: 1.1rem;
-            color: #8b6f55;
-            margin-bottom: 1rem;
-            letter-spacing: 2px;
-            font-style: italic;
-        }
-        .jumpbar {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.6rem;
-            margin: 1.2rem 0 2.5rem 0;
-            padding: 0.9rem;
-            background: #f4ebe2;
-            border-radius: 14px;
-            border: 1px solid #e6d9cc;
-        }
-        .jumpbar a {
-            text-decoration: none;
-            font-size: 0.92rem;
-            color: #5e3e2b;
-            background: #fffcf8;
-            border: 1px solid #d9c6b0;
-            border-radius: 10px;
-            padding: 0.35rem 0.8rem;
-            transition: background 0.2s, color 0.2s;
-        }
-        .jumpbar a:hover { background: #5e3e2b; color: #fff8f0; }
-        .chapter-title {
-            font-size: 1.6rem;
-            text-align: center;
-            color: #4a3322;
-            margin: 2rem 0 2.5rem 0;
-            font-weight: 600;
-            letter-spacing: 3px;
-            background: linear-gradient(to right, transparent, #efe3d8, transparent);
-            padding: 0.8rem 0;
-            scroll-margin-top: 1.5rem;
-        }
-        .chapter-title .eng-title {
-            display: block;
-            font-size: 1rem;
-            font-weight: 400;
-            color: #8b6f55;
-            letter-spacing: 1px;
-            margin-top: 0.4rem;
-            font-style: italic;
-        }
-        .paragraph { margin-bottom: 2.2rem; text-align: justify; }
-        .sentence { display: block; margin-bottom: 1.5rem; }
-        .zh-line { display: block; margin-bottom: 0.3rem; }
-        .word {
-            display: inline-block;
-            position: relative;
-            cursor: pointer;
-            font-size: 1.25rem;
-            font-family: 'Noto Serif SC', 'KaiTi', serif;
-            color: #1f1a15;
-            margin: 0 0.05em;
-            padding: 0.05em 0.1em;
-            border-radius: 4px;
-            transition: background-color 0.2s;
-            vertical-align: middle;
-        }
-        .word:hover { background-color: #f0e4d8; }
-        .word.revealed {
-            background-color: #f4e8dc;
-            box-shadow: 0 0 0 1px #d9c6b0;
-        }
-        .punct {
-            font-family: 'Noto Serif SC', 'KaiTi', serif;
-            font-size: 1.25rem;
-            color: #1f1a15;
-            vertical-align: middle;
-        }
-        .pinyin {
-            display: none;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: 100%;
-            margin-bottom: 2px;
-            background-color: #5e3e2b;
-            color: #fff8f0;
-            font-size: 0.7rem;
-            font-family: 'Segoe UI', 'Arial', sans-serif;
-            letter-spacing: 0.5px;
-            padding: 0.15em 0.5em;
-            border-radius: 12px;
-            white-space: nowrap;
-            z-index: 10;
-            line-height: 1.4;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-            pointer-events: none;
-        }
-        .word.revealed .pinyin { display: block; }
-        .eng-line {
-            display: block;
-            font-size: 0.95rem;
-            color: #7a6554;
-            font-family: 'Segoe UI', 'Georgia', serif;
-            line-height: 1.6;
-            padding-left: 0.5rem;
-            border-left: 2px solid #d9c6b0;
-            margin-top: 0.2rem;
-            margin-bottom: 0.4rem;
-            font-style: italic;
-        }
-        .note {
-            margin-top: 3rem;
-            padding-top: 1.5rem;
-            border-top: 1px dashed #cdb9a8;
-            font-size: 0.9rem;
-            color: #7a5e4b;
-            text-align: center;
-            font-style: italic;
-        }
-        .hint {
-            text-align: center;
-            font-size: 0.85rem;
-            color: #a0785a;
-            margin-bottom: 1rem;
-            font-style: italic;
-        }
-        @media (max-width: 600px) {
-            .container { padding: 1.8rem 1.2rem; }
-            h1 { font-size: 1.6rem; letter-spacing: 2px; }
-            .word, .punct { font-size: 1.1rem; }
-            .chapter-title { font-size: 1.2rem; }
-            .eng-line { font-size: 0.85rem; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三国演义 · 第十四回 · 点击显示拼音 + 英译</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f8f5f0;font-family:'Segoe UI','Noto Serif SC','KaiTi','楷体','Songti SC',serif;padding:2rem 1rem;display:flex;justify-content:center;line-height:2.2}
+.container{max-width:1000px;width:100%;background:#fffcf8;box-shadow:0 10px 30px rgba(0,0,0,.08);border-radius:24px;padding:3rem 2.5rem;border:1px solid #e6d9cc}
+h1{font-size:2.2rem;text-align:center;color:#5e3e2b;letter-spacing:4px;font-weight:500;margin-bottom:.5rem;border-bottom:2px solid #d9c6b0;padding-bottom:1.2rem}
+.subhead{text-align:center;font-size:1.1rem;color:#8b6f55;margin-bottom:1rem;letter-spacing:2px;font-style:italic}
+.jumpbar{display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem;margin:1.2rem 0 2.5rem;padding:.9rem;background:#f4ebe2;border-radius:14px;border:1px solid #e6d9cc}
+.jumpbar a{text-decoration:none;font-size:.92rem;color:#5e3e2b;background:#fffcf8;border:1px solid #d9c6b0;border-radius:10px;padding:.35rem .8rem;transition:background .2s,color .2s}
+.jumpbar a:hover{background:#5e3e2b;color:#fff8f0}
+.chapter-title{font-size:1.6rem;text-align:center;color:#4a3322;margin:2rem 0 2.5rem;font-weight:600;letter-spacing:3px;background:linear-gradient(to right,transparent,#efe3d8,transparent);padding:.8rem 0;scroll-margin-top:1.5rem}
+.chapter-title .eng-title{display:block;font-size:1rem;font-weight:400;color:#8b6f55;letter-spacing:1px;margin-top:.4rem;font-style:italic}
+.paragraph{margin-bottom:2.2rem;text-align:justify}
+.sentence{display:block;margin-bottom:1.5rem}
+.zh-line{display:block;margin-bottom:.3rem}
+.word{display:inline-block;position:relative;cursor:pointer;font-size:1.25rem;font-family:'Noto Serif SC','KaiTi',serif;color:#1f1a15;margin:0 .05em;padding:.05em .1em;border-radius:4px;transition:background-color .2s;vertical-align:middle}
+.word:hover{background:#f0e4d8}
+.word.revealed{background:#f4e8dc;box-shadow:0 0 0 1px #d9c6b0}
+.punct{font-family:'Noto Serif SC','KaiTi',serif;font-size:1.25rem;color:#1f1a15;vertical-align:middle}
+.pinyin{display:none;position:absolute;left:50%;transform:translateX(-50%);bottom:100%;margin-bottom:2px;background:#5e3e2b;color:#fff8f0;font-size:.7rem;font-family:'Segoe UI','Arial',sans-serif;letter-spacing:.5px;padding:.15em .5em;border-radius:12px;white-space:nowrap;z-index:10;line-height:1.4;box-shadow:0 2px 6px rgba(0,0,0,.15);pointer-events:none}
+.word.revealed .pinyin{display:block}
+.eng-line{display:block;font-size:.95rem;color:#7a6554;font-family:'Segoe UI','Georgia',serif;line-height:1.6;padding-left:.5rem;border-left:2px solid #d9c6b0;margin-top:.2rem;margin-bottom:.4rem;font-style:italic}
+.note{margin-top:3rem;padding-top:1.5rem;border-top:1px dashed #cdb9a8;font-size:.9rem;color:#7a5e4b;text-align:center;font-style:italic}
+.hint{text-align:center;font-size:.85rem;color:#a0785a;margin-bottom:1rem;font-style:italic}
+@media(max-width:600px){.container{padding:1.8rem 1.2rem}h1{font-size:1.6rem;letter-spacing:2px}.word,.punct{font-size:1.1rem}.chapter-title{font-size:1.2rem}.eng-line{font-size:.85rem}}
+</style>
 </head>
 <body>
 <div class="container">
-    <h1>三国演义</h1>
-    <div class="subhead">第十四回 · 点击汉字显示拼音 + 英译</div>
-    <div class="hint">👆 点击任意汉字即可显示/隐藏其拼音</div>
-
-    <nav class="jumpbar">
-        <a href="#s1">曹操迁都</a>
-        <a href="#s2">刘备失徐州</a>
-        <a href="#s3">吕布夺权</a>
-        <a href="#s4">曹操图吕布</a>
-    </nav>
-
-    <div id="story"></div>
-
-    <div class="note">
-        —— 第十四回 · 点击汉字显示拼音 + 英译 ——
-    </div>
+<h1>三国演义</h1>
+<div class="subhead">第十四回 · 点击汉字显示拼音 + 英译</div>
+<div class="hint">👆 点击任意汉字即可显示/隐藏其拼音</div>
+<nav class="jumpbar">
+<a href="#s1">曹操迁都</a>
+<a href="#s2">刘备失徐州</a>
+<a href="#s3">吕布夺权</a>
+<a href="#s4">曹操图吕布</a>
+</nav>
+<div id="story"></div>
+<div class="note">—— 第十四回 · 点击汉字显示拼音 + 英译 ——</div>
 </div>
-
 <script>
-const SENTENCES = [
-    {
-        type: "title",
-        zh: "曹|cáo 孟|mèng 德|dé 移|yí 驾|jià 许|jú 都|dū · 吕|lǚ 奉|fèng 先|xiān 夜|yè 袭|xí 徐|xú 州|zhōu",
-        en: "Cao Mengde Moves the Imperial Court to Xudu; Lü Fengxian Makes a Night Raid on Xuzhou"
-    },
-    {
-        type: "para", id: "s1",
-        sentences: [
-            {
-                zh: "曹|cáo 操|cāo 迎|yíng 献|xiàn 帝|dì 入|rù 许|jú 都|dū 后|hòu ，自|zì 任|rèn 大|dà 将|jiàng 军|jūn ，总|zǒng 揽|lǎn 朝|cháo 政|zhèng 。他|tā 广|guǎng 纳|nà 贤|xián 才|cái ，屯|tún 田|tián 积|jī 粮|liáng ，势|shì 力|lì 日|rì 益|yì 强|qiáng 大|dà 。",
-                en: "After welcoming Emperor Xian into Xudu, Cao Cao appointed himself General-in-Chief and took full control of the court. He widely recruited talented men, established military farms to store grain, and his power grew stronger by the day."
-            },
-            {
-                zh: "刘|liú 备|bèi 领|lǐng 徐|xú 州|zhōu 之|zhī 事|shì 后|hòu ，吕|lǚ 布|bù 被|bèi 曹|cáo 操|cāo 击|jī 败|bài ，前|qián 来|lái 投|tóu 奔|bēn 。刘|liú 备|bèi 仁|rén 厚|hòu ，让|ràng 吕|lǚ 布|bù 屯|tún 兵|bīng 小|xiǎo 沛|pèi ，以|yǐ 为|wéi 犄|jī 角|jiǎo 之|zhī 势|shì 。",
-                en: "After Liu Bei took charge of Xuzhou, Lü Bu, having been defeated by Cao Cao, came seeking refuge. The kind-hearted Liu Bei let Lü Bu station his troops at Xiaopei, forming a mutual support arrangement."
-            }
-        ]
-    },
-    {
-        type: "para", id: "s2",
-        sentences: [
-            {
-                zh: "刘|liú 备|bèi 奉|fèng 命|mìng 前|qián 往|wǎng 征|zhēng 讨|tǎo 袁|yuán 术|shù ，留|liú 张|zhāng 飞|fēi 守|shǒu 徐|xú 州|zhōu 。张|zhāng 飞|fēi 性|xìng 如|rú 烈|liè 火|huǒ ，酒|jiǔ 后|hòu 鞭|biān 打|dǎ 部|bù 下|xià ，部|bù 将|jiàng 曹|cáo 豹|bào 心|xīn 怀|huái 不|bù 满|mǎn 。",
-                en: "Liu Bei was ordered to go campaign against Yuan Shu, leaving Zhang Fei to guard Xuzhou. Zhang Fei had a fiery temper and, after drinking, whipped his subordinates; his officer Cao Bao grew resentful."
-            },
-            {
-                zh: "曹|cáo 豹|bào 勾|gōu 结|jié 吕|lǚ 布|bù ，夜|yè 间|jiān 偷|tōu 开|kāi 城|chéng 门|mén 。吕|lǚ 布|bù 率|shuài 军|jūn 袭|xí 取|qǔ 徐|xú 州|zhōu ，张|zhāng 飞|fēi 仓|cāng 促|cù 应|yìng 战|zhàn ，兵|bīng 败|bài 而|ér 走|zǒu 。",
-                en: "Cao Bao colluded with Lü Bu and secretly opened the city gate at night. Lü Bu led his troops in and seized Xuzhou; Zhang Fei fought hastily but was defeated and fled."
-            }
-        ]
-    },
-    {
-        type: "para", id: "s3",
-        sentences: [
-            {
-                zh: "刘|liú 备|bèi 闻|wén 徐|xú 州|zhōu 失|shī 守|shǒu ，急|jí 忙|máng 回|huí 师|shī ，却|què 被|bèi 吕|lǚ 布|bù 与|yǔ 袁|yuán 术|shù 夹|jiā 击|jī ，进|jìn 退|tuì 两|liǎng 难|nán 。刘|liú 备|bèi 只|zhǐ 得|de 暂|zàn 驻|zhù 小|xiǎo 沛|pèi ，与|yǔ 吕|lǚ 布|bù 暂|zàn 时|shí 讲|jiǎng 和|hé 。",
-                en: "When Liu Bei learned that Xuzhou had fallen, he hurriedly turned his army back, but was caught between Lü Bu and Yuan Shu, unable to advance or retreat. Liu Bei had no choice but to station temporarily at Xiaopei and make a temporary peace with Lü Bu."
-            }
-        ]
-    },
-    {
-        type: "para", id: "s4",
-        sentences: [
-            {
-                zh: "曹|cáo 操|cāo 见|jiàn 刘|liú 备|bèi 与|yǔ 吕|lǚ 布|bù 相|xiāng 争|zhēng ，欲|yù 坐|zuò 收|shōu 渔|yú 利|lì ，便|biàn 表|biǎo 奏|zòu 刘|liú 备|bèi 为|wéi 豫|yù 州|zhōu 牧|mù ，令|lìng 其|qí 与|yǔ 吕|lǚ 布|bù 相|xiāng 抗|kàng ，自|zì 己|jǐ 则|zé 整|zhěng 军|jūn 备|bèi 战|zhàn ，图|tú 谋|móu 徐|xú 州|zhōu 。",
-                en: "Seeing Liu Bei and Lü Bu locked in conflict, Cao Cao wanted to profit from their struggle. He memorialized the throne to appoint Liu Bei as Governor of Yuzhou, setting him against Lü Bu, while Cao Cao himself prepared his army for war, scheming to take Xuzhou."
-            }
-        ]
-    }
+const SENTENCES=[
+{type:"title",zh:"曹|cáo 孟|mèng 德|dé 移|yí 驾|jià 许|xǔ 都|dū · 吕|lǚ 奉|fèng 先|xiān 夜|yè 袭|xí 徐|xú 州|zhōu",en:"Cao Mengde Moves the Imperial Court to Xudu; Lü Fengxian Makes a Night Raid on Xuzhou"},
+{type:"para",id:"s1",sentences:[
+{zh:"曹|cáo 操|cāo 把|bǎ 献|xiàn 帝|dì 接|jiē 到|dào 许|xǔ 都|dū 之|zhī 后|hòu ，自|zì 任|rèn 大|dà 将|jiàng 军|jūn ，朝|cháo 廷|tíng 上|shàng 下|xià 全|quán 听|tīng 他|tā 的|de 。他|tā 一|yī 面|miàn 招|zhāo 收|shōu 人|rén 才|cái ，一|yī 面|miàn 让|ràng 士|shì 兵|bīng 屯|tún 田|tián 种|zhòng 地|dì ，粮|liáng 草|cǎo 慢|màn 慢|màn 攒|zǎn 了|le 起|qǐ 来|lái 。",en:"After bringing Emperor Xian to Xudu, Cao Cao made himself General-in-Chief, and the whole court obeyed him. He recruited talented men on one hand and had his soldiers farm the land on the other, gradually building up stores of grain."},
+{zh:"势|shì 力|lì 一|yī 天|tiān 比|bǐ 一|yī 天|tiān 大|dà ，曹|cáo 操|cāo 的|de 心|xīn 思|sī 也|yě 越|yuè 来|lái 越|yuè 多|duō 。他|tā 看|kàn 着|zhe 地|dì 图|tú ，盘|pán 算|suàn 着|zhe 怎|zěn 么|me 把|bǎ 周|zhōu 边|biān 的|de 地|dì 盘|pán 一|yī 块|kuài 块|kuài 吃|chī 下|xià 。",en:"His power grew by the day, and so did his ambitions. He studied the map, scheming how to swallow up the territories around him one by one."},
+{zh:"这|zhè 时|shí 刘|liú 备|bèi 刚|gāng 接|jiē 手|shǒu 徐|xú 州|zhōu 不|bù 久|jiǔ ，根|gēn 基|jī 还|hái 不|bù 稳|wěn 。吕|lǚ 布|bù 被|bèi 曹|cáo 操|cāo 打|dǎ 败|bài 之|zhī 后|hòu ，带|dài 着|zhe 残|cán 兵|bīng 来|lái 投|tóu 奔|bēn 刘|liú 备|bèi 。刘|liú 备|bèi 心|xīn 地|dì 仁|rén 厚|hòu ，收|shōu 留|liú 了|le 他|tā ，让|ràng 他|tā 驻|zhù 扎|zhā 在|zài 小|xiǎo 沛|pèi 。",en:"At this time Liu Bei had only recently taken over Xuzhou, and his position was not yet secure. After being defeated by Cao Cao, Lü Bu came with his remnant troops to seek refuge with Liu Bei. Kind-hearted Liu Bei took him in and had him station his troops at Xiaopei."}
+]},
+{type:"para",id:"s2",sentences:[
+{zh:"不|bù 久|jiǔ ，袁|yuán 术|shù 派|pài 兵|bīng 来|lái 打|dǎ 徐|xú 州|zhōu ，刘|liú 备|bèi 只|zhǐ 好|hǎo 亲|qīn 自|zì 带|dài 兵|bīng 去|qù 迎|yíng 战|zhàn ，留|liú 张|zhāng 飞|fēi 守|shǒu 城|chéng 。临|lín 走|zǒu 前|qián 再|zài 三|sān 嘱|zhǔ 咐|fù 张|zhāng 飞|fēi ：“你|nǐ 千|qiān 万|wàn 别|bié 喝|hē 酒|jiǔ ，别|bié 打|dǎ 士|shì 兵|bīng 。”",en:"Before long Yuan Shu sent troops to attack Xuzhou, and Liu Bei had no choice but to lead his army out to meet them himself, leaving Zhang Fei to guard the city. Before setting out he warned Zhang Fei again and again: \"Whatever you do, don't drink, and don't beat the soldiers.\""},
+{zh:"刘|liú 备|bèi 一|yī 走|zǒu ，张|zhāng 飞|fēi 就|jiù 把|bǎ 这|zhè 话|huà 忘|wàng 到|dào 脑|nǎo 后|hòu 去|qù 了|le 。他|tā 摆|bǎi 下|xià 酒|jiǔ 席|xí 招|zhāo 待|dài 手|shǒu 下|xià ，喝|hē 得|de 大|dà 醉|zuì ，还|hái 嫌|xián 部|bù 将|jiàng 曹|cáo 豹|bào 不|bù 肯|kěn 多|duō 喝|hē ，把|bǎ 他|tā 狠|hěn 狠|hěn 抽|chōu 了|le 一|yī 顿|dùn 。",en:"The moment Liu Bei left, Zhang Fei forgot all about it. He held a banquet for his officers, got dead drunk, and when his officer Cao Bao refused to drink more, he gave him a sound beating."},
+{zh:"曹|cáo 豹|bào 怀|huái 恨|hèn 在|zài 心|xīn ，连|lián 夜|yè 派|pài 人|rén 去|qù 勾|gōu 结|jié 小|xiǎo 沛|pèi 的|de 吕|lǚ 布|bù ，偷|tōu 偷|tōu 打|dǎ 开|kāi 城|chéng 门|mén 。吕|lǚ 布|bù 带|dài 兵|bīng 一|yī 拥|yōng 而|ér 入|rù ，张|zhāng 飞|fēi 醉|zuì 得|de 站|zhàn 都|dōu 站|zhàn 不|bù 稳|wěn ，只|zhǐ 好|hǎo 带|dài 着|zhe 几|jǐ 个|gè 亲|qīn 兵|bīng 杀|shā 出|chū 城|chéng 去|qù 。",en:"Cao Bao harbored a grudge and that very night sent men to collude with Lü Bu at Xiaopei and secretly open the city gate. Lü Bu's troops poured in, and Zhang Fei, too drunk to even stand steady, had no choice but to fight his way out with a few guards."}
+]},
+{type:"para",id:"s3",sentences:[
+{zh:"刘|liú 备|bèi 听|tīng 说|shuō 徐|xú 州|zhōu 丢|diū 了|le ，急|jí 忙|máng 回|huí 师|shī ，可|kě 袁|yuán 术|shù 在|zài 后|hòu 面|miàn 紧|jǐn 追|zhuī 不|bù 放|fàng ，吕|lǚ 布|bù 又|yòu 在|zài 前|qián 面|miàn 堵|dǔ 着|zhe ，刘|liú 备|bèi 进|jìn 退|tuì 两|liǎng 难|nán ，队|duì 伍|wǔ 损|sǔn 失|shī 惨|cǎn 重|zhòng 。",en:"When Liu Bei learned Xuzhou was lost, he hurriedly turned his army back, but Yuan Shu was pressing hard from behind and Lü Bu blocked the way ahead. Caught between them, Liu Bei's forces suffered heavy losses."},
+{zh:"刘|liú 备|bèi 走|zǒu 投|tóu 无|wú 路|lù ，只|zhǐ 好|hǎo 暂|zàn 时|shí 在|zài 小|xiǎo 沛|pèi 落|luò 脚|jiǎo ，跟|gēn 吕|lǚ 布|bù 讲|jiǎng 和|hé 。吕|lǚ 布|bù 也|yě 不|bù 想|xiǎng 把|bǎ 事|shì 做|zuò 绝|jué ，就|jiù 答|dá 应|yìng 让|ràng 刘|liú 备|bèi 屯|tún 兵|bīng 小|xiǎo 沛|pèi ，两|liǎng 家|jiā 暂|zàn 时|shí 相|xiāng 安|ān 无|wú 事|shì 。",en:"With nowhere else to turn, Liu Bei had to settle temporarily at Xiaopei and make peace with Lü Bu. Lü Bu, not wanting to push things too far, agreed to let Liu Bei station his troops at Xiaopei, and the two sides kept a temporary peace."},
+{zh:"刘|liú 备|bèi 心|xīn 里|lǐ 明|míng 白|bai ，徐|xú 州|zhōu 这|zhè 笔|bǐ 账|zhàng 迟|chí 早|zǎo 要|yào 算|suàn ，可|kě 眼|yǎn 下|xià 实|shí 力|lì 不|bù 够|gòu ，只|zhǐ 能|néng 先|xiān 忍|rěn 着|zhe 。",en:"Liu Bei understood in his heart that the score of Xuzhou would have to be settled sooner or later, but for now he lacked the strength and could only endure."}
+]},
+{type:"para",id:"s4",sentences:[
+{zh:"曹|cáo 操|cāo 在|zài 许|xǔ 都|dū 看|kàn 得|de 清|qīng 清|qīng 楚|chǔ ，刘|liú 备|bèi 和|hé 吕|lǚ 布|bù 这|zhè 两|liǎng 个|gè 人|rén 谁|shuí 也|yě 不|bù 服|fú 谁|shuí ，正|zhèng 好|hǎo 让|ràng 他|tā 们|men 互|hù 相|xiāng 牵|qiān 制|zhì 。于|yú 是|shì 他|tā 打|dǎ 着|zhe 皇|huáng 帝|dì 的|de 旗|qí 号|hào ，封|fēng 刘|liú 备|bèi 做|zuò 豫|yù 州|zhōu 牧|mù ，让|ràng 他|tā 去|qù 对|duì 付|fù 吕|lǚ 布|bù 。",en:"Cao Cao in Xudu saw all this clearly: Liu Bei and Lü Bu were each unwilling to submit to the other, so it suited him to have them check each other. So under the Emperor's authority he appointed Liu Bei as Governor of Yuzhou, setting him against Lü Bu."},
+{zh:"刘|liú 备|bèi 接|jiē 了|le 任|rèn 命|mìng ，心|xīn 里|lǐ 也|yě 明|míng 白|bai 曹|cáo 操|cāo 是|shì 在|zài 利|lì 用|yòng 他|tā ，可|kě 有|yǒu 个|gè 正|zhèng 式|shì 名|míng 分|fèn 总|zǒng 比|bǐ 没|méi 有|yǒu 强|qiáng 。他|tā 干|gān 脆|cuì 借|jiè 这|zhè 个|gè 机|jī 会|huì 招|zhāo 兵|bīng 买|mǎi 马|mǎ ，壮|zhuàng 大|dà 自|zì 己|jǐ 。",en:"Liu Bei accepted the appointment, knowing full well Cao Cao was using him, but a proper title was better than none. He simply took the chance to recruit soldiers and buy horses, building up his own strength."},
+{zh:"曹|cáo 操|cāo 这|zhè 边|biān 也|yě 没|méi 闲|xián 着|zhe ，一|yī 面|miàn 看|kàn 着|zhe 刘|liú 备|bèi 和|hé 吕|lǚ 布|bù 斗|dòu ，一|yī 面|miàn 整|zhěng 顿|dùn 兵|bīng 马|mǎ ，准|zhǔn 备|bèi 找|zhǎo 机|jī 会|huì 亲|qīn 自|zì 收|shōu 拾|shí 徐|xú 州|zhōu 。",en:"Cao Cao was not idle either; while watching Liu Bei and Lü Bu fight, he reorganized his own forces, preparing to seize Xuzhou himself when the chance came."},
+{zh:"天|tiān 下|xià 的|de 局|jú 面|miàn 越|yuè 来|lái 越|yuè 清|qīng 楚|chǔ ：曹|cáo 操|cāo 在|zài 中|zhōng 央|yāng 挟|xié 着|zhe 皇|huáng 帝|dì ，各|gè 地|dì 的|de 诸|zhū 侯|hóu 互|hù 相|xiāng 争|zhēng 斗|dòu ，谁|shuí 的|de 拳|quán 头|tóu 硬|yìng ，谁|shuí 就|jiù 说|shuō 了|le 算|suàn 。",en:"The situation in the realm was growing clearer by the day: Cao Cao held the Emperor at the center, the regional lords fought among themselves, and whoever had the strongest fist had the final say."}
+]}
 ];
-
-function tokenToHtml(tok) {
-    if (tok.startsWith("RAW")) return tok.slice(3);
-    if (tok.includes("|")) {
-        const [ch, py] = tok.split("|");
-        return `<span class="word" data-pinyin="${py}">${ch}</span>`;
-    }
-    return `<span class="punct">${tok}</span>`;
-}
-
-function renderZh(zh) {
-    return zh.split(/\s+/).filter(Boolean).map(tokenToHtml).join("");
-}
-
-function renderSentence(s) {
-    return `<div class="sentence">
-        <span class="zh-line">${renderZh(s.zh)}</span>
-        <span class="eng-line">${s.en}</span>
-    </div>`;
-}
-
-function render() {
-    const root = document.getElementById("story");
-    let html = "";
-    for (const block of SENTENCES) {
-        if (block.type === "title") {
-            html += `<div class="chapter-title">${renderZh(block.zh)}<span class="eng-title">${block.en}</span></div>`;
-        } else if (block.type === "para") {
-            html += `<div class="paragraph"${block.id ? ` id="${block.id}"` : ""}>${block.sentences.map(renderSentence).join("")}</div>`;
-        }
-    }
-    root.innerHTML = html;
-    bindWords();
-}
-
-function bindWords() {
-    document.querySelectorAll(".word").forEach(function (word) {
-        var pinyinText = word.getAttribute("data-pinyin");
-        if (pinyinText) {
-            var pinyinSpan = document.createElement("span");
-            pinyinSpan.className = "pinyin";
-            pinyinSpan.textContent = pinyinText;
-            word.appendChild(pinyinSpan);
-        }
-        word.addEventListener("click", function (e) {
-            e.stopPropagation();
-            this.classList.toggle("revealed");
-        });
-    });
-}
-
-document.addEventListener("click", function () {
-    document.querySelectorAll(".word.revealed").forEach(function (w) {
-        w.classList.remove("revealed");
-    });
-});
-
+function tokenToHtml(t){if(t.startsWith("RAW"))return t.slice(3);if(t.includes("|")){const[c,p]=t.split("|");return`<span class="word" data-pinyin="${p}">${c}</span>`}return`<span class="punct">${t}</span>`}
+function renderZh(z){return z.split(/\s+/).filter(Boolean).map(tokenToHtml).join("")}
+function renderSentence(s){return`<div class="sentence"><span class="zh-line">${renderZh(s.zh)}</span><span class="eng-line">${s.en}</span></div>`}
+function render(){const r=document.getElementById("story");let h="";for(const b of SENTENCES){if(b.type==="title"){h+=`<div class="chapter-title">${renderZh(b.zh)}<span class="eng-title">${b.en}</span></div>`}else if(b.type==="para"){h+=`<div class="paragraph"${b.id?` id="${b.id}"`:""}>${b.sentences.map(renderSentence).join("")}</div>`}}r.innerHTML=h;bindWords()}
+function bindWords(){document.querySelectorAll(".word").forEach(function(w){var p=w.getAttribute("data-pinyin");if(p){var s=document.createElement("span");s.className="pinyin";s.textContent=p;w.appendChild(s)}w.addEventListener("click",function(e){e.stopPropagation();this.classList.toggle("revealed")})})}
+document.addEventListener("click",function(){document.querySelectorAll(".word.revealed").forEach(function(w){w.classList.remove("revealed")})});
 render();
 </script>
 </body>

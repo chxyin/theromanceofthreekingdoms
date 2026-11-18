@@ -1,292 +1,78 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>三国演义 · 第七回 · 点击显示拼音 + 英译</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background-color: #f8f5f0;
-            font-family: 'Segoe UI', 'Noto Serif SC', 'KaiTi', '楷体', 'Songti SC', serif;
-            padding: 2rem 1rem;
-            display: flex;
-            justify-content: center;
-            line-height: 2.2;
-        }
-        .container {
-            max-width: 1000px;
-            width: 100%;
-            background: #fffcf8;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            border-radius: 24px;
-            padding: 3rem 2.5rem;
-            border: 1px solid #e6d9cc;
-        }
-        h1 {
-            font-size: 2.2rem;
-            text-align: center;
-            color: #5e3e2b;
-            letter-spacing: 4px;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-            border-bottom: 2px solid #d9c6b0;
-            padding-bottom: 1.2rem;
-        }
-        .subhead {
-            text-align: center;
-            font-size: 1.1rem;
-            color: #8b6f55;
-            margin-bottom: 1rem;
-            letter-spacing: 2px;
-            font-style: italic;
-        }
-        .jumpbar {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.6rem;
-            margin: 1.2rem 0 2.5rem 0;
-            padding: 0.9rem;
-            background: #f4ebe2;
-            border-radius: 14px;
-            border: 1px solid #e6d9cc;
-        }
-        .jumpbar a {
-            text-decoration: none;
-            font-size: 0.92rem;
-            color: #5e3e2b;
-            background: #fffcf8;
-            border: 1px solid #d9c6b0;
-            border-radius: 10px;
-            padding: 0.35rem 0.8rem;
-            transition: background 0.2s, color 0.2s;
-        }
-        .jumpbar a:hover { background: #5e3e2b; color: #fff8f0; }
-        .chapter-title {
-            font-size: 1.6rem;
-            text-align: center;
-            color: #4a3322;
-            margin: 2rem 0 2.5rem 0;
-            font-weight: 600;
-            letter-spacing: 3px;
-            background: linear-gradient(to right, transparent, #efe3d8, transparent);
-            padding: 0.8rem 0;
-            scroll-margin-top: 1.5rem;
-        }
-        .chapter-title .eng-title {
-            display: block;
-            font-size: 1rem;
-            font-weight: 400;
-            color: #8b6f55;
-            letter-spacing: 1px;
-            margin-top: 0.4rem;
-            font-style: italic;
-        }
-        .paragraph { margin-bottom: 2.2rem; text-align: justify; }
-        .sentence { display: block; margin-bottom: 1.5rem; }
-        .zh-line { display: block; margin-bottom: 0.3rem; }
-        .word {
-            display: inline-block;
-            position: relative;
-            cursor: pointer;
-            font-size: 1.25rem;
-            font-family: 'Noto Serif SC', 'KaiTi', serif;
-            color: #1f1a15;
-            margin: 0 0.05em;
-            padding: 0.05em 0.1em;
-            border-radius: 4px;
-            transition: background-color 0.2s;
-            vertical-align: middle;
-        }
-        .word:hover { background-color: #f0e4d8; }
-        .word.revealed {
-            background-color: #f4e8dc;
-            box-shadow: 0 0 0 1px #d9c6b0;
-        }
-        .punct {
-            font-family: 'Noto Serif SC', 'KaiTi', serif;
-            font-size: 1.25rem;
-            color: #1f1a15;
-            vertical-align: middle;
-        }
-        .pinyin {
-            display: none;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: 100%;
-            margin-bottom: 2px;
-            background-color: #5e3e2b;
-            color: #fff8f0;
-            font-size: 0.7rem;
-            font-family: 'Segoe UI', 'Arial', sans-serif;
-            letter-spacing: 0.5px;
-            padding: 0.15em 0.5em;
-            border-radius: 12px;
-            white-space: nowrap;
-            z-index: 10;
-            line-height: 1.4;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-            pointer-events: none;
-        }
-        .word.revealed .pinyin { display: block; }
-        .eng-line {
-            display: block;
-            font-size: 0.95rem;
-            color: #7a6554;
-            font-family: 'Segoe UI', 'Georgia', serif;
-            line-height: 1.6;
-            padding-left: 0.5rem;
-            border-left: 2px solid #d9c6b0;
-            margin-top: 0.2rem;
-            margin-bottom: 0.4rem;
-            font-style: italic;
-        }
-        .note {
-            margin-top: 3rem;
-            padding-top: 1.5rem;
-            border-top: 1px dashed #cdb9a8;
-            font-size: 0.9rem;
-            color: #7a5e4b;
-            text-align: center;
-            font-style: italic;
-        }
-        .hint {
-            text-align: center;
-            font-size: 0.85rem;
-            color: #a0785a;
-            margin-bottom: 1rem;
-            font-style: italic;
-        }
-        @media (max-width: 600px) {
-            .container { padding: 1.8rem 1.2rem; }
-            h1 { font-size: 1.6rem; letter-spacing: 2px; }
-            .word, .punct { font-size: 1.1rem; }
-            .chapter-title { font-size: 1.2rem; }
-            .eng-line { font-size: 0.85rem; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三国演义 · 第七回 · 点击显示拼音 + 英译</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f8f5f0;font-family:'Segoe UI','Noto Serif SC','KaiTi','楷体','Songti SC',serif;padding:2rem 1rem;display:flex;justify-content:center;line-height:2.2}
+.container{max-width:1000px;width:100%;background:#fffcf8;box-shadow:0 10px 30px rgba(0,0,0,.08);border-radius:24px;padding:3rem 2.5rem;border:1px solid #e6d9cc}
+h1{font-size:2.2rem;text-align:center;color:#5e3e2b;letter-spacing:4px;font-weight:500;margin-bottom:.5rem;border-bottom:2px solid #d9c6b0;padding-bottom:1.2rem}
+.subhead{text-align:center;font-size:1.1rem;color:#8b6f55;margin-bottom:1rem;letter-spacing:2px;font-style:italic}
+.jumpbar{display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem;margin:1.2rem 0 2.5rem;padding:.9rem;background:#f4ebe2;border-radius:14px;border:1px solid #e6d9cc}
+.jumpbar a{text-decoration:none;font-size:.92rem;color:#5e3e2b;background:#fffcf8;border:1px solid #d9c6b0;border-radius:10px;padding:.35rem .8rem;transition:background .2s,color .2s}
+.jumpbar a:hover{background:#5e3e2b;color:#fff8f0}
+.chapter-title{font-size:1.6rem;text-align:center;color:#4a3322;margin:2rem 0 2.5rem;font-weight:600;letter-spacing:3px;background:linear-gradient(to right,transparent,#efe3d8,transparent);padding:.8rem 0;scroll-margin-top:1.5rem}
+.chapter-title .eng-title{display:block;font-size:1rem;font-weight:400;color:#8b6f55;letter-spacing:1px;margin-top:.4rem;font-style:italic}
+.paragraph{margin-bottom:2.2rem;text-align:justify}
+.sentence{display:block;margin-bottom:1.5rem}
+.zh-line{display:block;margin-bottom:.3rem}
+.word{display:inline-block;position:relative;cursor:pointer;font-size:1.25rem;font-family:'Noto Serif SC','KaiTi',serif;color:#1f1a15;margin:0 .05em;padding:.05em .1em;border-radius:4px;transition:background-color .2s;vertical-align:middle}
+.word:hover{background:#f0e4d8}
+.word.revealed{background:#f4e8dc;box-shadow:0 0 0 1px #d9c6b0}
+.punct{font-family:'Noto Serif SC','KaiTi',serif;font-size:1.25rem;color:#1f1a15;vertical-align:middle}
+.pinyin{display:none;position:absolute;left:50%;transform:translateX(-50%);bottom:100%;margin-bottom:2px;background:#5e3e2b;color:#fff8f0;font-size:.7rem;font-family:'Segoe UI','Arial',sans-serif;letter-spacing:.5px;padding:.15em .5em;border-radius:12px;white-space:nowrap;z-index:10;line-height:1.4;box-shadow:0 2px 6px rgba(0,0,0,.15);pointer-events:none}
+.word.revealed .pinyin{display:block}
+.eng-line{display:block;font-size:.95rem;color:#7a6554;font-family:'Segoe UI','Georgia',serif;line-height:1.6;padding-left:.5rem;border-left:2px solid #d9c6b0;margin-top:.2rem;margin-bottom:.4rem;font-style:italic}
+.note{margin-top:3rem;padding-top:1.5rem;border-top:1px dashed #cdb9a8;font-size:.9rem;color:#7a5e4b;text-align:center;font-style:italic}
+.hint{text-align:center;font-size:.85rem;color:#a0785a;margin-bottom:1rem;font-style:italic}
+@media(max-width:600px){.container{padding:1.8rem 1.2rem}h1{font-size:1.6rem;letter-spacing:2px}.word,.punct{font-size:1.1rem}.chapter-title{font-size:1.2rem}.eng-line{font-size:.85rem}}
+</style>
 </head>
 <body>
 <div class="container">
-    <h1>三国演义</h1>
-    <div class="subhead">第七回 · 点击汉字显示拼音 + 英译</div>
-    <div class="hint">👆 点击任意汉字即可显示/隐藏其拼音</div>
-
-    <nav class="jumpbar">
-        <a href="#s1">袁绍</a>
-        <a href="#s2">孙坚</a>
-        <a href="#s3">跨江</a>
-    </nav>
-
-    <div id="story"></div>
-
-    <div class="note">
-        —— 第七回 · 点击汉字显示拼音 + 英译 ——
-    </div>
+<h1>三国演义</h1>
+<div class="subhead">第七回 · 点击汉字显示拼音 + 英译</div>
+<div class="hint">👆 点击任意汉字即可显示/隐藏其拼音</div>
+<nav class="jumpbar">
+<a href="#s1">磐河之战</a>
+<a href="#s2">赵云登场</a>
+<a href="#s3">孙坚复仇</a>
+<a href="#s4">孙坚中伏</a>
+</nav>
+<div id="story"></div>
+<div class="note">—— 第七回 · 点击汉字显示拼音 + 英译 ——</div>
 </div>
-
 <script>
-const SENTENCES = [
-    {
-        type: "title",
-        zh: "袁|yuán 绍|shào 磐|pán 河|hé 战|zhàn 公|gōng 孙|sūn 瓒|zàn · 孙|sūn 坚|jiān 跨|kuà 江|jiāng 击|jī 刘|liú 表|biǎo",
-        en: "Yuan Shao Fights Gongsun Zan at the Pan River; Sun Jian Crosses the River to Attack Liu Biao"
-    },
-    {
-        type: "para", id: "s1",
-        sentences: [
-            {
-                zh: "袁|yuán 绍|shào 与|yǔ 公|gōng 孙|sūn 瓒|zàn 因|yīn 争|zhēng 夺|duó 冀|jì 州|zhōu 而|ér 交|jiāo 恶|è ，两|liǎng 军|jūn 大|dà 战|zhàn 于|yú 磐|pán 河|hé 。公|gōng 孙|sūn 瓒|zàn 兵|bīng 败|bài ，被|bèi 袁|yuán 绍|shào 部|bù 将|jiàng 文|wén 丑|chǒu 追|zhuī 杀|shā ，幸|xìng 得|dé 赵|zhào 云|yún 相|xiāng 救|jiù ，方|fāng 得|dé 脱|tuō 身|shēn 。",
-                en: "Yuan Shao and Gongsun Zan fell out over control of Jizhou and fought a great battle at the Pan River. Gongsun Zan's forces were defeated, and he was pursued by Yuan Shao's general Wen Chou; he escaped only because Zhao Yun came to his rescue."
-            },
-            {
-                zh: "赵|zhào 云|yún 勇|yǒng 猛|měng 过|guò 人|rén ，公|gōng 孙|sūn 瓒|zàn 甚|shèn 爱|ài 之|zhī 。此|zǐ 后|hòu 袁|yuán 绍|shào 势|shì 力|lì 渐|jiàn 强|qiáng ，雄|xióng 踞|jù 河|hé 北|běi 。",
-                en: "Zhao Yun was exceptionally brave, and Gongsun Zan greatly admired him. After this, Yuan Shao's power gradually grew, and he dominated the region north of the Yellow River."
-            }
-        ]
-    },
-    {
-        type: "para", id: "s2",
-        sentences: [
-            {
-                zh: "孙|sūn 坚|jiān 私|sī 藏|cáng 玉|yù 玺|xǐ 归|guī 江|jiāng 东|dōng ，袁|yuán 绍|shào 怀|huái 恨|hèn ，暗|àn 令|lìng 荆|jīng 州|zhōu 刺|cì 史|shǐ 刘|liú 表|biǎo 于|yú 路|lù 上|shàng 截|jié 击|jī 。孙|sūn 坚|jiān 中|zhòng 伏|fú ，损|sǔn 兵|bīng 折|zhé 将|jiàng ，与|yǔ 刘|liú 表|biǎo 结|jié 下|xià 深|shēn 仇|chóu 。",
-                en: "Sun Jian returned to Jiangdong with the Imperial Seal hidden, and Yuan Shao harbored a grudge. Yuan Shao secretly ordered Liu Biao, the Inspector of Jingzhou, to intercept Sun Jian on the road. Sun Jian fell into an ambush, lost many men, and became sworn enemies with Liu Biao."
-            }
-        ]
-    },
-    {
-        type: "para", id: "s3",
-        sentences: [
-            {
-                zh: "孙|sūn 坚|jiān 誓|shì 报|bào 此|zhǐ 仇|chóu ，亲|qīn 率|shuài 大|dà 军|jūn 跨|kuà 江|jiāng 攻|gōng 打|dǎ 荆|jīng 州|zhōu 。刘|liú 表|biǎo 派|pài 黄|huáng 祖|zǔ 迎|yíng 战|zhàn ，屡|lǚ 战|zhàn 屡|lǚ 败|bài 。孙|sūn 坚|jiān 乘|chéng 胜|shèng 追|zhuī 击|jī ，不|bù 料|liào 中|zhòng 了|le 埋|mái 伏|fú ，被|bèi 乱|luàn 箭|jiàn 射|shè 死|sǐ 。",
-                en: "Sun Jian swore to avenge this wrong and personally led a great army across the river to attack Jingzhou. Liu Biao sent Huang Zu to meet him, but Huang Zu was defeated again and again. Sun Jian pursued the retreating enemy in triumph, but unexpectedly fell into an ambush and was killed by a hail of arrows."
-            },
-            {
-                zh: "孙|sūn 坚|jiān 死|sǐ 后|hòu ，其|qí 子|zǐ 孙|sūn 策|cè 、孙|sūn 权|quán 尚|shàng 幼|yòu ，江|jiāng 东|dōng 基|jī 业|yè 暂|zàn 由|yóu 部|bù 属|shǔ 维|wéi 持|chí 。",
-                en: "After Sun Jian's death, his sons Sun Ce and Sun Quan were still young, and the Jiangdong enterprise was temporarily sustained by his subordinates."
-            }
-        ]
-    }
+const SENTENCES=[
+{type:"title",zh:"袁|yuán 绍|shào 磐|pán 河|hé 战|zhàn 公|gōng 孙|sūn 瓒|zàn · 孙|sūn 坚|jiān 跨|kuà 江|jiāng 击|jī 刘|liú 表|biǎo",en:"Yuan Shao Fights Gongsun Zan at the Pan River; Sun Jian Crosses the River to Attack Liu Biao"},
+{type:"para",id:"s1",sentences:[
+{zh:"袁|yuán 绍|shào 和|hé 公|gōng 孙|sūn 瓒|zàn 本|běn 来|lái 说|shuō 好|hǎo 了|le 一|yī 起|qǐ 打|dǎ 董|dǒng 卓|zhuó ，可|kě 打|dǎ 完|wán 之|zhī 后|hòu ，两|liǎng 个|gè 人|rén 为|wèi 了|le 争|zhēng 夺|duó 冀|jì 州|zhōu 的|de 地|dì 盘|pán 翻|fān 了|le 脸|liǎn 。袁|yuán 绍|shào 兵|bīng 多|duō 粮|liáng 足|zú ，公|gōng 孙|sūn 瓒|zàn 不|bù 服|fú 气|qì ，两|liǎng 军|jūn 在|zài 磐|pán 河|hé 边|biān 摆|bǎi 开|kāi 阵|zhèn 势|shì 。",en:"Yuan Shao and Gongsun Zan had originally agreed to fight Dong Zhuo together, but after the campaign the two fell out over control of Jizhou. Yuan Shao had many troops and ample grain; Gongsun Zan refused to submit, and the two armies drew up their formations by the Pan River."},
+{zh:"袁|yuán 绍|shào 手|shǒu 下|xià 的|de 大|dà 将|jiàng 文|wén 丑|chǒu 十|shí 分|fēn 勇|yǒng 猛|měng ，骑|qí 着|zhe 马|mǎ 冲|chōng 进|jìn 公|gōng 孙|sūn 瓒|zàn 的|de 队|duì 伍|wǔ ，连|lián 刺|cì 数|shù 将|jiàng ，公|gōng 孙|sūn 瓒|zàn 抵|dǐ 挡|dǎng 不|bù 住|zhù ，拨|bō 马|mǎ 就|jiù 跑|pǎo 。文|wén 丑|chǒu 紧|jǐn 追|zhuī 不|bù 放|fàng ，眼|yǎn 看|kàn 就|jiù 要|yào 追|zhuī 上|shàng 。",en:"Yuan Shao's great general Wen Chou was exceedingly fierce; he rode into Gongsun Zan's ranks and ran through several officers in a row. Gongsun Zan could not hold out and turned his horse to flee. Wen Chou pursued relentlessly and was about to catch him."}
+]},
+{type:"para",id:"s2",sentences:[
+{zh:"就|jiù 在|zài 这|zhè 危|wēi 急|jí 关|guān 头|tóu ，路|lù 旁|páng 冲|chōng 出|chū 一|yī 员|yuán 年|nián 轻|qīng 将|jiàng 领|lǐng ，身|shēn 材|cái 高|gāo 大|dà ，浓|nóng 眉|méi 大|dà 眼|yǎn ，挺|tǐng 枪|qiāng 拦|lán 住|zhù 文|wén 丑|chǒu ，救|jiù 下|xià 了|le 公|gōng 孙|sūn 瓒|zàn 。",en:"At this critical moment, a young officer charged out from the roadside—tall and powerful, with thick brows and big eyes—and leveled his spear to block Wen Chou, saving Gongsun Zan."},
+{zh:"这|zhè 个|gè 年|nián 轻|qīng 人|rén 叫|jiào 赵|zhào 云|yún ，字|zì 子|zǐ 龙|lóng ，武|wǔ 艺|yì 高|gāo 强|qiáng ，胆|dǎn 识|shí 过|guò 人|rén 。他|tā 本|běn 来|lái 是|shì 袁|yuán 绍|shào 那|nà 边|biān 的|de 人|rén ，看|kàn 不|bù 惯|guàn 袁|yuán 绍|shào 的|de 做|zuò 派|pài ，就|jiù 投|tóu 奔|bēn 了|le 公|gōng 孙|sūn 瓒|zàn 。",en:"This young man was Zhao Yun, courtesy name Zilong, a warrior of great skill and outstanding courage. He had originally been with Yuan Shao but, disgusted by Yuan Shao's ways, had come over to Gongsun Zan."},
+{zh:"公|gōng 孙|sūn 瓒|zàn 见|jiàn 赵|zhào 云|yún 这|zhè 么|me 厉|lì 害|hài ，非|fēi 常|cháng 高|gāo 兴|xìng ，把|bǎ 他|tā 留|liú 在|zài 身|shēn 边|biān 重|zhòng 用|yòng 。文|wén 丑|chǒu 见|jiàn 对|duì 方|fāng 来|lái 了|le 帮|bāng 手|shǒu ，也|yě 不|bù 敢|gǎn 再|zài 追|zhuī ，只|zhǐ 好|hǎo 退|tuì 了|le 回|huí 去|qù 。",en:"Gongsun Zan was delighted to see how formidable Zhao Yun was and kept him close at hand in an important role. Wen Chou, seeing the enemy had gained a helper, dared not pursue further and had no choice but to withdraw."}
+]},
+{type:"para",id:"s3",sentences:[
+{zh:"另|lìng 一|yī 边|biān ，孙|sūn 坚|jiān 因|yīn 为|wèi 玉|yù 玺|xǐ 的|de 事|shì 跟|gēn 袁|yuán 绍|shào 结|jié 了|le 仇|chóu ，又|yòu 怨|yuàn 刘|liú 表|biǎo 当|dāng 年|nián 拦|lán 截|jié 过|guò 他|tā ，一|yī 直|zhí 想|xiǎng 报|bào 这|zhè 个|gè 仇|chóu 。他|tā 亲|qīn 自|zì 带|dài 着|zhe 江|jiāng 东|dōng 的|de 兵|bīng 马|mǎ ，渡|dù 过|guò 大|dà 江|jiāng ，杀|shā 奔|bēn 荆|jīng 州|zhōu 。",en:"Meanwhile, Sun Jian had fallen out with Yuan Shao over the Imperial Seal, and he also resented Liu Biao for having intercepted him years before; he had long wanted revenge. He personally led the Jiangdong troops across the great river and marched on Jingzhou."},
+{zh:"刘|liú 表|biǎo 得|dé 知|zhī 孙|sūn 坚|jiān 来|lái 攻|gōng ，派|pài 大|dà 将|jiàng 黄|huáng 祖|zǔ 迎|yíng 战|zhàn 。黄|huáng 祖|zǔ 哪|nǎ 里|lǐ 是|shì 孙|sūn 坚|jiān 的|de 对|duì 手|shǒu ，连|lián 连|lián 败|bài 退|tuì ，被|bèi 孙|sūn 坚|jiān 一|yī 路|lù 追|zhuī 杀|shā ，损|sǔn 兵|bīng 折|zhé 将|jiàng 。",en:"When Liu Biao learned Sun Jian was attacking, he sent his general Huang Zu to meet him. But Huang Zu was no match for Sun Jian and retreated again and again, pursued all the way by Sun Jian and losing men and officers."},
+{zh:"孙|sūn 坚|jiān 打|dǎ 了|le 胜|shèng 仗|zhàng ，士|shì 气|qì 正|zhèng 旺|wàng ，一|yī 心|xīn 想|xiǎng 趁|chèn 热|rè 打|dǎ 铁|tiě ，直|zhí 接|jiē 攻|gōng 下|xià 荆|jīng 州|zhōu 。他|tā 催|cuī 促|cù 军|jūn 队|duì 连|lián 夜|yè 追|zhuī 击|jī 黄|huáng 祖|zǔ 的|de 残|cán 兵|bīng 。",en:"Having won the battle, Sun Jian's troops were in high spirits, and he was determined to strike while the iron was hot and take Jingzhou outright. He urged his army to pursue Huang Zu's broken troops through the night."}
+]},
+{type:"para",id:"s4",sentences:[
+{zh:"不|bù 料|liào 黄|huáng 祖|zǔ 早|zǎo 在|zài 岘|xiàn 山|shān 一|yī 带|dài 设|shè 下|xià 了|le 埋|mái 伏|fú 。孙|sūn 坚|jiān 只|zhǐ 顾|gù 追|zhuī 击|jī ，一|yī 头|tóu 钻|zuān 进|jìn 了|le 包|bāo 围|wéi 圈|quān 。山|shān 上|shàng 石|shí 头|tou 、箭|jiàn 雨|yǔ 一|yī 齐|qí 往|wǎng 下|xià 砸|zá ，孙|sūn 坚|jiān 身|shēn 中|zhòng 数|shù 箭|jiàn ，从|cóng 马|mǎ 上|shàng 摔|shuāi 了|le 下|xià 来|lái 。",en:"But Huang Zu had already set an ambush around Xian Mountain. Sun Jian, intent only on pursuit, charged headlong into the trap. Stones and arrows rained down from the heights, and Sun Jian, struck by several arrows, fell from his horse."},
+{zh:"孙|sūn 坚|jiān 这|zhè 一|yī 死|sǐ ，江|jiāng 东|dōng 的|de 人|rén 马|mǎ 只|zhǐ 好|hǎo 撤|chè 退|tuì 。他|tā 的|de 儿|ér 子|zi 孙|sūn 策|cè 当|dāng 时|shí 还|hái 年|nián 轻|qīng ，孙|sūn 权|quán 更|gèng 小|xiǎo ，江|jiāng 东|dōng 的|de 基|jī 业|yè 暂|zàn 时|shí 由|yóu 部|bù 下|xià 将|jiàng 领|lǐng 维|wéi 持|chí 。",en:"With Sun Jian dead, the Jiangdong forces had no choice but to withdraw. His son Sun Ce was still young at the time, and Sun Quan even younger, so the Jiangdong enterprise was for the time being sustained by his subordinate generals."},
+{zh:"孙|sūn 坚|jiān 死|sǐ 得|de 冤|yuān ，江|jiāng 东|dōng 上|shàng 下|xià 恨|hèn 透|tòu 了|le 刘|liú 表|biǎo 。这|zhè 个|gè 仇|chóu ，后|hòu 来|lái 由|yóu 孙|sūn 策|cè 和|hé 孙|sūn 权|quán 兄|xiōng 弟|dì 接|jiē 手|shǒu ，一|yī 直|zhí 记|jì 在|zài 心|xīn 里|lǐ 。",en:"Sun Jian's death was a grievous wrong, and everyone in Jiangdong hated Liu Biao bitterly for it. That grudge was later taken up by the brothers Sun Ce and Sun Quan, who kept it in their hearts ever after."}
+]}
 ];
-
-function tokenToHtml(tok) {
-    if (tok.startsWith("RAW")) return tok.slice(3);
-    if (tok.includes("|")) {
-        const [ch, py] = tok.split("|");
-        return `<span class="word" data-pinyin="${py}">${ch}</span>`;
-    }
-    return `<span class="punct">${tok}</span>`;
-}
-
-function renderZh(zh) {
-    return zh.split(/\s+/).filter(Boolean).map(tokenToHtml).join("");
-}
-
-function renderSentence(s) {
-    return `<div class="sentence">
-        <span class="zh-line">${renderZh(s.zh)}</span>
-        <span class="eng-line">${s.en}</span>
-    </div>`;
-}
-
-function render() {
-    const root = document.getElementById("story");
-    let html = "";
-    for (const block of SENTENCES) {
-        if (block.type === "title") {
-            html += `<div class="chapter-title">${renderZh(block.zh)}<span class="eng-title">${block.en}</span></div>`;
-        } else if (block.type === "para") {
-            html += `<div class="paragraph"${block.id ? ` id="${block.id}"` : ""}>${block.sentences.map(renderSentence).join("")}</div>`;
-        }
-    }
-    root.innerHTML = html;
-    bindWords();
-}
-
-function bindWords() {
-    document.querySelectorAll(".word").forEach(function (word) {
-        var pinyinText = word.getAttribute("data-pinyin");
-        if (pinyinText) {
-            var pinyinSpan = document.createElement("span");
-            pinyinSpan.className = "pinyin";
-            pinyinSpan.textContent = pinyinText;
-            word.appendChild(pinyinSpan);
-        }
-        word.addEventListener("click", function (e) {
-            e.stopPropagation();
-            this.classList.toggle("revealed");
-        });
-    });
-}
-
-document.addEventListener("click", function () {
-    document.querySelectorAll(".word.revealed").forEach(function (w) {
-        w.classList.remove("revealed");
-    });
-});
-
+function tokenToHtml(t){if(t.startsWith("RAW"))return t.slice(3);if(t.includes("|")){const[c,p]=t.split("|");return`<span class="word" data-pinyin="${p}">${c}</span>`}return`<span class="punct">${t}</span>`}
+function renderZh(z){return z.split(/\s+/).filter(Boolean).map(tokenToHtml).join("")}
+function renderSentence(s){return`<div class="sentence"><span class="zh-line">${renderZh(s.zh)}</span><span class="eng-line">${s.en}</span></div>`}
+function render(){const r=document.getElementById("story");let h="";for(const b of SENTENCES){if(b.type==="title"){h+=`<div class="chapter-title">${renderZh(b.zh)}<span class="eng-title">${b.en}</span></div>`}else if(b.type==="para"){h+=`<div class="paragraph"${b.id?` id="${b.id}"`:""}>${b.sentences.map(renderSentence).join("")}</div>`}}r.innerHTML=h;bindWords()}
+function bindWords(){document.querySelectorAll(".word").forEach(function(w){var p=w.getAttribute("data-pinyin");if(p){var s=document.createElement("span");s.className="pinyin";s.textContent=p;w.appendChild(s)}w.addEventListener("click",function(e){e.stopPropagation();this.classList.toggle("revealed")})})}
+document.addEventListener("click",function(){document.querySelectorAll(".word.revealed").forEach(function(w){w.classList.remove("revealed")})});
 render();
 </script>
 </body>
