@@ -243,7 +243,8 @@ const cover = `
       <div class="cover-stats">${chapters.length} 回 · ${nParas} 段 · ${nSent} 句 · ${nWords.toLocaleString('en-US')} 字</div>
       <div class="howto">
         <b>点击任意汉字</b> → 顶部浮出该字拼音（再点一次收起）；<b>点击空白处</b> → 全部收起。<br>
-        想整页都带拼音？把右上角 <b>「拼音 · 点按」</b> 切成 <b>「拼音 · 全显」</b>——<span class="word" data-pinyin="shì"><span class="pinyin">shì</span>试</span>一下。
+        想整页都带拼音？把右上角 <b>「拼音 · 点按」</b> 切成 <b>「拼音 · 全显」</b>——<span class="word" data-pinyin="shì"><span class="pinyin">shì</span>试</span>一下。<br>
+        用鼠标的话，打开右上角 <b>「悬停」</b>，指到哪个字就读哪个字。
       </div>
     </header>`;
 
@@ -282,6 +283,7 @@ ${toc}
     <div class="topinfo" id="topCh">${esc('第' + toCn(chapters[0].num) + '回 · ' + plainZh(chapters[0].titleZh).split('·')[0].trim())}</div>
     <div class="tools">
       <button class="tbtn" id="pyBtn" aria-pressed="false">拼音 · 点按</button>
+      <button class="tbtn" id="hoverBtn" aria-pressed="false">悬停 · 关</button>
       <button class="tbtn" id="enBtn" aria-pressed="false">英译 · 显示</button>
       <button class="tbtn fs" id="fsMinus" aria-label="缩小字号">A−</button>
       <button class="tbtn fs" id="fsPlus" aria-label="放大字号">A+</button>

@@ -187,6 +187,10 @@ body.py-all .word .pinyin{
 body.py-all .word.revealed{background:#f4e8dc}
 body.py-all .zh-line{line-height:2.35}
 
+/* ---------------- "hover" mode: same bubble, mouse trigger ---------------- */
+body.py-hover .word:hover .pinyin{display:block}
+body.py-hover .word:hover{background:#f0e4d8}
+
 /* ---------------- toggles ---------------- */
 body.no-en .eng-line{display:none}
 

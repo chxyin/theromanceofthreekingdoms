@@ -22,6 +22,7 @@
   var bar = document.getElementById('bar');
   var btnMenu = document.getElementById('menuBtn');
   var btnPy = document.getElementById('pyBtn');
+  var btnHover = document.getElementById('hoverBtn');
   var btnEn = document.getElementById('enBtn');
   var btnMinus = document.getElementById('fsMinus');
   var btnPlus = document.getElementById('fsPlus');
@@ -53,6 +54,15 @@
     if (save) set('pyAll', !!on);
   }
 
+  /* 悬停看拼音：与点按共用同一套 .pinyin 气泡，只是把触发方式换成鼠标悬停 */
+  function applyHover(on, save) {
+    body.classList.toggle('py-hover', !!on);
+    btnHover.classList.toggle('on', !!on);
+    btnHover.textContent = on ? '悬停 · 开' : '悬停 · 关';
+    btnHover.setAttribute('aria-pressed', on ? 'true' : 'false');
+    if (save) set('pyHover', !!on);
+  }
+
   function applyEn(show, save) {
     body.classList.toggle('no-en', !show);
     btnEn.classList.toggle('on', !show);
@@ -72,6 +82,7 @@
   }
 
   btnPy.addEventListener('click', function () { applyPyAll(!body.classList.contains('py-all'), true); });
+  btnHover.addEventListener('click', function () { applyHover(!body.classList.contains('py-hover'), true); });
   btnEn.addEventListener('click', function () { applyEn(body.classList.contains('no-en'), true); });
   btnMinus.addEventListener('click', function () { stepFs(-1); });
   btnPlus.addEventListener('click', function () { stepFs(1); });
@@ -165,6 +176,7 @@
 
   /* ---------------- boot ---------------- */
   applyPyAll(get('pyAll', false), false);
+  applyHover(get('pyHover', false), false);
   applyEn(get('en', true), false);
   var storedFs = get('fs', null);
   if (storedFs && FS[storedFs]) { applyFs(storedFs, false); }
