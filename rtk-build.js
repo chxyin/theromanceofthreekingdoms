@@ -178,7 +178,8 @@ chapters.forEach((c, idx) => {
     toc += '<div class="toc-secs">';
     c.sections.forEach((s, i) => {
       const sid = chId + '-s' + (i + 1);
-      toc += '<a class="toc-sec" href="#' + sid + '" data-target="' + sid + '">' + esc(s.label) + '</a>';
+      toc += '<a class="toc-sec" href="#' + sid + '" data-target="' + sid + '">'
+        + '<span class="toc-secn">' + c.num + '.' + (i + 1) + '</span>' + esc(s.label) + '</a>';
     });
     toc += '</div>';
   }
