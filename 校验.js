@@ -32,8 +32,8 @@ console.log('[punct] multi-char values', [...new Set(multiPunct)]);
 
 /* ---- 4. source vs rendered text, chapter by chapter ---- */
 const SOURCES = fs.readdirSync(DIR)
-  .filter(f => /^ch\d+(-\d+)?\.html$/i.test(f))
-  .sort((a, b) => parseInt(a.match(/^ch(\d+)/i)[1], 10) - parseInt(b.match(/^ch(\d+)/i)[1], 10));
+  .filter(f => /^第(\d+)回.*\.html$/.test(f))
+  .sort((a, b) => parseInt(a.match(/^第(\d+)回/)[1], 10) - parseInt(b.match(/^第(\d+)回/)[1], 10));
 
 function sourceTexts() {
   const out = [];

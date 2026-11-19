@@ -10,10 +10,11 @@ const DIR = __dirname;    // 章节源文件就在本文件夹里
 const OUTDIR = __dirname; // 成品也输出到这里，整个文件夹可以随便搬
 const OUT = path.join(OUTDIR, '三国演义.html');
 
-/* 源文件：自动发现，按起始回数排序（ch1-4.html 视为第一至第四回） */
+/* 源文件：自动发现，文件名形如「第01回-宴桃园豪杰三结义.html」，按回数排序 */
+const CHAPTER_RE = /^第(\d+)回.*\.html$/;
 const SOURCES = fs.readdirSync(DIR)
-  .filter(f => /^ch\d+(-\d+)?\.html$/i.test(f))
-  .sort((a, b) => parseInt(a.match(/^ch(\d+)/i)[1], 10) - parseInt(b.match(/^ch(\d+)/i)[1], 10));
+  .filter(f => CHAPTER_RE.test(f))
+  .sort((a, b) => parseInt(a.match(CHAPTER_RE)[1], 10) - parseInt(b.match(CHAPTER_RE)[1], 10));
 
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
@@ -60,14 +61,14 @@ for (const file of SOURCES) {
     let cur = null;
     for (const b of blocks) {
       if (b.type === 'title') {
-        cur = { num: parseInt(String(b.id).replace('ch', ''), 10), titleZh: normalizeZh(b.zh), titleEn: b.en, paras: [], sections: [] };
+        cur = { num: parseInt(String(b.id).replace(/\D/g, ''), 10), titleZh: normalizeZh(b.zh), titleEn: b.en, paras: [], sections: [] };
         chapters.push(cur);
       } else if (b.type === 'para' && cur) {
         cur.paras.push({ id: b.id || null, sentences: b.sentences.map(s => ({ zh: normalizeZh(s.zh), en: s.en })) });
       }
     }
   } else {
-    const num = parseInt(file.match(/ch(\d+)/i)[1], 10);
+    const num = parseInt(file.match(CHAPTER_RE)[1], 10);
     const title = titles[0];
     const paras = blocks.filter(b => b.type === 'para')
       .map(b => ({ id: b.id || null, sentences: b.sentences.map(s => ({ zh: normalizeZh(s.zh), en: s.en })) }));
@@ -225,8 +226,8 @@ chapters.forEach((c, idx) => {
     + chips + ps + '</section>';
 });
 
-const CSS = fs.readFileSync(path.join(DIR, 'rtk-style.css'), 'utf8');
-const JS = fs.readFileSync(path.join(DIR, 'rtk-client.js'), 'utf8');
+const CSS = fs.readFileSync(path.join(DIR, '样式.css'), 'utf8');
+const JS = fs.readFileSync(path.join(DIR, '交互.js'), 'utf8');
 
 /* 回目范围与缺口（用于封面与简介） */
 const firstNum = chapters[0].num;
